@@ -9,7 +9,7 @@ const storageKey='fregion_craft_pulse_v3';
 const oldStorageKey='fregion_craft_pulse_v2';
 function readSaved(){try{let x=JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(oldStorageKey)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
 const saved=isDemo?{}:readSaved();
-const state={latest:null,history:null,recipes:[],selected:null,period:24,search:'',filter:'evaluated',sort:'score',settings:{tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
+const state={latest:null,history:null,recipes:[],itemGrades:{},selected:null,period:24,search:'',filter:'evaluated',sort:'score',settings:{tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
 const JOBS=['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'];
 // Migrate saved preferences: old unknown/null values become Lv100; explicit skill values are preserved.
 const previousSkills=(state.settings.skills&&typeof state.settings.skills==='object')?state.settings.skills:{};
@@ -45,6 +45,10 @@ function actualSuccess(recipe,item){
 function successLabel(recipe,item){
  const rate=actualSuccess(recipe,item);
  return rate===null?'ไม่ทราบ':(rate*100).toFixed(1).replace(/\.0$/,'')+'%';
+}
+function rarityForItem(item,recipe){
+ const grade=state.itemGrades[String(item.id)]??recipe?.item_grade;
+ return E.rarityForGrade(grade);
 }
 function itemFor(id){return state.latest?.items.find(x=>x.id===id)}
 function recipeKey(recipe){return recipe.recipe_id||[recipe.item_id||E.normName(recipe.name),recipe.profession,recipe.level??'?'].join(':')}
@@ -104,6 +108,7 @@ function renderTable(){
  if(state.filter==='evaluated')rows=rows.filter(x=>x.recipe&&x.eco.complete);
  if(state.filter==='reference')rows=rows.filter(x=>x.recipe&&x.eco.complete&&!verified(x.recipe));
  if(state.filter==='trial')rows=rows.filter(x=>x.op.status==='trial');
+ if(state.filter==='hot')rows=rows.filter(x=>E.isHotListingSignal(x.signal));
  if(state.filter==='available')rows=rows.filter(x=>x.recipe&&x.eligible===true);
  if(state.filter==='watchlist')rows=rows.filter(x=>state.watchlist.includes(x.item.id));
  if(state.filter.startsWith('job:'))rows=rows.filter(x=>x.recipe?.profession===state.filter.slice(4));
@@ -113,6 +118,7 @@ function renderTable(){
  case 'roi':rows.sort((a,b)=>(b.eco.roi??-1e5)-(a.eco.roi??-1e5));break;
  case 'profit':rows.sort((a,b)=>(b.eco.profit??-1e15)-(a.eco.profit??-1e15));break;
  case 'drop':rows.sort((a,b)=>(b.signal.observedDrops??-1)-(a.signal.observedDrops??-1));break;
+ case 'outflow':rows.sort((a,b)=>(b.signal.removedRate??-1)-(a.signal.removedRate??-1));break;
  case 'name':rows.sort((a,b)=>a.item.name.localeCompare(b.item.name));break;
  default:rows.sort((a,b)=>score(b)-score(a) || (b.eco.complete?1:0)-(a.eco.complete?1:0) || (b.eco.roi??-100)-(a.eco.roi??-100) || a.item.name.localeCompare(b.item.name));
  }
@@ -122,7 +128,8 @@ function renderTable(){
  if(!rows.length){body.innerHTML='<tr><td colspan="13"><div class="empty-data"><strong>ไม่พบรายการ</strong><p>ลองแก้ตัวกรองหรือค้นหาชื่ออื่น</p></div></td></tr>';return}
  body.innerHTML=rows.slice(0,250).map(({item,recipe,signal,eco,op})=>{
   const listDelta=signal.netDelta;const watch=state.watchlist.includes(item.id);
-  return `<tr data-id="${esc(item.id)}" class="${state.selected===item.id?'selected':''}"><td class="name-cell"><div class="craft-item-cell">${craftIcon(recipe)}<div class="craft-item-copy"><div class="item-name" title="${esc(item.name)}">${esc(item.name)} ${watch?'<span class="star">★</span>':''}</div><div class="item-sub">${recipe?'<strong>'+esc(recipe.profession)+'</strong> · '+esc(recipe.craft_type||'Item'):'ไม่พบสูตรคราฟ'}</div><div class="craft-unlock">${recipe?'ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level)):'ยังไม่มีสูตร'}${recipe&&!verified(recipe)?' · อ้างอิง Global':''}</div></div></div></td><td class="num success-cell">${recipe?'<span class="'+(actualSuccess(recipe,item)===null?'success-unverified':'success-known')+'">'+esc(successLabel(recipe,item))+'</span><small>'+(actualSuccess(recipe,item)===null?'ต้องยืนยัน':'อัตราปกติ')+'</small>':'—'}</td><td class="num">${fmt(item.price)}</td><td class="num">${fmt(item.listings)}</td><td class="num ${posClass(signal.observedDrops)}">${signal.observedDrops===null?'—':fmt(signal.observedDrops)}</td><td class="num ${posClass(listDelta)}">${listDelta===null?'—':`${listDelta>0?'+':''}${fmt(listDelta)}`}</td><td class="num ${posClass(signal.priceChange)}">${percent(signal.priceChange)}</td><td class="num">${money(eco.unitCost)}</td><td class="num ${posClass(eco.profit)}">${money(eco.profit)}</td><td class="num ${posClass(eco.roi)}">${percent(eco.roi)}</td><td class="num ${posClass(eco.margin)}">${percent(eco.margin)}</td><td>${op.score===null?'<span class="muted">—</span>':`<span class="score-chip">${op.score}<small>/100</small></span>`}<div class="confidence">${signal.valid?'coverage '+fmt(signal.confidence)+'%':'รอข้อมูล'}</div></td><td><span class="pill ${esc(op.status)}">${esc(op.label)}</span></td></tr>`;
+  const rarity=rarityForItem(item,recipe),hot=E.isHotListingSignal(signal);
+  return `<tr data-id="${esc(item.id)}" class="${state.selected===item.id?'selected':''}"><td class="name-cell"><div class="craft-item-cell">${craftIcon(recipe)}<div class="craft-item-copy"><div class="item-title-row"><div class="item-name rarity-${rarity.key}" title="${esc(item.name)} · ${esc(rarity.label)}">${esc(item.name)} ${watch?'<span class="star">★</span>':''}</div>${hot?'<span class="hot-listing-tag" title="สัญญาณ Listings ลดสูง ไม่ใช่ยอดขายสำเร็จ">🔥 ขายดี*</span>':''}</div><div class="item-sub">${recipe?'<strong>'+esc(recipe.profession)+'</strong> · '+esc(recipe.craft_type||'Item'):'ไม่พบสูตรคราฟ'}</div><div class="craft-unlock">${recipe?'ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level)):'ยังไม่มีสูตร'}${recipe&&!verified(recipe)?' · อ้างอิง Global':''}</div></div></div></td><td class="num">${fmt(item.price)}</td><td class="num">${fmt(item.listings)}</td><td class="num ${posClass(signal.observedDrops)}" title="ผลรวม Listings ที่ลดลงระหว่าง Snapshot ในช่วงที่เลือก ไม่ใช่ยอดขายสำเร็จ">${signal.observedDrops===null?'—':fmt(signal.observedDrops)}</td><td class="num outflow-rate" title="Removed ÷ (Listings ต้นช่วง + จำนวน Listings ที่เพิ่มระหว่าง Snapshot) · ไม่ใช่อัตราขายสำเร็จ">${signal.removedRate===null?'—':(signal.removedRate*100).toFixed(1)+'%'}</td><td class="num ${posClass(listDelta)}">${listDelta===null?'—':`${listDelta>0?'+':''}${fmt(listDelta)}`}</td><td class="num ${posClass(signal.priceChange)}">${percent(signal.priceChange)}</td><td class="num">${money(eco.unitCost)}</td><td class="num ${posClass(eco.profit)}">${money(eco.profit)}</td><td class="num ${posClass(eco.roi)}">${percent(eco.roi)}</td><td class="num ${posClass(eco.margin)}">${percent(eco.margin)}</td><td>${op.score===null?'<span class="muted">—</span>':`<span class="score-chip">${op.score}<small>/100</small></span>`}<div class="confidence">${signal.valid?'coverage '+fmt(signal.confidence)+'%':'รอข้อมูล'}</div></td><td><span class="pill ${esc(op.status)}">${esc(op.label)}</span></td></tr>`;
  }).join('');
  for(const tr of body.querySelectorAll('tr[data-id]'))tr.addEventListener('click',()=>{state.selected=tr.dataset.id;renderTable();renderDetail();$('details').scrollIntoView({behavior:'smooth',block:'nearest'})});
 }
@@ -148,8 +155,9 @@ function renderDetail(){
  const variants=recipeOptions(item);
  const ingredients=recipe?eco.parts.map(p=>{const ing=(recipe.ingredients||[]).find(i=>i.name===p.name),key=ing?.id?'id:'+ing.id:'name:'+E.normName(p.name),manual=state.materialPrices[key];return `<div class="ingredient editable-ingredient"><span>${esc(p.name)} × ${fmt(p.qty)}</span><label>ราคา/ชิ้น (K)<input class="materialPrice" data-material="${esc(key)}" type="number" min="0" step="1" placeholder="${p.price===null?'ไม่มีราคา':fmt(p.price)}" value="${esc(manual??'')}" aria-label="ราคาวัตถุดิบ ${esc(p.name)}"/></label></div>`;}).join(''):'<p class="muted">ยังไม่มีสูตรคราฟสำหรับสินค้านี้</p>';
  const watch=state.watchlist.includes(item.id);
- el.innerHTML=`<div class="detail-top"><div class="detail-title-wrap">${craftIcon(recipe,true)}<div><div class="eyebrow">INVESTMENT REVIEW · ${esc(item.category||'ITEM')}</div><h2>${esc(item.name)}</h2><p class="detail-meta">${recipe?esc(recipe.profession)+' · Lv.'+(recipe.level==null?'?':fmt(recipe.level))+' · '+fmt(recipe.output_qty)+' ชิ้น/คราฟ':'สูตรยังไม่ได้เพิ่ม'} · ID ${esc(item.id)} · <a href="https://aion2.exchange/items/${encodeURIComponent(item.id)}" target="_blank" rel="noopener noreferrer">ข้อมูลตลาดต้นทาง ↗</a></p><div class="detail-craft-fields">${recipe?'<span>'+esc(recipe.profession)+' · '+esc(recipe.craft_type||'Item')+'</span><span>ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level))+'</span><span>สำเร็จ '+esc(successLabel(recipe,item))+'</span>'+(recipe.combo_chance==null?'':'<span>Combo '+fmt(recipe.combo_chance)+'% (แยกจาก Success)</span>'):''}</div></div></div><div class="detail-actions"><button id="starButton" class="soft">${watch?'★ ติดตามแล้ว':'☆ เพิ่ม Watchlist'}</button><span class="pill ${esc(op.status)}">${esc(op.label)}</span></div></div>
- <div class="detail-stat-row"><div class="mini-stat"><small>ประเมินการลดลงของประกาศ</small><strong>${fmt(signal.observedDrops)}</strong><span>ไม่ใช่ยอดขายจริง</span></div><div class="mini-stat"><small>Listings Δ</small><strong class="${posClass(signal.netDelta)}">${signal.netDelta==null?'—':(signal.netDelta>0?'+':'')+fmt(signal.netDelta)}</strong><span>สุทธิในช่วงที่เลือก</span></div><div class="mini-stat"><small>ความเชื่อมั่นข้อมูล</small><strong>${fmt(signal.confidence)}%</strong><span>${fmt(signal.points)} จุดข้อมูล · ${(signal.coverage*100).toFixed(0)}% ของช่วง</span></div><div class="mini-stat"><small>Craft Investment Score</small><strong>${op.score===null?'—':op.score+'/100'}</strong><span>คะแนนสัญญาณ ไม่ใช่ % ขายออก</span></div></div>
+ const rarity=rarityForItem(item,recipe),hot=E.isHotListingSignal(signal);
+ el.innerHTML=`<div class="detail-top"><div class="detail-title-wrap">${craftIcon(recipe,true)}<div><div class="eyebrow">INVESTMENT REVIEW · ${esc(item.category||'ITEM')}</div><h2 class="rarity-${rarity.key}" title="${esc(rarity.label)}">${esc(item.name)}</h2><p class="detail-meta">${recipe?esc(recipe.profession)+' · Lv.'+(recipe.level==null?'?':fmt(recipe.level))+' · '+fmt(recipe.output_qty)+' ชิ้น/คราฟ':'สูตรยังไม่ได้เพิ่ม'} · ID ${esc(item.id)} · <a href="https://aion2.exchange/items/${encodeURIComponent(item.id)}" target="_blank" rel="noopener noreferrer">ข้อมูลตลาดต้นทาง ↗</a></p><div class="detail-craft-fields">${recipe?'<span>'+esc(recipe.profession)+' · '+esc(recipe.craft_type||'Item')+'</span><span>ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level))+'</span><span>สำเร็จ '+esc(successLabel(recipe,item))+'</span>'+(recipe.combo_chance==null?'':'<span>Combo '+fmt(recipe.combo_chance)+'% (แยกจาก Success)</span>'):''}</div></div></div><div class="detail-actions">${hot?'<span class="hot-listing-tag" title="Removed % และจำนวนประกาศที่ลดสูงอย่างต่อเนื่อง ไม่ใช่ยอดขายจริง">🔥 ขายดี*</span>':''}<button id="starButton" class="soft">${watch?'★ ติดตามแล้ว':'☆ เพิ่ม Watchlist'}</button><span class="pill ${esc(op.status)}">${esc(op.label)}</span></div></div>
+ <div class="detail-stat-row"><div class="mini-stat"><small>ประเมินการลดลงของประกาศ</small><strong>${fmt(signal.observedDrops)}</strong><span>ไม่ใช่ยอดขายจริง</span></div><div class="mini-stat"><small>Removed % / Observed Supply</small><strong>${signal.removedRate===null?'—':(signal.removedRate*100).toFixed(1)+'%'}</strong><span>${fmt(signal.observedDrops)} จาก ${fmt(signal.observedSupply)} ประกาศที่สังเกต · ไม่ใช่อัตราขายจริง</span></div><div class="mini-stat"><small>Listings Δ</small><strong class="${posClass(signal.netDelta)}">${signal.netDelta==null?'—':(signal.netDelta>0?'+':'')+fmt(signal.netDelta)}</strong><span>สุทธิในช่วงที่เลือก</span></div><div class="mini-stat"><small>ความเชื่อมั่นข้อมูล</small><strong>${fmt(signal.confidence)}%</strong><span>${fmt(signal.points)} จุดข้อมูล · ${(signal.coverage*100).toFixed(0)}% ของช่วง</span></div><div class="mini-stat"><small>Craft Investment Score</small><strong>${op.score===null?'—':op.score+'/100'}</strong><span>คะแนนสัญญาณ ไม่ใช่ % ขายออก</span></div></div>
  <div class="charts"><div class="chartcard"><h3>Listing history</h3><div class="hint">จำนวนประกาศขายลดลงอาจมาจากขาย, ถอน, หมดอายุ</div>${chart(pts,'listings','list','#57dfbd')}</div><div class="chartcard"><h3>Lowest asking price</h3><div class="hint">ราคาที่ตั้งขายต่อชิ้น ไม่ใช่ราคาซื้อขายสำเร็จ</div>${chart(pts,'price','price','#79aafa')}</div></div>
  <div class="detail-bottom"><div class="breakdown"><div class="detail-subhead"><h3>Recipe & Materials</h3>${recipe?`<a href="https://github.com/xtopolis/aion2-static" target="_blank" rel="noopener noreferrer">ที่มาสูตร (Global client) ↗</a>`:''}</div>
  ${variants.length>1?`<label class="variant-label">เปรียบเทียบวิธีคราฟ ${variants.length} สูตร<select id="variantSelect" class="variant-select">${variants.map(r=>`<option value="${esc(recipeKey(r))}" ${recipeKey(r)===recipeKey(recipe)?'selected':''}>${esc(r.profession)} · ${esc(r.name)} · Lv.${r.level??'?'} · ${r.output_qty} pcs</option>`).join('')}</select></label>`:''}
@@ -240,11 +248,22 @@ async function load(){
  try{
   const r=await Promise.all(['latest.json','history.json'].map(x=>fetch(root+x+'?'+Date.now())));
   const recipesResponse=await fetch(root+'recipes.json?'+Date.now());
+  // Optional, attributed game-client grade lookup for additional market items. Never infer rarity from item names.
+  const rarityResponse=await fetch(root+'item-rarity.json?'+Date.now()).catch(()=>null);
   if(r.some(x=>!x.ok)||!recipesResponse.ok)throw Error('Data JSON ไม่พร้อม');
   const [latest,history,book]=await Promise.all([...r.map(x=>x.json()),recipesResponse.json()]);
   if(!Array.isArray(latest.items)||!Array.isArray(history.snapshots)||!Array.isArray(book.recipes))throw Error('โครงสร้าง JSON ไม่ถูกต้อง');
   if(latest.server!=='Fregion'||latest.region!=='Asia'||latest.faction!=='Elyos')throw Error('ตลาดผิดเซิร์ฟเวอร์: ต้อง Asia / Elyos / Fregion');
-  state.latest=latest;state.history=history;state.seedRecipes=book.recipes.map(r=>E.validateRecipe(r,{allowUnknown:true}));state.recipes=mergeRecipes(state.seedRecipes,state.customRecipes.map(r=>E.validateRecipe(r)));
+  state.latest=latest;state.history=history;
+  state.itemGrades={};
+  if(rarityResponse?.ok){
+   try{
+    const gradeDoc=await rarityResponse.json();
+    if(gradeDoc?.grades&&typeof gradeDoc.grades==='object'&&!Array.isArray(gradeDoc.grades))
+      state.itemGrades=gradeDoc.grades;
+   }catch(err){console.warn('Optional rarity metadata unavailable:',err)}
+  }
+  state.seedRecipes=book.recipes.map(r=>E.validateRecipe(r,{allowUnknown:true}));state.recipes=mergeRecipes(state.seedRecipes,state.customRecipes.map(r=>E.validateRecipe(r)));
   if(isDemo){state.verified=Object.fromEntries(state.recipes.map(x=>[recipeKey(x),true]));state.settings.skills=Object.fromEntries(['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'].map(x=>[x,100]));}
   state.ready=true;render();
  }catch(err){$('itemsTable').innerHTML=`<tr><td colspan="13"><div class="empty-data"><strong>เปิดข้อมูลไม่ได้</strong>${esc(err.message)}<p>เปิดเว็บผ่าน HTTP Server เช่น python -m http.server (ไม่ใช่ file://)</p></div></td></tr>`;$('qualityTitle').textContent='DATA ERROR';console.error(err)}
