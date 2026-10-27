@@ -12,3 +12,28 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 
 /* Global-client scenario labels and alternative recipe selector */
 .pill.scenario{background:#443c26;color:#f4d89c;border:1px solid #695a36}.pill.history{background:#263746;color:#bdcbdd}.variant-label{display:block;font-size:12px;color:#c5d9e5;margin:12px 0 16px}.variant-select{display:block;width:100%;margin-top:6px;color:#dfeeff;background:#0d1b2a;border:1px solid #375064;border-radius:8px;padding:10px}.warning-note strong{color:#f4d79c}.detail-meta{overflow-wrap:anywhere}
+
+
+/* Recipe images and player-friendly craft requirements (icons remain served by their public upstream source). */
+.craft-item-cell{display:flex;align-items:center;gap:12px;min-width:310px}
+.craft-icon{width:48px;height:48px;flex:0 0 48px;display:inline-flex;align-items:center;justify-content:center;position:relative;border-radius:9px;background:#10283b;border:1px solid #344e64;overflow:hidden}
+.craft-icon img{position:absolute;inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);object-fit:contain;image-rendering:auto}
+.craft-icon-placeholder{font-size:24px;color:#4b7589;line-height:1}
+.craft-icon-lg{width:76px;height:76px;flex:0 0 76px;border-radius:12px}
+.craft-item-copy{min-width:0;max-width:290px}
+.craft-item-copy .item-name{max-width:290px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.craft-item-copy .item-sub{margin-top:4px;color:#9eb9ce}
+.craft-item-copy .item-sub strong{color:#71ddb7}
+.craft-unlock{color:#8da4b9;font-size:10px;font-weight:450;margin-top:4px}
+.success-cell{text-align:center;min-width:108px}
+.success-cell span{display:block;font-weight:750}
+.success-cell small{display:block;margin-top:4px;color:#91a4b6;font-size:10px;font-weight:450}
+.success-unverified{color:#e6c68b}
+.success-known{color:#7cefc7}
+.detail-title-wrap{display:flex;align-items:center;gap:18px;min-width:0}
+.detail-title-wrap>div{min-width:0}
+.detail-craft-fields{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.detail-craft-fields span{display:inline-block;padding:5px 8px;border:1px solid #2d4d60;border-radius:7px;background:#10283b;color:#b8d4e2;font-size:11px}
+.cron-health{padding:7px 10px;border-radius:7px;text-decoration:none;background:#10273a;border:1px solid #28445d;color:#7ad9bc;font-size:11px;white-space:nowrap}
+.cron-health:hover{border-color:#67d8b8;color:#b8f5e3}
+@media(max-width:760px){.detail-title-wrap{align-items:flex-start}.craft-item-cell{min-width:270px}.craft-item-copy{max-width:220px}.craft-item-copy .item-name{max-width:220px}.top-right .cron-health{white-space:normal}}
