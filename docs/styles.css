@@ -89,14 +89,14 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .craft-category-area{padding:5px 20px 13px;border-bottom:1px solid #263b4f;margin-bottom:11px}
 .craft-category-label{color:#deecf4;font-size:12px;font-weight:800;letter-spacing:.15px;margin:10px 0}
 .craft-category-label span{color:#86a6b7;font-size:11px;font-weight:400;margin-left:8px}
-.craft-families{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.craft-family{appearance:none;border:1px solid #355166;background:#14293c;color:#b5cadb;
+.craft-professions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.craft-profession{appearance:none;border:1px solid #355166;background:#14293c;color:#b5cadb;
  display:inline-flex;gap:8px;align-items:center;padding:9px 13px;border-radius:9px;font-weight:650;font-size:12px;cursor:pointer}
-.craft-family span{border:1px solid #3d5363;background:#0d2130;border-radius:30px;padding:1px 6px;color:#a6c0cf;font-size:10px}
-.craft-family.active{border-color:#55d4aa;background:#16473c;color:#c5fff0}
-.craft-family.active span{color:#aef1d4;border-color:#57af94;background:#174637}
-.craft-family:hover{border-color:#65cca9}
-.craft-family:focus-visible{outline:2px solid #c6f3dd;outline-offset:2px}
+.craft-profession span{border:1px solid #3d5363;background:#0d2130;border-radius:30px;padding:1px 6px;color:#a6c0cf;font-size:10px}
+.craft-profession.active{border-color:#55d4aa;background:#16473c;color:#c5fff0}
+.craft-profession.active span{color:#aef1d4;border-color:#57af94;background:#174637}
+.craft-profession:hover{border-color:#65cca9}
+.craft-profession:focus-visible{outline:2px solid #c6f3dd;outline-offset:2px}
 .craft-category-hint{color:#8fabbc;font-size:11px;margin-top:9px;line-height:1.6}
 .market-tag-row{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin:5px 0 2px}
 .market-tag-row:empty{display:none}
@@ -108,7 +108,7 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .unlisted-market-note{color:#ecc987}
 .pill.unlisted{background:#293b4b;color:#bbd2e2}
 .pill.bound{background:#3a3242;color:#dbc4e3}
-@media(max-width:670px){.craft-category-area{padding:5px 11px 14px}.craft-family{padding:9px 10px}.craft-category-label span{display:block;margin-left:0;margin-top:3px}}
+@media(max-width:670px){.craft-category-area{padding:5px 11px 14px}.craft-profession{padding:9px 10px}.craft-category-label span{display:block;margin-left:0;margin-top:3px}}
 
 /* Optional cross-region NPC prices are clearly marked; never imply verified Fregion costs. */
 .market-data-tag.vendor-ref{background:#453822;color:#ebcc9a;border:1px solid #83633d}
