@@ -32,8 +32,8 @@ jobs:
           python-version: '3.12'
       - name: Collect approved public market summaries
         env:
-          MARKET_SERVER_ID: ${{ vars.MARKET_SERVER_ID }}
-          CONFIRM_FREGION_SERVER_ID: ${{ vars.CONFIRM_FREGION_SERVER_ID }}
+          MARKET_SERVER_ID: '11507'
+          CONFIRM_FREGION_SERVER_ID: '11507'
           MARKET_SOURCE_PERMISSION_CONFIRMED: ${{ vars.MARKET_SOURCE_PERMISSION_CONFIRMED }}
         run: python scripts/collector.py
       - name: Commit validated snapshot data
