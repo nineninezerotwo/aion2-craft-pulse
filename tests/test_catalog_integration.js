@@ -100,7 +100,7 @@ const htmlText=fs.readFileSync('docs/index.html','utf8');
 const appText=fs.readFileSync('docs/app.js','utf8');
 assert(htmlText.includes('id="craftFamilies"'),'Craft family shortcuts must be visible');
 assert(appText.includes("filter:'craft'"),'Start with all crafts rather than only cost-complete items');
-assert(appText.includes('state.catalog.map(compute)'),'Table must include craft outputs absent from Market feed');
+assert(appText.includes('craftList.map(compute)') && appText.includes('state.craftIds.has(String(item.id))'),'Table must include all craft outputs without scanning unrelated market items');
 assert(appText.includes('E.buildCraftCatalog(state.latest.items,state.recipes)'),'Craft catalog must be generated from both feeds');
 assert(appText.includes('Bound · ลงขายไม่ได้'),'Bound crafts must be marked non-sellable');
 assert(appText.includes('ไม่มีประกาศขาย'),'Missing prices must be called out clearly');
