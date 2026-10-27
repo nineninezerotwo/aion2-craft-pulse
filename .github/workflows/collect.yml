@@ -1,62 +1,51 @@
-name: Collect market & refresh Pages
+name: Collect verified Fregion market snapshots
 
 on:
-  # Optional low-rate collection, once per hour (only when explicitly enabled).
+  workflow_dispatch:
   schedule:
     - cron: '23 * * * *'
-  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/collector.py'
+      - '.github/workflows/collect.yml'
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
-  group: fregion-github-pages
+  group: fregion-market-collector
   cancel-in-progress: false
 
 jobs:
-  collect-and-publish:
-    if: vars.MARKET_DATA_COLLECTION_ENABLED == 'true' && vars.MARKET_SOURCE_PERMISSION_CONFIRMED == 'true'
+  collect:
+    if: github.repository == 'nineninezerotwo/aion2-craft-pulse'
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Collect approved public market summaries
-        env:
-          MARKET_SERVER_ID: '11507'
-          CONFIRM_FREGION_SERVER_ID: '11507'
-          MARKET_SOURCE_PERMISSION_CONFIRMED: ${{ vars.MARKET_SOURCE_PERMISSION_CONFIRMED }}
-        run: python scripts/collector.py
-      - name: Commit validated snapshot data
-        run: |
-          git config user.name 'fregion-market-bot'
-          git config user.email 'fregion-market-bot@users.noreply.github.com'
-          git add docs/data/latest.json docs/data/history.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'data: capture authorized Fregion snapshot'
-            git push
-          fi
-      # Commits made with GITHUB_TOKEN do not trigger a separate push workflow.
-      # Deploy in this workflow so the hourly snapshot becomes visible on Pages.
-      - name: Verify calculations and collector format
+      - name: Test snapshot validation and ROI engine
         run: |
           python -m unittest discover -s tests -v
           node tests/test_engine.js
           node --check docs/app.js
           node --check docs/engine.js
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./docs
-      - name: Deploy updated dashboard
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Read only the verified Fregion public market summaries
+        env:
+          MARKET_SERVER_ID: '11507'
+          CONFIRM_FREGION_SERVER_ID: '11507'
+        run: python scripts/collector.py
+      - name: Commit validated snapshots to GitHub
+        run: |
+          git config user.name 'fregion-market-bot'
+          git config user.email 'fregion-market-bot@users.noreply.github.com'
+          git add docs/data/latest.json docs/data/history.json
+          if git diff --cached --quiet; then
+            echo 'No data changes'
+            exit 0
+          fi
+          git commit -m 'data: update Asia Elyos Fregion market reference snapshot'
+          git push
