@@ -34,6 +34,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Report cron and data collection schedule
+        run: |
+          echo "Event: $GITHUB_EVENT_NAME"
+          echo "Cron expression: 23 * * * * (UTC, hourly)"
+          echo "Collector market: Asia / Elyos / Fregion (API 11507)"
+          date -u '+Collection started at: %Y-%m-%dT%H:%M:%SZ'
       - name: Verify market and crafting calculation safety
         run: |
           python -m unittest discover -s tests -v
