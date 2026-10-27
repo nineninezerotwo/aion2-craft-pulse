@@ -173,6 +173,25 @@ function chart(points,type,id,color){
  const dates=`<text x="${x0}" y="176" font-size="11" fill="#91a4b9">${new Date(t0).toLocaleDateString('th-TH',{month:'short',day:'numeric',timeZone:'Asia/Bangkok'})}</text><text x="${end}" y="176" font-size="11" text-anchor="end" fill="#91a4b9">${new Date(t1).toLocaleDateString('th-TH',{month:'short',day:'numeric',timeZone:'Asia/Bangkok'})}</text>`;
  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="กราฟ ${esc(type)}"><defs><linearGradient id="g${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".25"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>${ticks}<polygon points="${poly}" fill="url(#g${id})"/><polyline points="${line}" stroke="${color}" fill="none" stroke-width="2.8" stroke-linejoin="round"/>${dates}</svg>`;
 }
+function chainBreakdown(eco,item){
+ if(!eco.chainEstimated||!eco.chainEstimate?.steps?.length)return '';
+ const c=eco.chainEstimate, root=c.steps[0],marketUrl='https://aion2.exchange/items/'+encodeURIComponent(item.id);
+ const level=x=>x?.mode==='combo-proc'?'ลุ้น Combo':x?.mode==='craft'?'คราฟ':'ซื้อ';
+ let inputs='';
+ for(const child of (root.inputs||[]).slice(0,15)){
+   const nested=(child.details||[])[0];
+   inputs+='<li><strong>'+esc(child.name)+'</strong> ×'+fmt(child.quantity)+' · '+level({mode:child.method})+' · ≈ '+money(child.costEach)+' K / ชิ้น'+
+     (nested?.mode==='combo-proc'?' · ได้แบบ Combo เฉลี่ย '+money(nested.attempts)+' ครั้ง':'')+'</li>';
+ }
+ return '<details class="chain-breakdown"><summary>Chain Estimate · แสดงสมมติฐานและวัตถุดิบที่เลือก</summary>'+
+   '<p><strong>≈ '+money(c.cost)+' Kinah/ชิ้น</strong> · คำนวณจากราคาเสนอขาย Fregion กับสูตรคราฟ Global Client</p>'+
+   '<p>ขั้นสุดท้าย: '+esc(root.name||item.name)+' · '+(root.mode==='combo-proc'?'โอกาส Combo '+money((root.procChance||0)*100)+'%':'คราฟปกติ')+
+   ' · จำนวนครั้งเฉลี่ยประมาณ '+money(root.attempts)+' ครั้ง (ภายใต้สมมติฐานสำเร็จปกติ 100%)</p>'+
+   '<ul>'+inputs+'</ul>'+
+   (c.vendorReference?'<p class="chain-warning">มีการใช้ราคา NPC ของ Taiwan เป็นเพียงค่าอ้างอิง ไม่ใช่ราคายืนยันบน Fregion</p>':'')+
+   '<p class="chain-warning">ไม่รวมการนำไอเทมที่ไม่ได้ Combo ไปขายคืน และอาจไม่รวมค่า Craft Fee / อัตราสำเร็จจริง ราคาตลาดเป็นราคาตั้งขาย ไม่ใช่ยอดขายสำเร็จ</p>'+
+   '<p><a href="'+marketUrl+'" target="_blank" rel="noopener noreferrer">ดู Craft Cost อ้างอิงใน Aion2Market (ตรวจเซิร์ฟเวอร์ก่อน) ↗</a></p></details>';
+}
 function renderDetail(){
  const el=$('details'),item=itemFor(state.selected);
  if(!item){el.innerHTML='<div class="empty-details"><span>◇</span><h2>เลือกสินค้าจากตาราง</h2><p>ดูกราฟ, ต้นทุนสูตรคราฟ, ROI, Margin และหลักฐานที่ใช้จัดอันดับ</p></div>';return}
@@ -187,7 +206,7 @@ function renderDetail(){
  <div class="detail-bottom"><div class="breakdown"><div class="detail-subhead"><h3>Recipe & Materials</h3>${recipe?`<a href="https://github.com/xtopolis/aion2-static" target="_blank" rel="noopener noreferrer">ที่มาสูตร (Global client) ↗</a>`:''}</div>
  ${variants.length>1?`<label class="variant-label">เปรียบเทียบวิธีคราฟ ${variants.length} สูตร<select id="variantSelect" class="variant-select">${variants.map(r=>`<option value="${esc(recipeKey(r))}" ${recipeKey(r)===recipeKey(recipe)?'selected':''}>${esc(r.profession)} · ${esc(r.name)} · Lv.${r.level??'?'} · ${r.output_qty} pcs</option>`).join('')}</select></label>`:''}
  <div class="recipe-meta">${recipe?'อัตราสำเร็จ '+(actualSuccess(recipe,item)===null?'ยังไม่ยืนยัน — คำนวณฉากทัศน์ 100%':successLabel(recipe,item))+' · ผลผลิต '+fmt(recipe.output_qty)+' ชิ้น':'สูตรยังไม่อยู่ในคลัง'}</div>${ingredients}${recipe?`<div class="ingredient"><span>วัสดุ Bound / NPC ต่อคราฟ</span><b>${eco.npc_kinah==null?'ยังไม่ได้กำหนด':fmt(eco.npc_kinah)+' K'}</b></div><label class="verify-row"><input id="verifyRecipe" type="checkbox" ${active?'checked':''}/><span>ฉันตรวจสูตรนี้ตรงกับในเกมแล้ว</span></label><p class="warning-note">ข้อมูลสูตรจาก Global client 21 ก.ย. 2026 (อาจต่างจากแพตช์ล่าสุด) · ค่าธรรมเนียม/โอกาสสำเร็จที่ไม่ทราบใช้สถานการณ์สมมติเท่านั้น · Combo ${recipe.combo_chance??0}% <strong>ยังไม่รวมมูลค่าในกำไร</strong> · ต้องตรวจจากในเกมก่อนลงทุน</p>`:''}</div>
- <div class="calc-pane"><h3>Calculate ROI / Margin</h3><div class="edit-fields"><label>ราคาขายต่อชิ้น (K)<input id="salePrice" type="number" min="0" step="1" placeholder="ราคาตลาดอัตโนมัติ" value="${esc(cust.sale_price??'')}"/></label><label>ต้นทุนต่อชิ้นแบบกรอกเอง (K)<input id="manualUnitCost" type="number" min="0" step="1" placeholder="คำนวณจากสูตรอัตโนมัติ" value="${esc(cust.unit_cost_override??'')}"/></label><label>ค่า NPC/Bound ต่อคราฟ (K)<input id="npcCost" type="number" min="0" step="1" placeholder="ต้องกรอกถ้ายังไม่ทราบ" value="${esc(cust.npc_kinah??recipe?.npc_kinah??'')}"/></label><label>โอกาสคราฟสำเร็จ (%)<input id="successRate" type="number" min="0.1" max="100" step=".1" value="${esc(cust.success_rate!=null?cust.success_rate*100:recipe?.success_rate!=null?recipe.success_rate*100:'')}"/></label></div><div class="totals"><div><small>ต้นทุน/ชิ้น (expected)</small><strong>${money(eco.unitCost)} K</strong></div><div><small>กำไร/ชิ้น</small><strong class="${posClass(eco.profit)}">${money(eco.profit)} K</strong></div><div><small>ROI on cost</small><strong class="${posClass(eco.roi)}">${percent(eco.roi)}</strong></div><div><small>Net margin</small><strong class="${posClass(eco.margin)}">${percent(eco.margin)}</strong></div></div><div class="calc-foot">${eco.complete?`ราคาสุทธิหลังภาษี/ค่าลงประกาศ ${money(eco.netRevenue)} K · ${eco.manualOverride?'ใช้ต้นทุนกรอกเอง':'ใช้ราคาวัตถุดิบที่ตั้งขาย'} ${eco.assumedSuccess?'· สมมติคราฟสำเร็จ 100% (กรณีดีที่สุด)':''}`:'ยังคำนวณไม่ได้: '+esc(eco.missing?.join(', ')||eco.reason||'ข้อมูลไม่ครบ')}</div></div></div>
+ <div class="calc-pane"><h3>Calculate ROI / Margin</h3><div class="edit-fields"><label>ราคาขายต่อชิ้น (K)<input id="salePrice" type="number" min="0" step="1" placeholder="ราคาตลาดอัตโนมัติ" value="${esc(cust.sale_price??'')}"/></label><label>ต้นทุนต่อชิ้นแบบกรอกเอง (K)<input id="manualUnitCost" type="number" min="0" step="1" placeholder="คำนวณจากสูตรอัตโนมัติ" value="${esc(cust.unit_cost_override??'')}"/></label><label>ค่า NPC/Bound ต่อคราฟ (K)<input id="npcCost" type="number" min="0" step="1" placeholder="ต้องกรอกถ้ายังไม่ทราบ" value="${esc(cust.npc_kinah??recipe?.npc_kinah??'')}"/></label><label>โอกาสคราฟสำเร็จ (%)<input id="successRate" type="number" min="0.1" max="100" step=".1" value="${esc(cust.success_rate!=null?cust.success_rate*100:recipe?.success_rate!=null?recipe.success_rate*100:'')}"/></label></div><div class="totals"><div><small>ต้นทุน/ชิ้น (expected)</small><strong>${money(eco.unitCost)} K</strong></div><div><small>กำไร/ชิ้น</small><strong class="${posClass(eco.profit)}">${money(eco.profit)} K</strong></div><div><small>ROI on cost</small><strong class="${posClass(eco.roi)}">${percent(eco.roi)}</strong></div><div><small>Net margin</small><strong class="${posClass(eco.margin)}">${percent(eco.margin)}</strong></div></div>${chainBreakdown(eco,item)}<div class="calc-foot">${eco.complete?`ราคาสุทธิหลังภาษี/ค่าลงประกาศ ${money(eco.netRevenue)} K · ${eco.manualOverride?'ใช้ต้นทุนกรอกเอง':'ใช้ราคาวัตถุดิบที่ตั้งขาย'} ${eco.assumedSuccess?'· สมมติคราฟสำเร็จ 100% (กรณีดีที่สุด)':''}`:'ยังคำนวณไม่ได้: '+esc(eco.missing?.join(', ')||eco.reason||'ข้อมูลไม่ครบ')}</div></div></div>
  <div class="signal-foot"><strong>อ่านผล:</strong> ${esc(op.reason)} · Observed drops ${fmt(signal.observedDrops)} ประกาศ, observed adds ${fmt(signal.observedAdds)} ประกาศ · ข้อมูลไม่มีผลการขายสำเร็จจาก Fregion</div>`;
  if($('variantSelect'))$('variantSelect').addEventListener('change',e=>{state.selectedRecipes[item.id]=e.target.value;save();render()});
  for(const inp of el.querySelectorAll('.materialPrice'))inp.addEventListener('change',()=>{const v=inp.value.trim(),key=inp.dataset.material;if(v===''){delete state.materialPrices[key]}else {if(!Number.isFinite(Number(v))||Number(v)<0){alert('ราคาวัตถุดิบไม่ถูกต้อง');return}state.materialPrices[key]=Number(v)}save();render()});
@@ -231,6 +250,11 @@ function setupControls(){
      if(v!==null&&(!Number.isFinite(v)||v<0||v>100)){alert('เลเวลต้องอยู่ระหว่าง 0–100');field.value=state.settings.skills?.[job]??'';return}
      state.settings.skills={...state.settings.skills,[job]:v};save();render();
    });
+ }
+ const vendorToggle=$('useVendorReference');
+ if(vendorToggle){
+  vendorToggle.checked=state.settings.use_vendor_reference===true;
+  vendorToggle.addEventListener('change',()=>{state.settings.use_vendor_reference=vendorToggle.checked;save();render()});
  }
  $('addRecipe').addEventListener('click',()=>openDialog('recipeDialog'));
  $('recipeCancel').addEventListener('click',()=>closeDialog('recipeDialog'));
