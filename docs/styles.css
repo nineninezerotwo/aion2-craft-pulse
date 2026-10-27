@@ -63,3 +63,24 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .detail-stat-row{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:1080px){.detail-stat-row{grid-template-columns:repeat(3,minmax(0,1fr))}.table-footer{flex-wrap:wrap}}
 @media(max-width:650px){.detail-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.item-title-row{flex-wrap:wrap}.rarity-legend{gap:6px 10px}}
+
+
+/* Clickable sorting headers: keyboard-accessible buttons and distinct active direction. */
+#craftHeader th{padding:0;user-select:none}
+#craftHeader th .sort-header{font:inherit;font-weight:750;letter-spacing:.25px;background:transparent;color:inherit;border:0;box-shadow:none;padding:13px 11px;min-height:42px;width:100%;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:6px;cursor:pointer;white-space:nowrap}
+#craftHeader th:first-child .sort-header{justify-content:flex-start}
+#craftHeader th .sort-header:hover,#craftHeader th.sorted-column .sort-header{color:#80e9c3;background:rgba(37,132,111,.12)}
+#craftHeader th .sort-header:focus-visible{outline:2px solid #6ee6bd;outline-offset:-3px;border-radius:4px}
+#craftHeader th .sort-direction{color:#66849a;font-size:12px;font-weight:800;min-width:11px}
+#craftHeader th.sorted-column .sort-direction{color:#65ebc2}
+.sort-hint{padding:0 18px 11px;color:#a5bccc;font-size:11px;line-height:1.6}
+.chain-cost-label{display:block;color:#f1ca7c;font-size:10px;font-weight:600;margin-top:3px}
+.chain-breakdown{border:1px solid #315063;background:#0e2431;border-radius:10px;padding:13px 15px;margin:12px 0;line-height:1.6}
+.chain-breakdown summary{cursor:pointer;color:#a6e5cd;font-size:12px;font-weight:750}
+.chain-breakdown p,.chain-breakdown li{font-size:12px;color:#b6cada}
+.chain-breakdown ul{padding-left:21px;max-height:200px;overflow:auto}
+.chain-breakdown .chain-warning{color:#d7be85}
+.chain-breakdown a{color:#8ec7ff}
+.vendor-optin{display:flex;align-items:flex-start;gap:9px;margin:15px 0 11px;color:#accbd9}
+.vendor-optin input{flex:0 0 auto;accent-color:#54caac;margin-top:4px}
+.vendor-optin small{display:block;color:#d9b47c;font-size:11px}
