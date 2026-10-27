@@ -109,3 +109,7 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .pill.unlisted{background:#293b4b;color:#bbd2e2}
 .pill.bound{background:#3a3242;color:#dbc4e3}
 @media(max-width:670px){.craft-category-area{padding:5px 11px 14px}.craft-family{padding:9px 10px}.craft-category-label span{display:block;margin-left:0;margin-top:3px}}
+
+/* Optional cross-region NPC prices are clearly marked; never imply verified Fregion costs. */
+.market-data-tag.vendor-ref{background:#453822;color:#ebcc9a;border:1px solid #83633d}
+.vendor-reference-notice{font-size:10px;color:#e7bd79;font-weight:750;margin-left:5px}
