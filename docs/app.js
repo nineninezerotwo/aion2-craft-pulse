@@ -99,7 +99,7 @@ function compute(item){
    {...itemOverrides(item),materialPrices:state.materialPrices,chainEstimate:chain});
  // A Splendent item is a proc/chain outcome. When its chain cannot be priced,
  // do not fall back to a misleading "bonus materials only" cost.
- if(recipe&&E.isEquipmentRecipe(recipe)&&/^Splendent\\b/i.test(String(recipe.name||''))&&!chain?.complete
+ if(recipe&&E.isEquipmentRecipe(recipe)&&/^Splendent\b/i.test(String(recipe.name||''))&&!chain?.complete
      &&!(E.safeNumber(itemOverrides(item).unit_cost_override)>0)){
    eco={...eco,complete:false,unitCost:null,profit:null,roi:null,margin:null,
      missing:chain?.missing||['unknown chain input'],
