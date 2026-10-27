@@ -37,3 +37,29 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .cron-health{padding:7px 10px;border-radius:7px;text-decoration:none;background:#10273a;border:1px solid #28445d;color:#7ad9bc;font-size:11px;white-space:nowrap}
 .cron-health:hover{border-color:#67d8b8;color:#b8f5e3}
 @media(max-width:760px){.detail-title-wrap{align-items:flex-start}.craft-item-cell{min-width:270px}.craft-item-copy{max-width:220px}.craft-item-copy .item-name{max-width:220px}.top-right .cron-health{white-space:normal}}
+
+
+/* Game-client rarity grades. Heroic red is supported; unknown grades stay neutral. */
+:root{
+ --rarity-common:#e8eef7;--rarity-rare:#76e5a1;--rarity-epic:#72bfff;
+ --rarity-unique:#f1c459;--rarity-heroic:#fc687b;--rarity-special:#c2bed3;--rarity-unknown:#d4e1ee
+}
+.item-name.rarity-common,.detail-top h2.rarity-common,.rarity-legend .rarity-common{color:var(--rarity-common)}
+.item-name.rarity-rare,.detail-top h2.rarity-rare,.rarity-legend .rarity-rare{color:var(--rarity-rare)}
+.item-name.rarity-epic,.detail-top h2.rarity-epic,.rarity-legend .rarity-epic{color:var(--rarity-epic)}
+.item-name.rarity-unique,.detail-top h2.rarity-unique,.rarity-legend .rarity-unique{color:var(--rarity-unique)}
+.item-name.rarity-heroic,.detail-top h2.rarity-heroic,.rarity-legend .rarity-heroic{color:var(--rarity-heroic)}
+.item-name.rarity-special,.detail-top h2.rarity-special{color:var(--rarity-special)}
+.item-name.rarity-unknown,.detail-top h2.rarity-unknown{color:var(--rarity-unknown)}
+.rarity-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin:12px 0;color:#91aabd;font-size:11px}
+.rarity-legend b{font-weight:700;white-space:nowrap}
+.rarity-legend small{font-size:10px;color:#8295a9}
+.item-title-row{display:flex;align-items:center;gap:8px;min-width:0;max-width:100%}
+.item-title-row .item-name{min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hot-listing-tag{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex:0 0 auto;
+ padding:3px 6px;border:1px solid #4d7761;background:#183829;color:#9ce5b6;
+ border-radius:6px;font-size:10px;font-weight:750;white-space:nowrap;letter-spacing:0}
+.outflow-rate{font-variant-numeric:tabular-nums;color:#75d6cb}
+.detail-stat-row{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1080px){.detail-stat-row{grid-template-columns:repeat(3,minmax(0,1fr))}.table-footer{flex-wrap:wrap}}
+@media(max-width:650px){.detail-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.item-title-row{flex-wrap:wrap}.rarity-legend{gap:6px 10px}}
