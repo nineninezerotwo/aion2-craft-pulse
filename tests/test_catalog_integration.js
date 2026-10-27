@@ -46,6 +46,26 @@ assert(client.includes('setInterval(refreshFeedInPlace,10*60*1000)'),'Browser sh
 const catalog=E.buildCraftCatalog(latest.items,valid);
 const catalogById=new Map(catalog.map(x=>[x.id,x]));
 const uniqueCraftIds=new Set(valid.map(r=>r.item_id));
+const jobs=['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'];
+const counts=E.craftProfessionCounts(valid,jobs);
+assert.equal(counts.all,243,'Total outputs must be distinct item IDs');
+assert.deepEqual(jobs.map(j=>counts[j]),[46,51,70,58,23],
+ 'Profession tab counts must reflect unique outputs from the current reference dataset');
+assert(counts.all<jobs.reduce((sum,j)=>sum+counts[j],0),
+ 'An item shared across jobs is counted once overall and once in each relevant job');
+const shared=valid.filter(r=>r.item_id==='610710001'); // Orichalcum Ingot
+assert(shared.some(r=>r.profession==='Blacksmithing'));
+assert(shared.some(r=>r.profession==='Armorsmithing'));
+assert.equal(new Set(shared.map(r=>r.profession)).size,2);
+assert.deepEqual(E.craftProfessionCounts(shared,jobs),{
+ all:1,Alchemy:0,Blacksmithing:1,Armorsmithing:1,Handicrafting:0,Cooking:0
+},'Batch recipes must not inflate counts, and shared outputs must occur under both jobs');
+assert(appText.includes("state.profession==='all'?options:options.filter(recipe=>recipe.profession===state.profession)"),
+ 'The selected profession must determine the recipe used for cost calculations');
+assert(appText.includes('rows=rows.filter(x=>x.recipe?.profession===state.profession)'),
+ 'Profession filter must constrain the displayed crafting rows');
+assert(appText.includes('state.selected=null'),'Switching profession should clear a stale item detail');
+
 assert.equal(catalogById.size,catalog.length,'Craft catalog must not duplicate market entries');
 assert(uniqueCraftIds.size>=240,'Craft output catalog unexpectedly shrunk');
 for(const id of uniqueCraftIds)assert(catalogById.has(id),'Missing craft output '+id);
@@ -98,7 +118,10 @@ assert.equal(optedInFood.vendorReference,true);
 
 const htmlText=fs.readFileSync('docs/index.html','utf8');
 const appText=fs.readFileSync('docs/app.js','utf8');
-assert(htmlText.includes('id="craftFamilies"'),'Craft family shortcuts must be visible');
+assert(htmlText.includes('id="craftProfessions"'),'Craft profession selector must be visible');
+assert(htmlText.includes('เลือกอาชีพคราฟ'),'Profession selector must have correct Thai label');
+assert(!htmlText.includes('id="craftFamilies"'),'Old item-type selector should no longer be visible');
+assert(!htmlText.includes('value="job:Alchemy"'),'Profession chips should replace duplicate profession dropdown options');
 assert(appText.includes("filter:'craft'"),'Start with all crafts rather than only cost-complete items');
 assert(appText.includes('craftList.map(compute)') && appText.includes('state.craftIds.has(String(item.id))'),'Table must include all craft outputs without scanning unrelated market items');
 assert(appText.includes('E.buildCraftCatalog(state.latest.items,state.recipes)'),'Craft catalog must be generated from both feeds');
