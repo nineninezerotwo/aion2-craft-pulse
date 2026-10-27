@@ -42,6 +42,49 @@ assert(['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'].eve
 assert(client.includes('craftIcon(recipe)')&&client.includes('craftIcon(recipe,true)'),'List and detail both need icons');
 assert(client.includes('setInterval(refreshFeedInPlace,10*60*1000)'),'Browser should periodically refresh market snapshots');
 
+// Full Craft Catalog must not depend on the availability of Market prices or Bound vendor prices.
+const catalog=E.buildCraftCatalog(latest.items,valid);
+const catalogById=new Map(catalog.map(x=>[x.id,x]));
+const uniqueCraftIds=new Set(valid.map(r=>r.item_id));
+assert.equal(catalogById.size,catalog.length,'Craft catalog must not duplicate market entries');
+assert(uniqueCraftIds.size>=240,'Craft output catalog unexpectedly shrunk');
+for(const id of uniqueCraftIds)assert(catalogById.has(id),'Missing craft output '+id);
+assert(catalog.length>latest.items.length,'Craft-only unlisted outputs should exist');
+const expectedFamilies={Food:17,Drink:6,Potion:7,Scroll:4};
+for(const [type,amount] of Object.entries(expectedFamilies)){
+ const recipes=valid.filter(r=>r.craft_type===type);
+ assert.equal(recipes.length,amount,'Incomplete '+type+' recipes in Global client catalog');
+ assert(recipes.every(r=>catalogById.has(r.item_id)),'Missing '+type+' recipes from craft view');
+}
+assert.equal(E.craftFamily({profession:'Cooking',craft_type:'Food'}),'food');
+assert.equal(E.craftFamily({profession:'Cooking',craft_type:'Drink'}),'food');
+assert.equal(E.craftFamily({profession:'Alchemy',craft_type:'Potion'}),'potion');
+assert.equal(E.craftFamily({profession:'Alchemy',craft_type:'Scroll'}),'scroll');
+assert.equal(E.craftFamily({profession:'Handicrafting',craft_type:'Ring'}),'equipment');
+const noExchange=valid.find(r=>r.name==="Artisan's Coriolus Tea");
+assert(noExchange,'A sample unlisted drink should exist');
+const missingMarketItem=catalogById.get(noExchange.item_id);
+assert.equal(missingMarketItem.marketMissing,true);
+assert.equal(missingMarketItem.price,null,'Unlisted drink must not get a fake price');
+assert.equal(missingMarketItem.listings,null,'Unlisted drink must not get fake market listings');
+const bound=valid.find(r=>r.name==='Life Serum (Bound)');
+assert(bound);
+assert.equal(catalogById.get(bound.item_id).bound,true,'Bound output must stay identified');
+const selectedScroll=valid.find(r=>r.name==='Superior Speed Scroll');
+assert(selectedScroll && catalogById.has(selectedScroll.item_id));
+const speedMarket=latest.items.find(x=>x.id===selectedScroll.item_id);
+assert(speedMarket?.price>0,'Scroll output has valid Fregion ask');
+const speedEco=E.calculateEconomics(speedMarket,selectedScroll,latest.items,{tax_percent:10});
+assert.equal(speedEco.complete,false,'Bound NPC materials without local prices must not be treated as free');
+assert(speedEco.missing.some(x=>x.includes('Bound')),'Missing Bound cost must explain why consumables are unscored');
+const htmlText=fs.readFileSync('docs/index.html','utf8');
+const appText=fs.readFileSync('docs/app.js','utf8');
+assert(htmlText.includes('id="craftFamilies"'),'Craft family shortcuts must be visible');
+assert(appText.includes("filter:'craft'"),'Start with all crafts rather than only cost-complete items');
+assert(appText.includes('state.catalog.map(compute)'),'Table must include craft outputs absent from Market feed');
+assert(appText.includes('E.buildCraftCatalog(state.latest.items,state.recipes)'),'Craft catalog must be generated from both feeds');
+assert(appText.includes('Bound · ลงขายไม่ได้'),'Bound crafts must be marked non-sellable');
+assert(appText.includes('ไม่มีประกาศขาย'),'Missing prices must be called out clearly');
 const marketIds=new Set(latest.items.map(i=>String(i.id)));
 assert(valid.filter(r=>marketIds.has(r.item_id)).length>=70, 'Unrecognized market item IDs');
 assert(valid.some(r=>r.item_id==='511060015'),'Speed scroll missing');
