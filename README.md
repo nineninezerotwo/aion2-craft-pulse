@@ -4,6 +4,18 @@
 
 Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
+## Sortable columns and equipment crafting chains (Oct 27, 2026)
+
+- Every column header in the dashboard is a keyboard-accessible button: click once to sort that column, click again to reverse the direction. The sort dropdown still works.
+- Default is **Investment Score descending**, with **Net Margin descending** as the fallback for rows without actionable scores. When *all* scores are unknown or nonactionable (such as early snapshot history), the entire table sorts by **Net Margin highest first**. Known losses (0-score / negative margin) do not jump ahead of unscored profitable crafts.
+- For equipment, the app uses its own **Cheapest Crafting Chain Estimate** built from the **Asia / Elyos / Fregion lowest asking prices captured from Aion2.exchange** and the MIT Global-client crafting recipe graph. This is inspired by Aion2Market's "buy, convert or craft the cheaper path" method, but **is not an imported Aion2Market-published completed estimate**, and totals may differ. See [their reference crafting page](https://aion2.exchange/crafts).
+- The chain resolver compares an intermediate item's market asking price with its recursively obtainable crafting cost (when materials can be priced); it avoids cycles and missing prices. Special **Splendent/Combo** outputs use their *parent recipe's* combo probability (e.g. 25% means approximately 4 attempts at 100% ordinary crafting success), rather than the incomplete extra-material recipe that the client dump may list for the proc output.
+- Cost rows marked **≈ Chain est.** are approximate; the details panel explains the chosen chain and links to Aion2Market. Expected attempts are not the minimum guaranteed crafting attempts.
+- **We do not automatically copy estimated costs from the other server's Aion2Market page.** A verified server-specific public cost API has not yet been established. Current prices come from the same Fregion market snapshot as all other numbers.
+- Ordinarily unknown success chances remain an **optimistic 100% assumption**; the estimator currently gives no resale credit for non-combo outcomes and may omit shop fees. Real in-game results can differ substantially.
+- An optional Settings checkbox lets users include **Taiwan NPC reference prices** (36 price points, published under the MIT dataset); it is disabled by default because these are *not verified Fregion shop prices*. With it disabled, unpriced Bound materials stay missing rather than silently becoming free.
+- Cron collection stays hourly; the chain estimate is recalculated client-side from the latest Fregion prices whenever the feed updates. No additional paid service is required.
+
 ## Rarity, Observed Removal % and high-outflow tags
 
 - Item names are colored only when there is an attributed, item-ID-matched **Global-client grade**: 11 Common = white, 21 Rare = green, 31 Epic = blue, 41 Unique = gold, 51/61 higher Heroic = red. Grade 71 Special is not Heroic and stays neutral. If no trustworthy grade is known, the name stays neutral; we never guess rarity from the item name.
