@@ -129,6 +129,25 @@ assert(appText.includes('Bound · ลงขายไม่ได้'),'Bound cra
 assert(htmlText.includes('value="market"'),'Market-score-only filter must be available for users waiting on missing NPC costs');
 assert(appText.includes("x.op.scoreKind==='market'"),'Market-only scores should appear clearly in the score column and as a filter');
 assert(appText.includes('MARKET ONLY'),'Missing-cost score must not be presented as normal investment score');
+
+const dashboardStyle=fs.readFileSync('docs/styles.css','utf8');
+const expectedDataLabels=['CRAFT ITEM / JOB','ASK (K)','LISTINGS','REMOVED*','OUTFLOW %*','NET Δ',
+ 'PRICE Δ','COST/K','PROFIT/K','ROI','MARGIN','SCORE','ACTION'];
+assert.equal((htmlText.match(/data-sort-key=/g)||[]).length,13,'All 13 columns must stay sortable');
+assert.equal((appText.match(/data-label=/g)||[]).length,13,'Every table cell must have a responsive card label');
+for(const label of expectedDataLabels)
+ assert(appText.includes('data-label="'+label+'"'),'Missing responsive column label '+label);
+assert(dashboardStyle.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),
+ 'At laptop/tablet widths, use multi-column cards instead of a sideways table');
+assert(dashboardStyle.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),
+ 'At mobile widths, display all metrics in a two-column card');
+assert(dashboardStyle.includes('table-layout:fixed;white-space:normal'),
+ 'At desktop widths, fit the full width of the parent container');
+assert(dashboardStyle.includes('overflow-x:visible'),
+ 'Desktop table must not rely on horizontal scrolling');
+assert(appText.includes("sort:'score',sortDir:'desc'"),'Default sort must be Investment Score descending');
+assert(appText.includes('MARGIN ↓ (FALLBACK)'),'Must explain why margin wins when full Investment Scores are unavailable');
+
 assert(appText.includes('INVEST PREVIEW'),'Short-history profitable crafts must be marked as provisional');
 assert(appText.includes('Market Signal Score — ไม่ใช่ Investment Score'),'Detail panel must explain market-only score');
 assert(appText.includes('status:\'unlisted\'')&&appText.includes("status:'bound'"),
