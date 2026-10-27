@@ -113,3 +113,16 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 /* Optional cross-region NPC prices are clearly marked; never imply verified Fregion costs. */
 .market-data-tag.vendor-ref{background:#453822;color:#ebcc9a;border:1px solid #83633d}
 .vendor-reference-notice{font-size:10px;color:#e7bd79;font-weight:750;margin-left:5px}
+
+
+/* Distinct market-only scoring. These badges are not profitability or likelihood of completed sales. */
+.score-chip.score-market{background:#21384e;border:1px solid #53718b;color:#b4def6}
+.score-chip.score-market small{color:#c3d8ea}
+.score-chip.score-preview{background:#423b25;border:1px solid #87714d;color:#f6d695}
+.score-kind{font-size:10px;font-weight:800;color:#aacbdc;letter-spacing:.38px;margin-top:5px;white-space:nowrap}
+.score-cell .confidence{font-size:10px;color:#839eaf;margin-top:3px}
+.pill.market{background:#193b50;border:1px solid #416c85;color:#a9e2f2}
+.pill.preview{background:#433925;border:1px solid #67573b;color:#f3d08d}
+.market-only-notice{border:1px solid #3b6379;background:#102938;border-radius:10px;padding:13px 17px;margin:15px 0;line-height:1.6}
+.market-only-notice strong{color:#9fdef1;font-size:13px}
+.market-only-notice p{color:#b3ccda;font-size:12px;margin:7px 0 0}
