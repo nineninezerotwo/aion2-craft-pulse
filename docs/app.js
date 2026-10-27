@@ -163,7 +163,12 @@ function renderHead(){
  const cron=$('cronStatus');if(cron)cron.textContent=isDemo?'ข้อมูลทดลอง':age===null?'Cron · รอ Snapshot':age>3?'Cron · ตรวจ GitHub Actions':'Cron · ทุกชั่วโมง (UTC :23)';
 }
 function renderTable(){
- let rows=state.catalog.map(compute);
+ const sourceItems=state.filter==='all'?state.latest.items:state.catalog;
+ const craftList=(state.filter==='all'||state.filter==='watchlist')
+   ?sourceItems
+   :sourceItems.filter(item=>state.craftIds.has(String(item.id))||
+     state.recipes.some(r=>!r.item_id && E.normName(r.name)===E.normName(item.name)));
+ let rows=craftList.map(compute);
  if(state.family!=='all')rows=rows.filter(x=>x.recipe&&E.craftFamily(x.recipe)===state.family);
  const query=E.normName(state.search);
  if(query)rows=rows.filter(x=>E.normName(x.item.name).includes(query)||x.item.id.includes(query)||E.normName(x.recipe?.profession).includes(query)||E.normName(x.recipe?.craft_type).includes(query));
@@ -273,6 +278,7 @@ function renderDetail(){
 function render(){
  if(!state.ready)return;
  state.catalog=E.buildCraftCatalog(state.latest.items,state.recipes);
+ state.craftIds=new Set(state.recipes.map(r=>String(r.item_id||'')).filter(Boolean));
  state.catalogById=new Map(state.catalog.map(item=>[String(item.id),item]));
  rebuildChainEstimator();periods();renderHead();renderFamilyFilters();renderTable();renderDetail();
 }
