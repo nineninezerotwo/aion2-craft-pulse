@@ -52,6 +52,47 @@ assert(['trial','watch','avoid'].includes(op.status),op.status);
 assert(op.score!==null);
 assert.equal(E.opportunityScore(signal,econ,false).status,'scenario');
 assert.equal(E.opportunityScore(E.analyzeSignal([],24),econ,true).status,'history');
+
+const priceMissing={...recipe,ingredients:[{name:'Unpriced Bound Item',id:'not-in-market',qty:1}],reference:true,verified:false};
+const partialEconomic=E.calculateEconomics(item,priceMissing,[item,ingredient],{tax_percent:10});
+assert.equal(partialEconomic.complete,false,'Cost must remain unknown when NPC-bound ingredient is missing');
+const onlyMarket=E.opportunityScore(signal,partialEconomic,false);
+assert.equal(onlyMarket.scoreKind,'market');
+assert(onlyMarket.score>=0 && onlyMarket.score<=100,'Market-only score should be numeric');
+assert.equal(onlyMarket.status,'market');
+assert(onlyMarket.reason.includes('Unpriced Bound Item'),'Must report which ingredient cost is unavailable');
+assert.equal(E.opportunityScore(E.analyzeSignal([],24),partialEconomic,false).score,null,'No market history should never fabricate an outflow score');
+const shortMarket=E.analyzeSignal(points.slice(-2),24);
+assert.equal(shortMarket.valid,false,'Two snapshots over 1h should not count as fully observed 24h');
+assert.equal(E.opportunityScore(shortMarket,partialEconomic,false).scoreKind,'market');
+assert.equal(E.opportunityScore(shortMarket,partialEconomic,false).preview,true);
+assert(E.opportunityScore(shortMarket,partialEconomic,false).score!==null);
+const shortInvestment=E.opportunityScore(shortMarket,econ,true);
+assert.equal(shortInvestment.scoreKind,'investment-preview');
+assert.equal(shortInvestment.preview,true);
+assert(shortInvestment.score!==null,'Early but labeled investment preview may exist before full-history threshold');
+const onePointMarket=E.analyzeSignal(points.slice(-1),24);
+assert.equal(E.marketSignalPreview(onePointMarket).score,null);
+assert.equal(E.opportunityScore(onePointMarket,partialEconomic,false).score,null);
+const lowSupply=E.analyzeSignal([
+ {ts:'2026-10-27T00:00:00Z',price:10000,listings:2},
+ {ts:'2026-10-27T01:00:00Z',price:10000,listings:1}
+],24);
+const lowMarketScore=E.marketSignalPreview(lowSupply).score;
+assert(lowMarketScore>=0&&lowMarketScore<60,'Sparse one-listing decline must not look like a strong market signal');
+const mixedSort=[
+ {item:{name:'Complete',price:3000},eco:{complete:true,margin:.35,profit:350},op:{score:85,scoreKind:'investment'}},
+ {item:{name:'Market only high',price:3000},eco:{complete:false,margin:null},op:{score:98,scoreKind:'market'}},
+ {item:{name:'Positive margin',price:3000},eco:{complete:true,margin:.55,profit:550},op:{score:40,scoreKind:'investment-preview'}},
+ {item:{name:'Loss',price:3000},eco:{complete:true,margin:-.2,profit:-200},op:{score:0,scoreKind:'loss'}},
+];
+assert.deepEqual(E.sortCraftRows(mixedSort,'score','desc').map(x=>x.item.name),
+ ['Complete','Positive margin','Market only high','Loss'],
+ 'Never compare a market-only 98 directly with an investment score 85');
+const noFullInvestment=mixedSort.filter(r=>r.op.scoreKind!=='investment');
+assert.deepEqual(E.sortCraftRows(noFullInvestment,'score','desc').map(x=>x.item.name),
+ ['Positive margin','Market only high','Loss'],'Without mature investment scores, margin then market-only then loss');
+
 const bound={...recipe,npc_kinah:null};
 assert.equal(E.calculateEconomics(item,bound,[item,ingredient],{tax_percent:10}).complete,false);
 const manual=E.calculateEconomics(item,bound,[item,ingredient],{tax_percent:10},{unit_cost_override:5500});
