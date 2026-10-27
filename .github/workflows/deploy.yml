@@ -1,5 +1,10 @@
-name: Deploy Fregion Craft Pulse
+name: Validate Fregion Craft Pulse
 
+# GitHub Pages is already published from main/docs by the native Pages workflow.
+# Do not publish Pages a second time here: dual deployments were racing and
+# causing intermittent HTTP 400 "in progress deployment" failures.
+# Scheduled market collector still publishes its own hourly data snapshot,
+# because GitHub Actions GITHUB_TOKEN pushes do not trigger ordinary push workflows.
 on:
   push:
     branches: [main]
@@ -12,21 +17,20 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: fregion-code-deploy
+  group: fregion-code-validate
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Validate dataset and calculations
         run: |
           python -m unittest discover -s tests -v
@@ -34,10 +38,3 @@ jobs:
           node tests/test_catalog_integration.js
           node --check docs/app.js
           node --check docs/engine.js
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./docs
-      - name: Deploy public dashboard
-        id: deployment
-        uses: actions/deploy-pages@v4
