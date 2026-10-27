@@ -1,12 +1,15 @@
 {
-  "schema": 3,
+  "schema": 4,
   "server": "Asia / Elyos / Fregion",
   "source": {
     "name": "xtopolis/aion2-static (MIT), Global LST client, 2026-09-21",
     "url": "https://github.com/xtopolis/aion2-static/blob/main/src/data/crafting.json",
     "license": "MIT",
     "reference_date": "2026-09-21",
-    "notes": "Client reference, NOT current-game verified; success rates and additional fees unknown; combo output not included in ROI; no Questlog scraping."
+    "notes": "Client reference, NOT current-game verified; success rates and additional fees unknown; combo output not included in ROI; no Questlog scraping.",
+    "images": "External GitHub Raw image references (original game icons), attributed to source project; not redistributed or owned by Craft Pulse.",
+    "metadata": "Profession mastery grade and item grouping from Global LST",
+    "rate_note": "combo_chance is NOT crafting success rate. Unverified success rates remain null."
   },
   "recipes": [
     {
@@ -44,7 +47,10 @@
       "combo_item_id": "110630013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0064_T05",
+      "craft_type": "Orb",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311054001",
@@ -81,7 +87,10 @@
       "combo_item_id": "110530013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0064_T05",
+      "craft_type": "Magicbook",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016004",
@@ -103,7 +112,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv1_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016009",
@@ -125,7 +137,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv1_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315024003",
@@ -152,7 +167,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_003",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "315024002",
@@ -179,7 +197,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_002",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "315024001",
@@ -206,7 +227,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_001",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "311095001",
@@ -243,7 +267,10 @@
       "combo_item_id": "110640012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0024_T05",
+      "craft_type": "Orb",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311055001",
@@ -280,7 +307,10 @@
       "combo_item_id": "110540012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0024_T05",
+      "craft_type": "Magicbook",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314045001",
@@ -312,7 +342,10 @@
       "combo_item_id": "511351003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_MagicStone_Abyss_A_r_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314045002",
@@ -344,7 +377,10 @@
       "combo_item_id": "513551003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_SoulStone_Abyss_A_r_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314046001",
@@ -376,7 +412,10 @@
       "combo_item_id": "511360004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_MagicStone_A_c_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314046005",
@@ -408,7 +447,10 @@
       "combo_item_id": "511360004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_MagicStone_A_c_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314046002",
@@ -440,7 +482,10 @@
       "combo_item_id": "513560004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_SoulStone_A_c_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314046006",
@@ -472,7 +517,10 @@
       "combo_item_id": "513560004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_SoulStone_A_c_002",
+      "craft_type": "MagicStone",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314016001",
@@ -499,7 +547,10 @@
       "combo_item_id": "530116001",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_HP_Instant_A_001",
+      "craft_type": "Potion",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016001",
@@ -526,7 +577,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Part_SpellCrystal_L_lv1_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016002",
@@ -553,7 +607,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Part_SpellCrystal_L_lv1_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "314016006",
@@ -585,7 +642,10 @@
       "combo_item_id": "510126003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_MP_Dot_A_001",
+      "craft_type": "Potion",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "419016001",
@@ -617,7 +677,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Alchemy_lv1_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "419016002",
@@ -659,7 +722,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Alchemy_lv2_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "315016005",
@@ -681,7 +747,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv6_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016010",
@@ -703,7 +772,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv6_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016003",
@@ -725,7 +797,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv3_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016008",
@@ -747,7 +822,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv3_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016006",
@@ -769,7 +847,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv4_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016011",
@@ -791,7 +872,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Enchant_Supplement_lv4_01",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311093011",
@@ -818,7 +902,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0036_T05",
+      "craft_type": "Orb"
     },
     {
       "recipe_id": "311053011",
@@ -845,7 +931,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0036_T05",
+      "craft_type": "Magicbook"
     },
     {
       "recipe_id": "311093013",
@@ -882,7 +970,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0068_T05",
+      "craft_type": "Orb"
     },
     {
       "recipe_id": "311053013",
@@ -919,7 +1009,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0068_T05",
+      "craft_type": "Magicbook"
     },
     {
       "recipe_id": "311093015",
@@ -961,7 +1053,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0100_T06",
+      "craft_type": "Orb"
     },
     {
       "recipe_id": "311053015",
@@ -1003,7 +1097,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0100_T06",
+      "craft_type": "Magicbook"
     },
     {
       "recipe_id": "314036008",
@@ -1040,7 +1136,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Scroll_ProtectShield_02a_A_002",
+      "craft_type": "Scroll",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314036003",
@@ -1077,7 +1176,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Scroll_MaxHPMPRatio_A_002",
+      "craft_type": "Scroll",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314036002",
@@ -1114,7 +1216,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Scroll_AttackSpeed_A_002",
+      "craft_type": "Scroll",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314026001",
@@ -1146,7 +1251,10 @@
       "combo_item_id": "510146002",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_Cure_A_002",
+      "craft_type": "Potion",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314016003",
@@ -1178,7 +1286,10 @@
       "combo_item_id": "510126002",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_HP_Dot_A_002",
+      "craft_type": "Potion",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314016004",
@@ -1210,7 +1321,10 @@
       "combo_item_id": "510116006",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_HP_Instant_A_002",
+      "craft_type": "Potion",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314046003",
@@ -1242,7 +1356,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_MagicStone_A_c_003",
+      "craft_type": "MagicStone",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314046004",
@@ -1274,7 +1391,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Enchant_SoulStone_A_c_003",
+      "craft_type": "MagicStone",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314036001",
@@ -1311,7 +1431,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Scroll_MoveSpeed_A_002",
+      "craft_type": "Scroll",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "314016005",
@@ -1348,7 +1471,10 @@
       "combo_item_id": "510116010",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_FP_Instant_A_002",
+      "craft_type": "Potion",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "311093001",
@@ -1395,7 +1521,10 @@
       "combo_item_id": "110630017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0036_T05",
+      "craft_type": "Orb",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "311053001",
@@ -1442,7 +1571,10 @@
       "combo_item_id": "110530017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0036_T05",
+      "craft_type": "Magicbook",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "311096001",
@@ -1474,7 +1606,10 @@
       "combo_item_id": "110650014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0052_T04",
+      "craft_type": "Orb",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311056001",
@@ -1506,7 +1641,10 @@
       "combo_item_id": "110550014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0052_T04",
+      "craft_type": "Magicbook",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311093012",
@@ -1558,7 +1696,9 @@
       "combo_item_id": "110630097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0068_T05",
+      "craft_type": "Orb"
     },
     {
       "recipe_id": "311053012",
@@ -1610,7 +1750,9 @@
       "combo_item_id": "110530097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0068_T05",
+      "craft_type": "Magicbook"
     },
     {
       "recipe_id": "314016002",
@@ -1642,7 +1784,10 @@
       "combo_item_id": "510116005",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Potion_FP_Instant_A_001",
+      "craft_type": "Potion",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "311093014",
@@ -1699,7 +1844,9 @@
       "combo_item_id": "110630104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_OR_0100_T06",
+      "craft_type": "Orb"
     },
     {
       "recipe_id": "311053014",
@@ -1756,7 +1903,9 @@
       "combo_item_id": "110530104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MB_0100_T06",
+      "craft_type": "Magicbook"
     },
     {
       "recipe_id": "315016007",
@@ -1778,7 +1927,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Paper_A_001",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "315016012",
@@ -1800,7 +1952,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Paper_A_001",
+      "craft_type": "Misc_Alchemy",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412064001",
@@ -1837,7 +1992,10 @@
       "combo_item_id": "210630013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Boots",
+      "craft_type": "Boots",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412014001",
@@ -1874,7 +2032,10 @@
       "combo_item_id": "210130013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Torso",
+      "craft_type": "Torso",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412074001",
@@ -1911,7 +2072,10 @@
       "combo_item_id": "210730013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Cape",
+      "craft_type": "Cape",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412054001",
@@ -1948,7 +2112,10 @@
       "combo_item_id": "210530013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Gloves",
+      "craft_type": "Gloves",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412024001",
@@ -1985,7 +2152,10 @@
       "combo_item_id": "210230013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Pants",
+      "craft_type": "Pants",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412034001",
@@ -2022,7 +2192,10 @@
       "combo_item_id": "210330013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Helmet",
+      "craft_type": "Helmet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412044001",
@@ -2059,7 +2232,10 @@
       "combo_item_id": "210430013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0148_T03_Shoulder",
+      "craft_type": "Shoulder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412065001",
@@ -2096,7 +2272,10 @@
       "combo_item_id": "210640012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Boots",
+      "craft_type": "Boots",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412015001",
@@ -2133,7 +2312,10 @@
       "combo_item_id": "210140012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Torso",
+      "craft_type": "Torso",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412075001",
@@ -2170,7 +2352,10 @@
       "combo_item_id": "210740012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Cape",
+      "craft_type": "Cape",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412055001",
@@ -2207,7 +2392,10 @@
       "combo_item_id": "210540012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Gloves",
+      "craft_type": "Gloves",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412025001",
@@ -2244,7 +2432,10 @@
       "combo_item_id": "210240012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Pants",
+      "craft_type": "Pants",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412035001",
@@ -2281,7 +2472,10 @@
       "combo_item_id": "210340012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Helmet",
+      "craft_type": "Helmet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412045001",
@@ -2318,7 +2512,10 @@
       "combo_item_id": "210440012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0004_T05_Shoulder",
+      "craft_type": "Shoulder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "219016001",
@@ -2345,7 +2542,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Tailor_lv1_01",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412066001",
@@ -2382,7 +2582,10 @@
       "combo_item_id": "210650014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Boots",
+      "craft_type": "Boots",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412016001",
@@ -2419,7 +2622,10 @@
       "combo_item_id": "210150014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Torso",
+      "craft_type": "Torso",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412076001",
@@ -2456,7 +2662,10 @@
       "combo_item_id": "210750014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Cape",
+      "craft_type": "Cape",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412056001",
@@ -2493,7 +2702,10 @@
       "combo_item_id": "210550014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Gloves",
+      "craft_type": "Gloves",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412026001",
@@ -2530,7 +2742,10 @@
       "combo_item_id": "210250014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Pants",
+      "craft_type": "Pants",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412036001",
@@ -2567,7 +2782,10 @@
       "combo_item_id": "210350014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Helmet",
+      "craft_type": "Helmet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "415016001",
@@ -2594,7 +2812,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Ore_Ingot_A_c_001",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "415016002",
@@ -2621,7 +2842,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Ore_Ingot_A_c_001",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "412046001",
@@ -2658,7 +2882,10 @@
       "combo_item_id": "210450014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0003_T04_Shoulder",
+      "craft_type": "Shoulder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "219016002",
@@ -2705,7 +2932,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Tailor_lv2_01",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412063011",
@@ -2732,7 +2962,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Boots",
+      "craft_type": "Boots"
     },
     {
       "recipe_id": "412013011",
@@ -2759,7 +2991,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Torso",
+      "craft_type": "Torso"
     },
     {
       "recipe_id": "412073011",
@@ -2786,7 +3020,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Cape",
+      "craft_type": "Cape"
     },
     {
       "recipe_id": "412053011",
@@ -2813,7 +3049,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Gloves",
+      "craft_type": "Gloves"
     },
     {
       "recipe_id": "412023011",
@@ -2840,7 +3078,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Pants",
+      "craft_type": "Pants"
     },
     {
       "recipe_id": "412033011",
@@ -2867,7 +3107,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Helmet",
+      "craft_type": "Helmet"
     },
     {
       "recipe_id": "412043011",
@@ -2894,7 +3136,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Shoulder",
+      "craft_type": "Shoulder"
     },
     {
       "recipe_id": "412063013",
@@ -2931,7 +3175,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Boots",
+      "craft_type": "Boots"
     },
     {
       "recipe_id": "412013013",
@@ -2968,7 +3214,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Torso",
+      "craft_type": "Torso"
     },
     {
       "recipe_id": "412073013",
@@ -3005,7 +3253,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Cape",
+      "craft_type": "Cape"
     },
     {
       "recipe_id": "412053013",
@@ -3042,7 +3292,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Gloves",
+      "craft_type": "Gloves"
     },
     {
       "recipe_id": "412023013",
@@ -3079,7 +3331,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Pants",
+      "craft_type": "Pants"
     },
     {
       "recipe_id": "412033013",
@@ -3116,7 +3370,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Helmet",
+      "craft_type": "Helmet"
     },
     {
       "recipe_id": "412043013",
@@ -3153,7 +3409,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Shoulder",
+      "craft_type": "Shoulder"
     },
     {
       "recipe_id": "412063015",
@@ -3195,7 +3453,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Boots",
+      "craft_type": "Boots"
     },
     {
       "recipe_id": "412013015",
@@ -3237,7 +3497,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Torso",
+      "craft_type": "Torso"
     },
     {
       "recipe_id": "412073015",
@@ -3279,7 +3541,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Cape",
+      "craft_type": "Cape"
     },
     {
       "recipe_id": "412053015",
@@ -3321,7 +3585,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Gloves",
+      "craft_type": "Gloves"
     },
     {
       "recipe_id": "412023015",
@@ -3363,7 +3629,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Pants",
+      "craft_type": "Pants"
     },
     {
       "recipe_id": "412033015",
@@ -3405,7 +3673,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Helmet",
+      "craft_type": "Helmet"
     },
     {
       "recipe_id": "412043015",
@@ -3447,7 +3717,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Shoulder",
+      "craft_type": "Shoulder"
     },
     {
       "recipe_id": "415016003",
@@ -3469,7 +3741,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Skin_L_lv3_01",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "415016004",
@@ -3491,7 +3766,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Skin_L_lv3_01",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "415024003",
@@ -3518,7 +3796,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Leather_A_r_003",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "415024002",
@@ -3545,7 +3826,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Leather_A_r_002",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "415024001",
@@ -3572,7 +3856,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Leather_A_r_001",
+      "craft_type": "Misc_Tailoring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412063001",
@@ -3619,7 +3906,10 @@
       "combo_item_id": "210630017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Boots",
+      "craft_type": "Boots",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412013001",
@@ -3666,7 +3956,10 @@
       "combo_item_id": "210130017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Torso",
+      "craft_type": "Torso",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412073001",
@@ -3713,7 +4006,10 @@
       "combo_item_id": "210730017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Cape",
+      "craft_type": "Cape",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412053001",
@@ -3760,7 +4056,10 @@
       "combo_item_id": "210530017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Gloves",
+      "craft_type": "Gloves",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412023001",
@@ -3807,7 +4106,10 @@
       "combo_item_id": "210230017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Pants",
+      "craft_type": "Pants",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412033001",
@@ -3854,7 +4156,10 @@
       "combo_item_id": "210330017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Helmet",
+      "craft_type": "Helmet",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412043001",
@@ -3901,7 +4206,10 @@
       "combo_item_id": "210430017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0061_T05_Shoulder",
+      "craft_type": "Shoulder",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "412063012",
@@ -3953,7 +4261,9 @@
       "combo_item_id": "210630110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Boots",
+      "craft_type": "Boots"
     },
     {
       "recipe_id": "412013012",
@@ -4005,7 +4315,9 @@
       "combo_item_id": "210130111",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Torso",
+      "craft_type": "Torso"
     },
     {
       "recipe_id": "412073012",
@@ -4057,7 +4369,9 @@
       "combo_item_id": "210730110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Cape",
+      "craft_type": "Cape"
     },
     {
       "recipe_id": "412053012",
@@ -4109,7 +4423,9 @@
       "combo_item_id": "210530110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Gloves",
+      "craft_type": "Gloves"
     },
     {
       "recipe_id": "412023012",
@@ -4161,7 +4477,9 @@
       "combo_item_id": "210230110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Pants",
+      "craft_type": "Pants"
     },
     {
       "recipe_id": "412033012",
@@ -4213,7 +4531,9 @@
       "combo_item_id": "210330110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Helmet",
+      "craft_type": "Helmet"
     },
     {
       "recipe_id": "412043012",
@@ -4265,7 +4585,9 @@
       "combo_item_id": "210430110",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_GM_0060_T06_Shoulder",
+      "craft_type": "Shoulder"
     },
     {
       "recipe_id": "412063014",
@@ -4322,7 +4644,9 @@
       "combo_item_id": "210630117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Boots",
+      "craft_type": "Boots"
     },
     {
       "recipe_id": "412013014",
@@ -4379,7 +4703,9 @@
       "combo_item_id": "210130118",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Torso",
+      "craft_type": "Torso"
     },
     {
       "recipe_id": "412073014",
@@ -4436,7 +4762,9 @@
       "combo_item_id": "210730117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Cape",
+      "craft_type": "Cape"
     },
     {
       "recipe_id": "412053014",
@@ -4493,7 +4821,9 @@
       "combo_item_id": "210530117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Gloves",
+      "craft_type": "Gloves"
     },
     {
       "recipe_id": "412023014",
@@ -4550,7 +4880,9 @@
       "combo_item_id": "210230117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Pants",
+      "craft_type": "Pants"
     },
     {
       "recipe_id": "412033014",
@@ -4607,7 +4939,9 @@
       "combo_item_id": "210330117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Helmet",
+      "craft_type": "Helmet"
     },
     {
       "recipe_id": "412043014",
@@ -4664,7 +4998,9 @@
       "combo_item_id": "210430117",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_AR_L_0005_T05_Shoulder",
+      "craft_type": "Shoulder"
     },
     {
       "recipe_id": "111034001",
@@ -4701,7 +5037,10 @@
       "combo_item_id": "110330013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_WP_L_DA_0064_T05",
+      "craft_type": "Dagger",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111024001",
@@ -4738,7 +5077,10 @@
       "combo_item_id": "110130013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0064_T05",
+      "craft_type": "Greatsword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111084001",
@@ -4775,7 +5117,10 @@
       "combo_item_id": "115030013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_R_036",
+      "craft_type": "Guarder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111014001",
@@ -4812,7 +5157,10 @@
       "combo_item_id": "110230013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0064_T05",
+      "craft_type": "Sword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111064001",
@@ -4849,7 +5197,10 @@
       "combo_item_id": "110730013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0064_T05",
+      "craft_type": "Mace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111035001",
@@ -4886,7 +5237,10 @@
       "combo_item_id": "110340012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0024_T05",
+      "craft_type": "Dagger",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111025001",
@@ -4923,7 +5277,10 @@
       "combo_item_id": "110140012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0024_T05",
+      "craft_type": "Greatsword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111085001",
@@ -4960,7 +5317,10 @@
       "combo_item_id": "115040012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_R_029",
+      "craft_type": "Guarder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111015001",
@@ -4997,7 +5357,10 @@
       "combo_item_id": "110240012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0024_T05",
+      "craft_type": "Sword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111065001",
@@ -5034,7 +5397,10 @@
       "combo_item_id": "110740012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0024_T05",
+      "craft_type": "Mace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "115024003",
@@ -5061,7 +5427,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Horn_A_r_003",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "115024002",
@@ -5088,7 +5457,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Horn_A_r_002",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "115024001",
@@ -5115,7 +5487,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Horn_A_r_001",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "119016001",
@@ -5142,7 +5517,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Blacksmith_lv1_01",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111036001",
@@ -5174,7 +5552,10 @@
       "combo_item_id": "110350014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0052_T04",
+      "craft_type": "Dagger",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111026001",
@@ -5206,7 +5587,10 @@
       "combo_item_id": "110150014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0052_T04",
+      "craft_type": "Greatsword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111086001",
@@ -5238,7 +5622,10 @@
       "combo_item_id": "115050014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_R_023",
+      "craft_type": "Guarder",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "115016001",
@@ -5265,7 +5652,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Ore_Ingot_A_c_001",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "115016002",
@@ -5292,7 +5682,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Ore_Ingot_A_c_001",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111016001",
@@ -5324,7 +5717,10 @@
       "combo_item_id": "110250014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0052_T04",
+      "craft_type": "Sword",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "111066001",
@@ -5356,7 +5752,10 @@
       "combo_item_id": "110750014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0052_T04",
+      "craft_type": "Mace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "119016002",
@@ -5403,7 +5802,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Blacksmith_lv2_01",
+      "craft_type": "Misc_Blacksmithing",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111033011",
@@ -5430,7 +5832,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0036_T05",
+      "craft_type": "Dagger"
     },
     {
       "recipe_id": "111023011",
@@ -5457,7 +5861,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_WP_L_GS_0036_T05",
+      "craft_type": "Greatsword"
     },
     {
       "recipe_id": "111083011",
@@ -5484,7 +5890,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_R_032",
+      "craft_type": "Guarder"
     },
     {
       "recipe_id": "111013011",
@@ -5511,7 +5919,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0036_T05",
+      "craft_type": "Sword"
     },
     {
       "recipe_id": "111063011",
@@ -5538,7 +5948,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0036_T05",
+      "craft_type": "Mace"
     },
     {
       "recipe_id": "111033013",
@@ -5575,7 +5987,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0068_T05",
+      "craft_type": "Dagger"
     },
     {
       "recipe_id": "111023013",
@@ -5612,7 +6026,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0068_T05",
+      "craft_type": "Greatsword"
     },
     {
       "recipe_id": "111083013",
@@ -5649,7 +6065,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_U_005",
+      "craft_type": "Guarder"
     },
     {
       "recipe_id": "111013013",
@@ -5686,7 +6104,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0068_T05",
+      "craft_type": "Sword"
     },
     {
       "recipe_id": "111063013",
@@ -5723,7 +6143,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0068_T05",
+      "craft_type": "Mace"
     },
     {
       "recipe_id": "111033015",
@@ -5765,7 +6187,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0100_T06",
+      "craft_type": "Dagger"
     },
     {
       "recipe_id": "111023015",
@@ -5807,7 +6231,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0100_T06",
+      "craft_type": "Greatsword"
     },
     {
       "recipe_id": "111083015",
@@ -5849,7 +6275,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_U_013",
+      "craft_type": "Guarder"
     },
     {
       "recipe_id": "111013015",
@@ -5891,7 +6319,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0100_T06",
+      "craft_type": "Sword"
     },
     {
       "recipe_id": "111063015",
@@ -5933,7 +6363,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0100_T06",
+      "craft_type": "Mace"
     },
     {
       "recipe_id": "111033001",
@@ -5980,7 +6412,10 @@
       "combo_item_id": "110330017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0036_T05",
+      "craft_type": "Dagger",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111023001",
@@ -6027,7 +6462,10 @@
       "combo_item_id": "110130017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Equip_WP_L_GS_0036_T05",
+      "craft_type": "Greatsword",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111083001",
@@ -6074,7 +6512,10 @@
       "combo_item_id": "115030017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_R_032",
+      "craft_type": "Guarder",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111013001",
@@ -6121,7 +6562,10 @@
       "combo_item_id": "110230017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0036_T05",
+      "craft_type": "Sword",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111063001",
@@ -6168,7 +6612,10 @@
       "combo_item_id": "110730017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0036_T05",
+      "craft_type": "Mace",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "111033012",
@@ -6220,7 +6667,9 @@
       "combo_item_id": "110330097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0068_T05",
+      "craft_type": "Dagger"
     },
     {
       "recipe_id": "111023012",
@@ -6272,7 +6721,9 @@
       "combo_item_id": "110130097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0068_T05",
+      "craft_type": "Greatsword"
     },
     {
       "recipe_id": "111083012",
@@ -6324,7 +6775,9 @@
       "combo_item_id": "115030095",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_U_005",
+      "craft_type": "Guarder"
     },
     {
       "recipe_id": "111013012",
@@ -6376,7 +6829,9 @@
       "combo_item_id": "110230097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0068_T05",
+      "craft_type": "Sword"
     },
     {
       "recipe_id": "111063012",
@@ -6428,7 +6883,9 @@
       "combo_item_id": "110730097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0068_T05",
+      "craft_type": "Mace"
     },
     {
       "recipe_id": "111033014",
@@ -6485,7 +6942,9 @@
       "combo_item_id": "110330104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_DA_0100_T06",
+      "craft_type": "Dagger"
     },
     {
       "recipe_id": "111023014",
@@ -6542,7 +7001,9 @@
       "combo_item_id": "110130104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_GS_0100_T06",
+      "craft_type": "Greatsword"
     },
     {
       "recipe_id": "111083014",
@@ -6599,7 +7060,9 @@
       "combo_item_id": "115030102",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Weapon_Guarder_U_013",
+      "craft_type": "Guarder"
     },
     {
       "recipe_id": "111013014",
@@ -6656,7 +7119,9 @@
       "combo_item_id": "110230104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_SW_0100_T06",
+      "craft_type": "Sword"
     },
     {
       "recipe_id": "111063014",
@@ -6713,7 +7178,9 @@
       "combo_item_id": "110730104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_MA_0100_T06",
+      "craft_type": "Mace"
     },
     {
       "recipe_id": "514075002",
@@ -6740,7 +7207,10 @@
       "combo_item_id": "510616004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Shop_A_c_002",
+      "craft_type": "Drink",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085001",
@@ -6772,7 +7242,10 @@
       "combo_item_id": "510716007",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_002",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085002",
@@ -6799,7 +7272,10 @@
       "combo_item_id": "510716008",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_c_025",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085006",
@@ -6831,7 +7307,10 @@
       "combo_item_id": "510716012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_001",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085004",
@@ -6863,7 +7342,10 @@
       "combo_item_id": "510716010",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_006",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085005",
@@ -6895,7 +7377,10 @@
       "combo_item_id": "510716011",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_003",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514075001",
@@ -6922,7 +7407,10 @@
       "combo_item_id": "510616003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Craft_A_r_001",
+      "craft_type": "Drink",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514085003",
@@ -6954,7 +7442,10 @@
       "combo_item_id": "510716009",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_r_013",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514076002",
@@ -6981,7 +7472,10 @@
       "combo_item_id": "510616002",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Shop_A_c_002",
+      "craft_type": "Drink",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514086001",
@@ -7013,7 +7507,10 @@
       "combo_item_id": "510716001",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_002",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514086002",
@@ -7040,7 +7537,10 @@
       "combo_item_id": "510716002",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_c_025",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514086006",
@@ -7072,7 +7572,10 @@
       "combo_item_id": "510716006",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_001",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514086004",
@@ -7104,7 +7607,10 @@
       "combo_item_id": "510716004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_006",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514086005",
@@ -7136,7 +7642,10 @@
       "combo_item_id": "510716005",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_003",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514076001",
@@ -7163,7 +7672,10 @@
       "combo_item_id": "510616001",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Craft_A_r_001",
+      "craft_type": "Drink",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "519016001",
@@ -7195,7 +7707,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Cook_lv1_01",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "519016002",
@@ -7232,7 +7747,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Cook_lv2_01",
+      "craft_type": "Food",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "514086003",
@@ -7264,7 +7782,10 @@
       "combo_item_id": "510716003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_r_013",
+      "craft_type": "Food",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "514084002",
@@ -7306,7 +7827,10 @@
       "combo_item_id": "510715008",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_r_011",
+      "craft_type": "Food",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "514084001",
@@ -7348,7 +7872,10 @@
       "combo_item_id": "510715007",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_Craft_A_r_005",
+      "craft_type": "Food",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "514074001",
@@ -7385,7 +7912,10 @@
       "combo_item_id": "510615003",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Craft_A_c_005",
+      "craft_type": "Drink",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "514074002",
@@ -7427,7 +7957,10 @@
       "combo_item_id": "510615004",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Drink_Craft_A_c_006",
+      "craft_type": "Drink",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "514084005",
@@ -7469,7 +8002,10 @@
       "combo_item_id": "510715011",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Usable_Food_A_009",
+      "craft_type": "Food",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "213024001",
@@ -7506,7 +8042,10 @@
       "combo_item_id": "310230013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0012",
+      "craft_type": "Earring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213014001",
@@ -7543,7 +8082,10 @@
       "combo_item_id": "310130013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0012",
+      "craft_type": "Necklace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213034001",
@@ -7580,7 +8122,10 @@
       "combo_item_id": "310330013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0012",
+      "craft_type": "Ring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211044001",
@@ -7617,7 +8162,10 @@
       "combo_item_id": "110430013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0064_T05",
+      "craft_type": "Bow",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211104001",
@@ -7654,7 +8202,10 @@
       "combo_item_id": "110830013",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0064_T05",
+      "craft_type": "Staff",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213046002",
@@ -7686,7 +8237,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Bracelet_0014",
+      "craft_type": "Bracelet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016003",
@@ -7713,7 +8267,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_001",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016004",
@@ -7740,7 +8297,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_001",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213026001",
@@ -7772,7 +8332,10 @@
       "combo_item_id": "310250010",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0096",
+      "craft_type": "Earring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215024003",
@@ -7799,7 +8362,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_003",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "215024002",
@@ -7826,7 +8392,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_002",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "215024001",
@@ -7853,7 +8422,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Draconic_Skin_A_r_001",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "213025001",
@@ -7890,7 +8462,10 @@
       "combo_item_id": "310240012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0049",
+      "craft_type": "Earring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213015001",
@@ -7927,7 +8502,10 @@
       "combo_item_id": "310140012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0049",
+      "craft_type": "Necklace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213035001",
@@ -7964,7 +8542,10 @@
       "combo_item_id": "310340012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0049",
+      "craft_type": "Ring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211045001",
@@ -8001,7 +8582,10 @@
       "combo_item_id": "110440012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0024_T05",
+      "craft_type": "Bow",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211105001",
@@ -8038,7 +8622,10 @@
       "combo_item_id": "110840012",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0024_T05",
+      "craft_type": "Staff",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016009",
@@ -8065,7 +8652,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Part_SpellCrystal_L_lv1_01",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016010",
@@ -8092,7 +8682,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Material_Part_SpellCrystal_L_lv1_01",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "319016001",
@@ -8124,7 +8717,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Jewel_lv1_01",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213044002",
@@ -8156,7 +8752,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Bracelet_0071",
+      "craft_type": "Bracelet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "319016002",
@@ -8203,7 +8802,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Elevate_Jewel_lv2_01",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "215016005",
@@ -8230,7 +8832,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_004",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016006",
@@ -8257,7 +8862,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_004",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213016001",
@@ -8289,7 +8897,10 @@
       "combo_item_id": "310150010",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0096",
+      "craft_type": "Necklace",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016001",
@@ -8316,7 +8927,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_002",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016002",
@@ -8343,7 +8957,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Gemstone_Deco_A_c_002",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "213036001",
@@ -8375,7 +8992,10 @@
       "combo_item_id": "310350010",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0096",
+      "craft_type": "Ring",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211043011",
@@ -8402,7 +9022,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0036_T05",
+      "craft_type": "Bow"
     },
     {
       "recipe_id": "213023011",
@@ -8429,7 +9051,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0036",
+      "craft_type": "Earring"
     },
     {
       "recipe_id": "213013011",
@@ -8456,7 +9080,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0036",
+      "craft_type": "Necklace"
     },
     {
       "recipe_id": "213033011",
@@ -8483,7 +9109,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0036",
+      "craft_type": "Ring"
     },
     {
       "recipe_id": "211103011",
@@ -8510,7 +9138,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0036_T05",
+      "craft_type": "Staff"
     },
     {
       "recipe_id": "211043013",
@@ -8547,7 +9177,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0068_T05",
+      "craft_type": "Bow"
     },
     {
       "recipe_id": "213023013",
@@ -8584,7 +9216,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0035",
+      "craft_type": "Earring"
     },
     {
       "recipe_id": "213013013",
@@ -8621,7 +9255,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0035",
+      "craft_type": "Necklace"
     },
     {
       "recipe_id": "213033013",
@@ -8658,7 +9294,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0035",
+      "craft_type": "Ring"
     },
     {
       "recipe_id": "211103013",
@@ -8695,7 +9333,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0068_T05",
+      "craft_type": "Staff"
     },
     {
       "recipe_id": "211043015",
@@ -8737,7 +9377,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0100_T06",
+      "craft_type": "Bow"
     },
     {
       "recipe_id": "213023015",
@@ -8779,7 +9421,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0047",
+      "craft_type": "Earring"
     },
     {
       "recipe_id": "213013015",
@@ -8821,7 +9465,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0047",
+      "craft_type": "Necklace"
     },
     {
       "recipe_id": "213033015",
@@ -8863,7 +9509,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0047",
+      "craft_type": "Ring"
     },
     {
       "recipe_id": "211103015",
@@ -8905,7 +9553,9 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0100_T06",
+      "craft_type": "Staff"
     },
     {
       "recipe_id": "211043001",
@@ -8952,7 +9602,10 @@
       "combo_item_id": "110430017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0036_T05",
+      "craft_type": "Bow",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "213023001",
@@ -8999,7 +9652,10 @@
       "combo_item_id": "310230017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0036",
+      "craft_type": "Earring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "213013001",
@@ -9046,7 +9702,10 @@
       "combo_item_id": "310130017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0036",
+      "craft_type": "Necklace",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "213033001",
@@ -9093,7 +9752,10 @@
       "combo_item_id": "310330017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0036",
+      "craft_type": "Ring",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "211103001",
@@ -9140,7 +9802,10 @@
       "combo_item_id": "110830017",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0036_T05",
+      "craft_type": "Staff",
+      "mastery_grade": "intermediate"
     },
     {
       "recipe_id": "211043012",
@@ -9192,7 +9857,9 @@
       "combo_item_id": "110430097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0068_T05",
+      "craft_type": "Bow"
     },
     {
       "recipe_id": "213023012",
@@ -9244,7 +9911,9 @@
       "combo_item_id": "310230114",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0035",
+      "craft_type": "Earring"
     },
     {
       "recipe_id": "213013012",
@@ -9296,7 +9965,9 @@
       "combo_item_id": "310130112",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0035",
+      "craft_type": "Necklace"
     },
     {
       "recipe_id": "213033012",
@@ -9348,7 +10019,9 @@
       "combo_item_id": "310330114",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0035",
+      "craft_type": "Ring"
     },
     {
       "recipe_id": "211103012",
@@ -9400,7 +10073,9 @@
       "combo_item_id": "110830097",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0068_T05",
+      "craft_type": "Staff"
     },
     {
       "recipe_id": "213045002",
@@ -9432,7 +10107,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Bracelet_0030",
+      "craft_type": "Bracelet",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211043014",
@@ -9489,7 +10167,9 @@
       "combo_item_id": "110430104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0100_T06",
+      "craft_type": "Bow"
     },
     {
       "recipe_id": "213023014",
@@ -9546,7 +10226,9 @@
       "combo_item_id": "310230121",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_ER_0047",
+      "craft_type": "Earring"
     },
     {
       "recipe_id": "213013014",
@@ -9603,7 +10285,9 @@
       "combo_item_id": "310130119",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_NL_0047",
+      "craft_type": "Necklace"
     },
     {
       "recipe_id": "213033014",
@@ -9660,7 +10344,9 @@
       "combo_item_id": "310330121",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_ACC_Ring_0047",
+      "craft_type": "Ring"
     },
     {
       "recipe_id": "211103014",
@@ -9717,7 +10403,9 @@
       "combo_item_id": "110830104",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0100_T06",
+      "craft_type": "Staff"
     },
     {
       "recipe_id": "211046001",
@@ -9749,7 +10437,10 @@
       "combo_item_id": "110450014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_BW_0052_T04",
+      "craft_type": "Bow",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "211106001",
@@ -9781,7 +10472,10 @@
       "combo_item_id": "110850014",
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_WP_ST_0052_T04",
+      "craft_type": "Staff",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016007",
@@ -9808,7 +10502,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Part_Jewel_L_c_001",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     },
     {
       "recipe_id": "215016008",
@@ -9835,7 +10532,10 @@
       "combo_item_id": null,
       "reference": true,
       "verified": false,
-      "source": "xtopolis/aion2-static MIT Global client 2026-09-21"
+      "source": "xtopolis/aion2-static MIT Global client 2026-09-21",
+      "icon": "Icon_Item_Craft_Part_Jewel_L_c_001",
+      "craft_type": "Misc_Jewelcrafting",
+      "mastery_grade": "beginner"
     }
   ]
 }
