@@ -4,6 +4,19 @@
 
 Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
+## Market-only Score when crafting costs are missing
+
+The dashboard intentionally **does not invent missing material prices**, even if waiting for Bound/NPC costs would prevent a true profitability calculation. Instead, whenever at least two nonempty chronological Fregion listing snapshots exist:
+
+- **MARKET ONLY (blue)** is a preliminary 0–100 *market activity signal* derived from observed listing outflow (45%), asking-price strength (30%), and listing-supply liquidity (25%), discounted for short histories, low confidence, and very sparse listings. It does **not** incorporate Kinah cost, ROI, Margin, or proof of completed sales. A cost-incomplete recipe may receive this score but is never tagged as a verified investment opportunity.
+- **INVEST PREVIEW (amber)** is a separate, conservative score when a recipe's cost is estimated but the requested history window is not yet sufficiently covered. It is **not** equivalent to a mature Investment Score.
+- **INVEST EST.** appears when both cost and market-history conditions are met; recipe success, NPC vendor reference, and listing outflow caveats still apply. Explicitly negative margin displays **LOSS 0/100**.
+- **No score** appears if there are fewer than two usable snapshots or no market data, or if the output is unlisted, Bound or not craftable under the profile restrictions. A snapshot cannot demonstrate outflow by itself.
+- The default sort keeps score types separate: full Investment Scores first, followed by profitable recipes sorted by Margin, followed by Market-only previews sorted by Market Signal Score, then known losses/unavailable data. When no full Investment Score is ready, Margin-ranked items come first, then Market-only scores. A new **Market Score** filter makes all cost-incomplete but market-observable crafts easy to find.
+- The detail panel lists missing input names and shows the distinction between Market Signal Score versus Investment Score. To unlock ROI/Margin, add confirmed NPC/Bound input costs or use the existing opt-in Taiwan NPC *reference scenario* (not verified Fregion prices).
+
+This initial scoring is only for **Fregion Asia/Elyos**. Reductions in listings still can be withdrawn/expired orders, not sold units; the score is not a probability that a craft sells.
+
 ## Sortable columns and equipment crafting chains (Oct 27, 2026)
 
 - Every column header in the dashboard is a keyboard-accessible button: click once to sort that column, click again to reverse the direction. The sort dropdown still works.
