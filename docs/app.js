@@ -9,7 +9,14 @@ const storageKey='fregion_craft_pulse_v3';
 const oldStorageKey='fregion_craft_pulse_v2';
 function readSaved(){try{let x=JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(oldStorageKey)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
 const saved=isDemo?{}:readSaved();
-const state={latest:null,history:null,recipes:[],selected:null,period:24,search:'',filter:'evaluated',sort:'score',settings:{tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:null,Armorsmithing:null,Handicrafting:null,Cooking:null},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
+const state={latest:null,history:null,recipes:[],selected:null,period:24,search:'',filter:'evaluated',sort:'score',settings:{tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
+const JOBS=['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'];
+// Migrate saved preferences: old unknown/null values become Lv100; explicit skill values are preserved.
+const previousSkills=(state.settings.skills&&typeof state.settings.skills==='object')?state.settings.skills:{};
+state.settings.skills=Object.fromEntries(JOBS.map(job=>{
+ const existing=E.safeNumber(previousSkills[job]);
+ return [job,existing===null?100:Math.max(0,Math.min(100,existing))];
+}));
 function save(){if(isDemo)return;try{localStorage.setItem(storageKey,JSON.stringify({settings:state.settings,materialPrices:state.materialPrices,overrides:state.overrides,customRecipes:state.customRecipes,verified:state.verified,watchlist:state.watchlist,selectedRecipes:state.selectedRecipes}))}catch(e){console.warn('Could not save browser settings',e)}}
 const esc=x=>String(x??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
 const fmt=n=>n==null||!Number.isFinite(Number(n))?'—':Math.round(Number(n)).toLocaleString('en-US');
@@ -17,6 +24,28 @@ const money=n=>n==null||!Number.isFinite(Number(n))?'—':new Intl.NumberFormat(
 const percent=n=>n==null||!Number.isFinite(n)?'—':`${n>=0?'+':''}${(n*100).toFixed(1)}%`;
 const localTs=t=>t?new Date(t).toLocaleString('th-TH',{timeZone:'Asia/Bangkok',dateStyle:'medium',timeStyle:'short'}):'ยังไม่มี Snapshot';
 const posClass=x=>x==null?'muted':x<0?'down':x>0?'up':'muted';
+const ICON_BASE='https://raw.githubusercontent.com/xtopolis/aion2-static/main/public/icons/crafting/';
+function craftIcon(recipe,large=false){
+ const name=recipe?.icon;
+ const img=typeof name==='string'&&/^[A-Za-z0-9_-]{1,160}$/.test(name)
+  ?'<img alt="" loading="lazy" decoding="async" width="'+(large?68:42)+'" height="'+(large?68:42)+'" src="'+esc(ICON_BASE+name+'.webp')+'" onerror="this.remove()">':'';
+ return '<span class="craft-icon'+(large?' craft-icon-lg':'')+'" aria-hidden="true"><span class="craft-icon-placeholder">◇</span>'+img+'</span>';
+}
+function recipeTier(recipe){
+ if(!recipe)return '—';
+ if(recipe.mastery_grade==='beginner')return 'Novice';
+ if(recipe.mastery_grade==='intermediate')return 'Professional';
+ return recipe.level==null?'ไม่ระบุ':Number(recipe.level)>50?'Professional':'Novice';
+}
+function actualSuccess(recipe,item){
+ if(!recipe)return null;
+ const rate=E.safeNumber(state.overrides?.[item.id]?.success_rate??recipe.success_rate);
+ return rate!==null&&rate>0&&rate<=1?rate:null;
+}
+function successLabel(recipe,item){
+ const rate=actualSuccess(recipe,item);
+ return rate===null?'ไม่ทราบ':(rate*100).toFixed(1).replace(/\.0$/,'')+'%';
+}
 function itemFor(id){return state.latest?.items.find(x=>x.id===id)}
 function recipeKey(recipe){return recipe.recipe_id||[recipe.item_id||E.normName(recipe.name),recipe.profession,recipe.level??'?'].join(':')}
 function recipeOptions(item){return E.recipesFor(item,state.recipes)}
@@ -63,13 +92,14 @@ function renderHead(){
  const candidates=items.map(compute).filter(x=>x.eco.complete&&x.eco.profit>0).length;
  $('opportunities').textContent=items.length?fmt(candidates):'—';
  const age=state.latest.ts?(Date.now()-Date.parse(state.latest.ts))/3600000:null;
- $('freshness').textContent=isDemo?'DEMO DATA':age===null?'รอข้อมูล':age>12?'ข้อมูลเก่า · '+Math.floor(age)+' ชั่วโมง':'เก็บล่าสุด '+Math.max(0,Math.floor(age))+' ชั่วโมงก่อน';
- $('freshness').className='freshness'+(age!==null&&age>12?' warning':'');
+ $('freshness').textContent=isDemo?'DEMO DATA':age===null?'รอข้อมูล':age>3?'Feed ล่าช้า · '+Math.floor(age)+' ชั่วโมง':'ข้อมูลใหม่ '+Math.max(0,Math.floor(age*60))+' นาทีที่แล้ว';
+ $('freshness').className='freshness'+(age!==null&&age>3?' warning':'');
+ const cron=$('cronStatus');if(cron)cron.textContent=isDemo?'ข้อมูลทดลอง':age===null?'Cron · รอ Snapshot':age>3?'Cron · ตรวจ GitHub Actions':'Cron · ทุกชั่วโมง (UTC :23)';
 }
 function renderTable(){
  let rows=state.latest.items.map(compute);
  const query=E.normName(state.search);
- if(query)rows=rows.filter(x=>E.normName(x.item.name).includes(query)||x.item.id.includes(query));
+ if(query)rows=rows.filter(x=>E.normName(x.item.name).includes(query)||x.item.id.includes(query)||E.normName(x.recipe?.profession).includes(query)||E.normName(x.recipe?.craft_type).includes(query));
  if(state.filter==='craft')rows=rows.filter(x=>x.recipe);
  if(state.filter==='evaluated')rows=rows.filter(x=>x.recipe&&x.eco.complete);
  if(state.filter==='reference')rows=rows.filter(x=>x.recipe&&x.eco.complete&&!verified(x.recipe));
@@ -219,4 +249,26 @@ async function load(){
   state.ready=true;render();
  }catch(err){$('itemsTable').innerHTML=`<tr><td colspan="12"><div class="empty-data"><strong>เปิดข้อมูลไม่ได้</strong>${esc(err.message)}<p>เปิดเว็บผ่าน HTTP Server เช่น python -m http.server (ไม่ใช่ file://)</p></div></td></tr>`;$('qualityTitle').textContent='DATA ERROR';console.error(err)}
 }
+// The collector runs hourly on GitHub; poll cached static JSON only for active browser tabs.
+let lastFeedCheck=0;
+async function refreshFeedInPlace(){
+ if(isDemo||!state.ready||document.visibilityState==='hidden')return;
+ const now=Date.now();if(now-lastFeedCheck<4*60*1000)return;lastFeedCheck=now;
+ try{
+  const latestRes=await fetch('data/latest.json?ts='+now,{cache:'no-store'});
+  if(!latestRes.ok)throw Error('latest '+latestRes.status);
+  const latest=await latestRes.json();
+  if(!Array.isArray(latest.items)||latest.region!=='Asia'||latest.faction!=='Elyos'||latest.server!=='Fregion')return;
+  if(Date.parse(latest.ts)<=Date.parse(state.latest.ts))return;
+  const historyRes=await fetch('data/history.json?ts='+now,{cache:'no-store'});
+  if(!historyRes.ok)throw Error('history '+historyRes.status);
+  const history=await historyRes.json();
+  if(!Array.isArray(history.snapshots)||String(history.server_id)!==String(latest.server_id))return;
+  state.latest=latest;state.history=history;render();
+ }catch(err){console.warn('Background feed refresh failed:',err)}
+}
 setupControls();load();
+if(!isDemo){
+ setInterval(refreshFeedInPlace,10*60*1000);
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshFeedInPlace()});
+}
