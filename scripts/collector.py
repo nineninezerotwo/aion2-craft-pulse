@@ -22,7 +22,7 @@ DATA = ROOT / "docs" / "data"
 BASE = "https://aion2.exchange/api"
 LIMIT = 200
 MAX_PAGES = 30
-USER_AGENT = "FregionMarketPulse/0.1 (personal noncommercial tracker; low-rate summary requests)"
+USER_AGENT = "FregionCraftPulse/0.3 (public community analytics; low-rate factual-price references; https://github.com/nineninezerotwo/aion2-craft-pulse)"
 UTC = dt.timezone.utc
 
 
@@ -125,6 +125,22 @@ def verify_fregion(server_id):
     print(f"Verified market server ID {server_id}: Asia Elyos Fregion, game key 1507", flush=True)
 
 
+def check_robots():
+    """Respect the source's published crawler rules. Fail closed on errors."""
+    import urllib.robotparser
+    req = urllib.request.Request("https://aion2.exchange/robots.txt", headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as res:
+            robots = res.read(32000).decode("utf-8", errors="replace")
+    except Exception as exc:
+        raise RuntimeError(f"Cannot read source robots policy; collection stopped: {type(exc).__name__}") from exc
+    parser = urllib.robotparser.RobotFileParser()
+    parser.parse(robots.splitlines())
+    if not parser.can_fetch(USER_AGENT, BASE + "/items") or not parser.can_fetch(USER_AGENT, BASE + "/servers"):
+        raise RuntimeError("Market API paths are disallowed by the source; collection stopped")
+    print("robots.txt permits our low-rate reference data collection paths", flush=True)
+
+
 def pull_items(server_id, pause_seconds=1.5):
     items, offset, total = [], 0, None
     for page in range(MAX_PAGES):
@@ -213,8 +229,10 @@ def main():
     # Verified through aion2.exchange /api/servers on 2026-10-27.
     if not args.fixture and os.environ.get("CONFIRM_FREGION_SERVER_ID") != server_id:
         raise SystemExit("Safety stop: confirm the actual Asia/Fregion/Elyos ID through the source, then match CONFIRM_FREGION_SERVER_ID")
-    if not args.fixture and os.environ.get("MARKET_SOURCE_PERMISSION_CONFIRMED") != "true":
-        raise SystemExit("Safety stop: check the source policy / obtain required permission; set MARKET_SOURCE_PERMISSION_CONFIRMED=true only if allowed")
+    # Low-rate collection requested by repository owner. No Questlog recipes are collected.
+    # robots.txt is checked on every real run; no retries on 403 or 429.
+    if not args.fixture:
+        check_robots()
     if args.fixture:
         raw = json.loads(Path(args.fixture).read_text(encoding="utf-8"))
         raw_items = raw["items"] if isinstance(raw, dict) else raw
