@@ -84,3 +84,28 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .vendor-optin{display:flex;align-items:flex-start;gap:9px;margin:15px 0 11px;color:#accbd9}
 .vendor-optin input{flex:0 0 auto;accent-color:#54caac;margin-top:4px}
 .vendor-optin small{display:block;color:#d9b47c;font-size:11px}
+
+/* Complete recipe catalog discovery: no recipe hidden just because vendor costs are unknown. */
+.craft-category-area{padding:5px 20px 13px;border-bottom:1px solid #263b4f;margin-bottom:11px}
+.craft-category-label{color:#deecf4;font-size:12px;font-weight:800;letter-spacing:.15px;margin:10px 0}
+.craft-category-label span{color:#86a6b7;font-size:11px;font-weight:400;margin-left:8px}
+.craft-families{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.craft-family{appearance:none;border:1px solid #355166;background:#14293c;color:#b5cadb;
+ display:inline-flex;gap:8px;align-items:center;padding:9px 13px;border-radius:9px;font-weight:650;font-size:12px;cursor:pointer}
+.craft-family span{border:1px solid #3d5363;background:#0d2130;border-radius:30px;padding:1px 6px;color:#a6c0cf;font-size:10px}
+.craft-family.active{border-color:#55d4aa;background:#16473c;color:#c5fff0}
+.craft-family.active span{color:#aef1d4;border-color:#57af94;background:#174637}
+.craft-family:hover{border-color:#65cca9}
+.craft-family:focus-visible{outline:2px solid #c6f3dd;outline-offset:2px}
+.craft-category-hint{color:#8fabbc;font-size:11px;margin-top:9px;line-height:1.6}
+.market-tag-row{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin:5px 0 2px}
+.market-tag-row:empty{display:none}
+.market-data-tag{display:inline-flex;align-items:center;border-radius:5px;padding:2px 6px;font-size:10px;font-weight:700;line-height:1.3}
+.market-data-tag.bound{background:#383442;color:#cbb9dd;border:1px solid #594667}
+.market-data-tag.unlisted{background:#303a4a;color:#b8cddd;border:1px solid #536074}
+.market-data-tag.needs-cost{background:#4c3b24;color:#f1ca83;border:1px solid #7b5b37}
+.market-note{background:#12283b;border:1px solid #47617b;color:#c3d5e2;padding:10px 12px;border-radius:9px;font-size:12px;margin:12px 0}
+.unlisted-market-note{color:#ecc987}
+.pill.unlisted{background:#293b4b;color:#bbd2e2}
+.pill.bound{background:#3a3242;color:#dbc4e3}
+@media(max-width:670px){.craft-category-area{padding:5px 11px 14px}.craft-family{padding:9px 10px}.craft-category-label span{display:block;margin-left:0;margin-top:3px}}
