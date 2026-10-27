@@ -291,24 +291,30 @@
    };
  }
 
- function collectIngredientCost(recipe,items,materialPrices){
+ function collectIngredientCost(recipe,items,materialPrices,vendorReference={},allowVendorReference=false){
    let subtotal=0;const missing=[],parts=[];
+   let vendorReferenceUsed=false;
    for(const ingredient of recipe.ingredients||[]){
      const quantity=safeNumber(ingredient.qty);
      if(quantity===null||quantity<=0){missing.push(`จำนวนของ ${ingredient.name}`);continue}
      const key=ingredient.id?`id:${ingredient.id}`:`name:${normName(ingredient.name)}`;
      const override=safeNumber(materialPrices[key]);
      const match=items.find(it=>ingredient.id?String(it.id)===String(ingredient.id):normName(it.name)===normName(ingredient.name));
-     const price=override!==null?override:safeNumber(match?.price);
+     const market=safeNumber(match?.price);
+     const fromVendor=allowVendorReference && ingredient.id && market===null && override===null
+        ?safeNumber(vendorReference[String(ingredient.id)]):null;
+     const price=override!==null?override:market!==null?market:fromVendor;
+     const isVendor=price!==null && fromVendor!==null && override===null && market===null;
+     if(isVendor)vendorReferenceUsed=true;
      if(price===null){missing.push(ingredient.name||ingredient.id);parts.push({name:ingredient.name,qty:quantity,price:null,total:null});continue}
      const total=price*quantity;subtotal+=total;
-     parts.push({name:ingredient.name,qty:quantity,price,total,manual:override!==null});
+     parts.push({name:ingredient.name,qty:quantity,price,total,manual:override!==null,vendorReference:isVendor});
    }
-   return {subtotal,parts,missing};
+   return {subtotal,parts,missing,vendorReferenceUsed};
  }
  function calculateEconomics(item,recipe,items,settings={},custom={}){
    if(!recipe)return {complete:false,reason:'ไม่มีสูตรคราฟ'};
-   const materials=collectIngredientCost(recipe,items,custom.materialPrices||{});
+   const materials=collectIngredientCost(recipe,items,custom.materialPrices||{},custom.vendorPrices||{},custom.useVendorReference===true);
    const outQty=safeNumber(recipe.output_qty);
    const knownSuccess=safeNumber(custom.success_rate??recipe.success_rate);
    const assumedSuccess=knownSuccess===null;
@@ -331,7 +337,7 @@
    const manualOverride=manualUnitCost!==null&&manualUnitCost>0;
    const chainOverride=!manualOverride&&chainCost!==null&&chainCost>0;
    if((manualOverride||chainOverride)&&ask!==null&&ask>0)missing.length=0;
-   const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,assumedSuccess,npc_kinah:npc,output_qty:outQty,reference:recipe.reference===true,comboExcluded:!!recipe.combo_chance};
+   const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,assumedSuccess,npc_kinah:npc,output_qty:outQty,reference:recipe.reference===true,comboExcluded:!!recipe.combo_chance,vendorReference:materials.vendorReferenceUsed||Boolean(chainEstimate?.vendorReference)};
    if(missing.length)return {...base,reason:'ข้อมูลต้นทุนหรือสูตรไม่ครบ'};
    // Bernoulli success model. Failure consumes inputs with no output; combo ignored.
    const spend=manualOverride||chainOverride?null:materials.subtotal+npc+crafting;
@@ -341,9 +347,9 @@
    const roi=unitCost>0?profit/unitCost:null;
    const margin=netRevenue>0?profit/netRevenue:null;
    return {...base,complete:true,missing:[],recipeSpend:spend,unitCost,netRevenue,profit,roi,margin,tax,listingFee,manualOverride,
-     chainEstimated:chainOverride,chainEstimate:chainOverride?chainEstimate:null,costSource:manualOverride?'manual':chainOverride?'chain-model':'direct',
+     chainEstimated:chainOverride,chainEstimate:chainOverride?chainEstimate:null,costSource:manualOverride?'manual':chainOverride?'chain-model':materials.vendorReferenceUsed?'vendor-reference':'direct',
      assumedSuccess:chainOverride?Boolean(chainEstimate.assumedSuccess):assumedSuccess,
-     scenario:assumedSuccess||recipe.reference===true||chainOverride};
+     scenario:assumedSuccess||recipe.reference===true||chainOverride||materials.vendorReferenceUsed};
  }
  function opportunityScore(signal,eco,recipeVerified){
    if(!eco.complete)return {status:'cost',label:'รอต้นทุน',score:null,reason:eco.reason};
