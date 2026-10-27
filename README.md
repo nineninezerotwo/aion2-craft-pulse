@@ -42,6 +42,7 @@ The checked-in catalog was converted from the MIT Global client reference, not s
 python scripts/import_client_recipes.py --input /path/to/crafting.json
 python -m unittest discover -s tests -v
 node tests/test_engine.js
+node tests/test_catalog_integration.js
 ```
 
 User-defined recipes can be added/verified and edited in the dashboard; they stay in `localStorage`. Export a JSON backup from Settings if you switch devices.
@@ -53,6 +54,7 @@ python -m http.server 8000 --directory docs
 # http://localhost:8000/
 python -m unittest discover -s tests -v
 node tests/test_engine.js
+node tests/test_catalog_integration.js
 node --check docs/app.js
 node --check docs/engine.js
 ```

@@ -33,6 +33,7 @@ jobs:
         run: |
           python -m unittest discover -s tests -v
           node tests/test_engine.js
+          node tests/test_catalog_integration.js
           node --check docs/app.js
           node --check docs/engine.js
       - name: Collect Fregion public market summaries (rate limited; policy checked)

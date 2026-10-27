@@ -60,7 +60,7 @@ function renderHead(){
  const snap=state.history.snapshots;
  const h=snap.length>1?(Date.parse(snap.at(-1).ts)-Date.parse(snap[0].ts))/3600000:0;
  $('historyDuration').textContent=h>=24?(h/24).toFixed(1)+'d':h>=1?h.toFixed(1)+'h':'—';
- const candidates=items.map(compute).filter(x=>x.op.status==='trial').length;
+ const candidates=items.map(compute).filter(x=>x.eco.complete&&x.eco.profit>0).length;
  $('opportunities').textContent=items.length?fmt(candidates):'—';
  const age=state.latest.ts?(Date.now()-Date.parse(state.latest.ts))/3600000:null;
  $('freshness').textContent=isDemo?'DEMO DATA':age===null?'รอข้อมูล':age>12?'ข้อมูลเก่า · '+Math.floor(age)+' ชั่วโมง':'เก็บล่าสุด '+Math.max(0,Math.floor(age))+' ชั่วโมงก่อน';
