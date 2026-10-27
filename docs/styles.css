@@ -217,3 +217,8 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
  .main-panel .table-scroll .craft-item-cell{gap:8px}
  .main-panel .table-scroll .craft-item-copy .item-name{font-size:12px}
 }
+
+/* Amber active header is the effective Margin fallback, not Investment Score. */
+#craftHeader th.fallback-column .sort-header{color:#f2cf91;background:rgba(147,106,44,.13)}
+#craftHeader th.fallback-column .sort-direction{color:#efcc8b}
+
