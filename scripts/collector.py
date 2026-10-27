@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "docs" / "data"
 BASE = "https://aion2.exchange/api"
 LIMIT = 200
-MAX_PAGES = 20
+MAX_PAGES = 30
 USER_AGENT = "FregionMarketPulse/0.1 (personal noncommercial tracker; low-rate summary requests)"
 UTC = dt.timezone.utc
 
@@ -110,6 +110,21 @@ def request_json(url):
         raise
 
 
+def verify_fregion(server_id):
+    """Abort if the current API does not map this market to Asia/Elyos/Fregion."""
+    worlds = request_json(f"{BASE}/servers")
+    entries = worlds if isinstance(worlds, list) else (
+        worlds.get("servers") or worlds.get("items") or worlds.get("data") or []
+    ) if isinstance(worlds, dict) else []
+    if not isinstance(entries, list):
+        raise RuntimeError("Unexpected server mapping response")
+    row = next((x for x in entries if isinstance(x, dict) and str(x.get("server_id")) == str(server_id)), None)
+    expected = {"name": "Fregion", "region": "AS", "faction": "Elyos"}
+    if row is None or any(str(row.get(k)) != v for k, v in expected.items()) or str(row.get("game_server_key")) != "1507":
+        raise RuntimeError(f"API server {server_id} is not verified as Asia Elyos Fregion")
+    print(f"Verified market server ID {server_id}: Asia Elyos Fregion, game key 1507", flush=True)
+
+
 def pull_items(server_id, pause_seconds=1.5):
     items, offset, total = [], 0, None
     for page in range(MAX_PAGES):
@@ -123,7 +138,7 @@ def pull_items(server_id, pause_seconds=1.5):
         items.extend(page_items)
         print(f"Page {page+1}: {len(page_items)} items (total {len(items)})", flush=True)
         offset += len(page_items)
-        if not page_items or len(page_items) < LIMIT or (total is not None and offset >= total):
+        if not page_items or (total is not None and offset >= total) or (total is None and len(page_items) < LIMIT):
             break
         time.sleep(pause_seconds)
     else:
@@ -192,11 +207,10 @@ def main():
     parser = argparse.ArgumentParser(description="Capture all publicly listed AION 2 items for one confirmed world")
     parser.add_argument("--fixture", help="Use local JSON fixture instead of the network (for testing only)")
     args = parser.parse_args()
-    server_id = os.environ.get("MARKET_SERVER_ID", "").strip()
+    server_id = os.environ.get("MARKET_SERVER_ID", "11507").strip()
     if not server_id.isdigit():
         raise SystemExit("MARKET_SERVER_ID must be numeric")
-    # This mapping is inferred from 1507 and the market API's 5-digit IDs, not live-tested.
-    # Do NOT collect until someone checks the selected server ID in the browser's Network panel.
+    # Verified through aion2.exchange /api/servers on 2026-10-27.
     if not args.fixture and os.environ.get("CONFIRM_FREGION_SERVER_ID") != server_id:
         raise SystemExit("Safety stop: confirm the actual Asia/Fregion/Elyos ID through the source, then match CONFIRM_FREGION_SERVER_ID")
     if not args.fixture and os.environ.get("MARKET_SOURCE_PERMISSION_CONFIRMED") != "true":
@@ -205,6 +219,7 @@ def main():
         raw = json.loads(Path(args.fixture).read_text(encoding="utf-8"))
         raw_items = raw["items"] if isinstance(raw, dict) else raw
     else:
+        verify_fregion(server_id)
         raw_items = pull_items(server_id)
     created = utc_now()
     latest = latest_snapshot(raw_items, server_id, created)
