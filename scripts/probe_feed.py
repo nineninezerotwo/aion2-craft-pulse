@@ -82,3 +82,10 @@ if __name__=="__main__":
     main()
     confirm_mapping()
     check_robots()
+    req=urllib.request.Request(BASE+"?"+urllib.parse.urlencode({"server":"11507","limit":200,"offset":0,"sort":"name","order":"asc","window":"24h"}),headers=HEADERS)
+    try:
+        with urllib.request.urlopen(req,timeout=25) as response:
+            data=json.load(response)
+            print("Bulk first page: HTTP",response.status,"requested limit=200; returned",len(data.get("items",[])),"total",data.get("total"),"reported limit",data.get("limit"))
+    except Exception as exc:
+        print("Bulk first page probe error",type(exc).__name__,str(exc)[:150])
