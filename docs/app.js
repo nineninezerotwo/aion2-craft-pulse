@@ -134,15 +134,18 @@ function renderTable(){
  if(state.filter==='available')rows=rows.filter(x=>x.recipe&&x.eligible===true);
  if(state.filter==='watchlist')rows=rows.filter(x=>state.watchlist.includes(x.item.id));
  if(state.filter.startsWith('job:'))rows=rows.filter(x=>x.recipe?.profession===state.filter.slice(4));
- function score(x){return x.op.score??-100}
- switch(state.sort){
- case 'margin':rows.sort((a,b)=>(b.eco.margin??-1e5)-(a.eco.margin??-1e5));break;
- case 'roi':rows.sort((a,b)=>(b.eco.roi??-1e5)-(a.eco.roi??-1e5));break;
- case 'profit':rows.sort((a,b)=>(b.eco.profit??-1e15)-(a.eco.profit??-1e15));break;
- case 'drop':rows.sort((a,b)=>(b.signal.observedDrops??-1)-(a.signal.observedDrops??-1));break;
- case 'outflow':rows.sort((a,b)=>(b.signal.removedRate??-1)-(a.signal.removedRate??-1));break;
- case 'name':rows.sort((a,b)=>a.item.name.localeCompare(b.item.name));break;
- default:rows.sort((a,b)=>score(b)-score(a) || (b.eco.complete?1:0)-(a.eco.complete?1:0) || (b.eco.roi??-100)-(a.eco.roi??-100) || a.item.name.localeCompare(b.item.name));
+ rows=E.sortCraftRows(rows,state.sort,state.sortDir);
+ const scoresReady=rows.some(x=>x.op.score!=null && x.op.score>0);
+ const sortedByMargin=state.sort==='score'&&state.sortDir==='desc'&&!scoresReady;
+ const elSort=$('sortHint');if(elSort)elSort.textContent=sortedByMargin
+   ?'ยังไม่มี Investment Score ที่ใช้จัดอันดับได้ → เรียงตาม Net Margin % สูงสุดก่อน'
+   :'คลิกหัวคอลัมน์เพื่อเรียงจากมาก–น้อยหรือสลับเป็นน้อย–มาก';
+ for(const th of document.querySelectorAll('#craftHeader th[data-sort-key]')){
+   const active=th.dataset.sortKey===state.sort;
+   const glyph=th.querySelector('.sort-direction');
+   if(glyph)glyph.textContent=active?(state.sortDir==='desc'?'↓':'↑'):'↕';
+   th.setAttribute('aria-sort',active?(state.sortDir==='desc'?'descending':'ascending'):'none');
+   th.classList.toggle('sorted-column',active);
  }
  $('rowCount').textContent=`แสดง ${Math.min(rows.length,250)} จาก ${rows.length} รายการ · ${state.period<=24?state.period+' ชั่วโมง':state.period/24+' วัน'}`;
  const body=$('itemsTable');
@@ -151,7 +154,7 @@ function renderTable(){
  body.innerHTML=rows.slice(0,250).map(({item,recipe,signal,eco,op})=>{
   const listDelta=signal.netDelta;const watch=state.watchlist.includes(item.id);
   const rarity=rarityForItem(item,recipe),hot=E.isHotListingSignal(signal);
-  return `<tr data-id="${esc(item.id)}" class="${state.selected===item.id?'selected':''}"><td class="name-cell"><div class="craft-item-cell">${craftIcon(recipe)}<div class="craft-item-copy"><div class="item-title-row"><div class="item-name rarity-${rarity.key}" title="${esc(item.name)} · ${esc(rarity.label)}">${esc(item.name)} ${watch?'<span class="star">★</span>':''}</div>${hot?'<span class="hot-listing-tag" title="สัญญาณ Listings ลดสูง ไม่ใช่ยอดขายสำเร็จ">🔥 ขายดี*</span>':''}</div><div class="item-sub">${recipe?'<strong>'+esc(recipe.profession)+'</strong> · '+esc(recipe.craft_type||'Item'):'ไม่พบสูตรคราฟ'}</div><div class="craft-unlock">${recipe?'ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level)):'ยังไม่มีสูตร'}${recipe&&!verified(recipe)?' · อ้างอิง Global':''}</div></div></div></td><td class="num">${fmt(item.price)}</td><td class="num">${fmt(item.listings)}</td><td class="num ${posClass(signal.observedDrops)}" title="ผลรวม Listings ที่ลดลงระหว่าง Snapshot ในช่วงที่เลือก ไม่ใช่ยอดขายสำเร็จ">${signal.observedDrops===null?'—':fmt(signal.observedDrops)}</td><td class="num outflow-rate" title="Removed ÷ (Listings ต้นช่วง + จำนวน Listings ที่เพิ่มระหว่าง Snapshot) · ไม่ใช่อัตราขายสำเร็จ">${signal.removedRate===null?'—':(signal.removedRate*100).toFixed(1)+'%'}</td><td class="num ${posClass(listDelta)}">${listDelta===null?'—':`${listDelta>0?'+':''}${fmt(listDelta)}`}</td><td class="num ${posClass(signal.priceChange)}">${percent(signal.priceChange)}</td><td class="num">${money(eco.unitCost)}</td><td class="num ${posClass(eco.profit)}">${money(eco.profit)}</td><td class="num ${posClass(eco.roi)}">${percent(eco.roi)}</td><td class="num ${posClass(eco.margin)}">${percent(eco.margin)}</td><td>${op.score===null?'<span class="muted">—</span>':`<span class="score-chip">${op.score}<small>/100</small></span>`}<div class="confidence">${signal.valid?'coverage '+fmt(signal.confidence)+'%':'รอข้อมูล'}</div></td><td><span class="pill ${esc(op.status)}">${esc(op.label)}</span></td></tr>`;
+  return `<tr data-id="${esc(item.id)}" class="${state.selected===item.id?'selected':''}"><td class="name-cell"><div class="craft-item-cell">${craftIcon(recipe)}<div class="craft-item-copy"><div class="item-title-row"><div class="item-name rarity-${rarity.key}" title="${esc(item.name)} · ${esc(rarity.label)}">${esc(item.name)} ${watch?'<span class="star">★</span>':''}</div>${hot?'<span class="hot-listing-tag" title="สัญญาณ Listings ลดสูง ไม่ใช่ยอดขายสำเร็จ">🔥 ขายดี*</span>':''}</div><div class="item-sub">${recipe?'<strong>'+esc(recipe.profession)+'</strong> · '+esc(recipe.craft_type||'Item'):'ไม่พบสูตรคราฟ'}</div><div class="craft-unlock">${recipe?'ปลดล็อก '+esc(recipeTier(recipe))+' Lv.'+(recipe.level==null?'?':fmt(recipe.level)):'ยังไม่มีสูตร'}${recipe&&!verified(recipe)?' · อ้างอิง Global':''}</div></div></div></td><td class="num">${fmt(item.price)}</td><td class="num">${fmt(item.listings)}</td><td class="num ${posClass(signal.observedDrops)}" title="ผลรวม Listings ที่ลดลงระหว่าง Snapshot ในช่วงที่เลือก ไม่ใช่ยอดขายสำเร็จ">${signal.observedDrops===null?'—':fmt(signal.observedDrops)}</td><td class="num outflow-rate" title="Removed ÷ (Listings ต้นช่วง + จำนวน Listings ที่เพิ่มระหว่าง Snapshot) · ไม่ใช่อัตราขายสำเร็จ">${signal.removedRate===null?'—':(signal.removedRate*100).toFixed(1)+'%'}</td><td class="num ${posClass(listDelta)}">${listDelta===null?'—':`${listDelta>0?'+':''}${fmt(listDelta)}`}</td><td class="num ${posClass(signal.priceChange)}">${percent(signal.priceChange)}</td><td class="num" title="${eco.chainEstimated?'Chain Estimate: Fregion asks + game-client recipe (may assume success=100% and omit fees).':eco.manualOverride?'Manual unit cost':'Direct market ingredient-price estimate'}">${eco.chainEstimated?'≈ ':''}${money(eco.unitCost)}${eco.chainEstimated?'<small class="chain-cost-label">Chain est.</small>':''}</td><td class="num ${posClass(eco.profit)}">${money(eco.profit)}</td><td class="num ${posClass(eco.roi)}">${percent(eco.roi)}</td><td class="num ${posClass(eco.margin)}">${percent(eco.margin)}</td><td>${op.score===null?'<span class="muted">—</span>':`<span class="score-chip">${op.score}<small>/100</small></span>`}<div class="confidence">${signal.valid?'coverage '+fmt(signal.confidence)+'%':'รอข้อมูล'}</div></td><td><span class="pill ${esc(op.status)}">${esc(op.label)}</span></td></tr>`;
  }).join('');
  for(const tr of body.querySelectorAll('tr[data-id]'))tr.addEventListener('click',()=>{state.selected=tr.dataset.id;renderTable();renderDetail();$('details').scrollIntoView({behavior:'smooth',block:'nearest'})});
 }
@@ -207,7 +210,16 @@ function readRecipeForm(){
 function setupControls(){
  $('search').addEventListener('input',e=>{state.search=e.target.value;renderTable()});
  $('recipeFilter').addEventListener('change',e=>{state.filter=e.target.value;renderTable()});
- $('sort').addEventListener('change',e=>{state.sort=e.target.value;renderTable()});
+ $('sort').addEventListener('change',e=>{state.sort=e.target.value;state.sortDir=['name','job','status'].includes(state.sort)?'asc':'desc';renderTable()});
+ for(const button of document.querySelectorAll('#craftHeader th[data-sort-key] .sort-header')){
+   button.addEventListener('click',()=>{
+     const col=button.closest('th').dataset.sortKey;
+     if(state.sort===col)state.sortDir=state.sortDir==='desc'?'asc':'desc';
+     else {state.sort=col;state.sortDir=['name','job','status'].includes(col)?'asc':'desc';}
+     const select=$('sort');if(select?.querySelector('option[value="'+col+'"]'))select.value=col;
+     renderTable();
+   });
+ }
  $('refresh').addEventListener('click',()=>location.reload());
  for(const [id,key] of [['taxRate','tax_percent'],['listingFee','listing_fee'],['craftingFee','crafting_fee']]){
   const field=$(id);field.value=state.settings[key];field.addEventListener('change',()=>{const n=Number(field.value);if(!Number.isFinite(n)||n<0||(key==='tax_percent'&&n>50)){alert('กรอกค่าที่ถูกต้อง');field.value=state.settings[key];return}state.settings[key]=n;save();render()});
