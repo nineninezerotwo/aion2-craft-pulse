@@ -192,3 +192,11 @@ const cyclic=E.createChainEstimator([
 assert.equal(cyclic.estimate('100').complete,false,'Cycle must fail closed');
 
 console.log('All engine tests passed (ROI, margin, listing drops, confidence, missing inputs, verification)');
+
+const partialCeiling=E.calculateEconomics(item,{...recipe,ingredients:[{name:'Ruby Gemstone',qty:10},{name:'Missing Bound',qty:1}]},[item,ingredient],{tax_percent:10});
+assert.equal(partialCeiling.complete,false);
+assert.equal(partialCeiling.roi,undefined);
+assert(Number.isFinite(partialCeiling.roiUpperBound));
+assert(partialCeiling.minimumUnitCost>0);
+const unknownCeiling=E.calculateEconomics(item,{...recipe,ingredients:[{name:'Missing Bound',qty:1}]},[item],{tax_percent:10});
+assert.equal(unknownCeiling.roiUpperBound,null);
