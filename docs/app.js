@@ -189,12 +189,17 @@ function renderTable(){
      :state.sort==='score'&&state.sortDir==='asc'
        ?'เรียงจริง: SCORE ↑ ตามตัวเลขคะแนน · สลับกลับเป็น ↓ เพื่อใช้กฎ Investment → Margin fallback'
        :'เรียงจริง: '+state.sort.toUpperCase()+' '+(state.sortDir==='desc'?'↓':'↑')+' · คลิกหัวคอลัมน์เพื่อเปลี่ยนลำดับ';
+ // Mark the column that actually controls the default order: when mature
+ // Investment Scores are absent, MARGIN is the effective sort, not SCORE.
+ const marginFallback=state.sort==='score'&&state.sortDir==='desc'&&!investmentReady;
+ const effectiveColumn=marginFallback?'margin':state.sort;
  for(const th of document.querySelectorAll('#craftHeader th[data-sort-key]')){
-   const active=th.dataset.sortKey===state.sort;
+   const active=th.dataset.sortKey===effectiveColumn;
    const glyph=th.querySelector('.sort-direction');
    if(glyph)glyph.textContent=active?(state.sortDir==='desc'?'↓':'↑'):'↕';
    th.setAttribute('aria-sort',active?(state.sortDir==='desc'?'descending':'ascending'):'none');
    th.classList.toggle('sorted-column',active);
+   th.classList.toggle('fallback-column',active&&marginFallback);
  }
  const unlisted=rows.filter(x=>x.item.marketMissing || x.item.price==null || Number(x.item.listings)<=0).length;
  const missingCost=rows.filter(x=>x.recipe&&!x.eco.complete).length;
