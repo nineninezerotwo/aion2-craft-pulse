@@ -81,6 +81,178 @@
      &&signal.removedRate!==null&&signal.removedRate>=.30
      &&signal.priceChange!==null&&signal.priceChange>=-.10);
  }
+
+ // Every sortable market column uses one common comparator, including the score fallback.
+ // Unscored opportunities are compared by net margin, with missing figures always last.
+ function sortCraftRows(input, column='score', direction='desc'){
+   const dir=direction==='asc'?1:-1;
+   const rows=[...input];
+   const number=value=>value==null||!Number.isFinite(Number(value))?null:Number(value);
+   const values={
+     name:r=>r.item?.name??null,
+     job:r=>r.recipe?.profession??null,
+     ask:r=>number(r.item?.price),
+     listings:r=>number(r.item?.listings),
+     drop:r=>number(r.signal?.observedDrops),
+     outflow:r=>number(r.signal?.removedRate),
+     delta:r=>number(r.signal?.netDelta),
+     price:r=>number(r.signal?.priceChange),
+     cost:r=>number(r.eco?.unitCost),
+     profit:r=>number(r.eco?.profit),
+     roi:r=>number(r.eco?.roi),
+     margin:r=>number(r.eco?.margin),
+     score:r=>number(r.op?.score),
+     status:r=>r.op?.label??null
+   };
+   const selected=Object.prototype.hasOwnProperty.call(values,column)?column:'score';
+   const anyPositiveScore=rows.some(r=>number(r.op?.score)>0);
+   function compareNullable(a,b,order){
+     if(a==null)return b==null?0:1;
+     if(b==null)return -1;
+     if(typeof a==='string'||typeof b==='string')
+       return String(a).localeCompare(String(b),'en',{sensitivity:'base',numeric:true})*order;
+     return (a===b?0:a>b?1:-1)*order;
+   }
+   rows.sort((a,b)=>{
+     if(selected==='score'&&direction!=='asc'){
+       const aScore=number(a.op?.score), bScore=number(b.op?.score);
+       // Only positive scores are *actionable*. Unscored profitable crafts outrank known losses (score 0).
+       if(anyPositiveScore){
+         const rank=r=>number(r.op?.score)>0?0:number(r.eco?.margin)!=null?1:2;
+         const ga=rank(a),gb=rank(b);
+         if(ga!==gb)return ga-gb;
+         if(ga===0){const byScore=compareNullable(aScore,bScore,-1);if(byScore)return byScore;}
+       }
+       // First snapshot(s) have no useful scores: lead with highest calculated net margin.
+       const byMargin=compareNullable(number(a.eco?.margin),number(b.eco?.margin),-1);
+       if(byMargin)return byMargin;
+       const byProfit=compareNullable(number(a.eco?.profit),number(b.eco?.profit),-1);
+       if(byProfit)return byProfit;
+     } else {
+       const primary=compareNullable(values[selected](a),values[selected](b),dir);
+       if(primary)return primary;
+       const margin=compareNullable(number(a.eco?.margin),number(b.eco?.margin),-1);
+       if(margin)return margin;
+     }
+     return compareNullable(a.item?.name??null,b.item?.name??null,1);
+   });
+   return rows;
+ }
+
+ function isEquipmentRecipe(recipe){
+   const type=String(recipe?.craft_type||'').toLowerCase();
+   if(!type)return false;
+   return !/^(misc_|potion|scroll|food|drink|magicstone)/.test(type);
+ }
+
+ // Cheapest-path expected cost model using the same Fregion market asking-price feed
+ // that powers the dashboard. This is our estimate, not Aion2Market's published cost endpoint.
+ // For proc products, compute the expected attempts from the parent recipe's COMBO chance.
+ // No revenue is assigned to unwanted non-proc outputs (deliberately conservative).
+ function createChainEstimator(recipes,items,settings={},opts={}){
+   const byOutput=new Map(),byCombo=new Map(),market=new Map();
+   for(const it of items||[]){if(it?.id!=null)market.set(String(it.id),it);}
+   for(const recipe of recipes||[]){
+     const id=String(recipe?.item_id||'');
+     if(!id||!Array.isArray(recipe?.ingredients)||!recipe.ingredients.length)continue;
+     if(!byOutput.has(id))byOutput.set(id,[]);
+     byOutput.get(id).push(recipe);
+     const combo=String(recipe?.combo_item_id||'');
+     const p=safeNumber(recipe?.combo_chance);
+     if(combo&&p!==null&&p>0&&p<=100){
+       if(!byCombo.has(combo))byCombo.set(combo,[]);
+       byCombo.get(combo).push(recipe);
+     }
+   }
+   const marketPrices=opts.materialPrices||{};
+   const vendor=opts.vendorPrices||{};
+   const successOverrides=opts.successOverrides||{};
+   const maxDepth=opts.maxDepth||12;
+   const fee=safeNumber(settings.crafting_fee)??0;
+   const memo=new Map();
+   function result(id,cost,method,extras={}){
+     return {complete:true,id,cost,method,chain:method!=='buy',steps:[],assumedSuccess:false,vendorReference:false,...extras};
+   }
+   function purchasable(id){
+     const override=safeNumber(marketPrices['id:'+id]);
+     if(override!==null&&override>=0)return result(id,override,'manual-material-price',{steps:[{id,mode:'manual-material-price',cost:override}]});
+     const item=market.get(id);
+     const ask=safeNumber(item?.price);
+     if(ask!==null&&ask>0&&Number(item?.listings)>0)
+       return result(id,ask,'buy',{steps:[{id,name:item.name||id,mode:'market-buy',cost:ask}]});
+     // TW reference prices are opt-in approximations, NOT confirmed Global shop prices.
+     if(opts.allowVendorReference){
+       const row=vendor[id],v=safeNumber(typeof row==='object'?row?.kinah:row);
+       if(v!==null&&v>=0)return result(id,v,'vendor-reference',{vendorReference:true,steps:[{id,mode:'vendor-reference-tw',cost:v}]});
+     }
+     return null;
+   }
+   function resolve(id,forceCraft,visited,depth,rootRecipeId){
+     id=String(id);
+     if(depth>maxDepth||visited.has(id))return {complete:false,id,missing:[id],reason:'Cycle/depth restriction'};
+     const key=id+':'+(forceCraft?'craft':'buy-or-craft')+':'+String(rootRecipeId||'');
+     if(memo.has(key))return memo.get(key);
+     const alternatives=[];
+     if(!forceCraft){const bought=purchasable(id);if(bought)alternatives.push(bought);}
+     const next=new Set(visited);next.add(id);
+     let missing=[];
+     const normalRecipes=byOutput.get(id)||[],comboRecipes=byCombo.get(id)||[];
+     const active=normalRecipes.filter(r=>
+       !(comboRecipes.length&&/^Splendent\b/i.test(String(r.name||''))) &&
+       (!forceCraft||!rootRecipeId||String(r.recipe_id)===String(rootRecipeId)));
+     const candidates=active.map(r=>({recipe:r,procRate:1,mode:'craft'}));
+     // Splendent recipes in this extraction often contain only extra materials.
+     // Prefer the *parent combo recipe*, not their incomplete direct inputs.
+     if(comboRecipes.length && (!forceCraft||!rootRecipeId||comboRecipes.some(r=>String(r.recipe_id)===String(rootRecipeId))))
+       for(const recipe of comboRecipes)candidates.push({recipe,procRate:Number(recipe.combo_chance)/100,mode:'combo-proc'});
+     for(const {recipe,procRate,mode} of candidates){
+       const quantity=safeNumber(recipe.output_qty);
+       if(quantity===null||quantity<=0||procRate<=0)continue;
+       let cost=fee+(safeNumber(recipe.npc_kinah)??0);
+       let nodes=[],usedVendor=false,assumedSuccess=false,missingInputs=[];
+       for(const ing of recipe.ingredients){
+         const ingId=String(ing.id||''),qty=safeNumber(ing.qty);
+         if(!ingId||qty===null||qty<=0){missingInputs.push(String(ing.name||ingId));continue}
+         const child=resolve(ingId,false,next,depth+1,null);
+         if(!child.complete){missingInputs.push(ing.name||ingId);continue;}
+         cost+=child.cost*qty;
+         usedVendor ||=Boolean(child.vendorReference);
+         assumedSuccess ||=Boolean(child.assumedSuccess);
+         nodes.push({id:ingId,name:ing.name||market.get(ingId)?.name||ingId,quantity:qty,costEach:child.cost,method:child.method,details:child.steps});
+       }
+       if(missingInputs.length){missing.push(...missingInputs);continue}
+       // An unknown normal craft success is an optimistic scenario, never a verified expectation.
+       const override=safeNumber(successOverrides[String(recipe.item_id)]);
+       const confirmed=safeNumber(recipe.success_rate);
+       const success=override!==null&&override>0&&override<=1?override:confirmed!==null&&confirmed>0&&confirmed<=1?confirmed:1;
+       assumedSuccess ||=!(override!==null&&override>0&&override<=1||confirmed!==null&&confirmed>0&&confirmed<=1);
+       const expectedAttempts=1/(procRate*success);
+       const unitCost=cost*expectedAttempts/quantity;
+       if(!Number.isFinite(unitCost)||unitCost<0)continue;
+       const steps=[{id,name:recipe.name,mode,recipe_id:recipe.recipe_id,cost:unitCost,
+         attempts:expectedAttempts,procChance:mode==='combo-proc'?procRate:null,
+         outputQty:quantity,inputs:nodes}];
+       alternatives.push(result(id,unitCost,mode,{
+         steps,assumedSuccess,vendorReference:usedVendor,
+         procChance:mode==='combo-proc'?procRate:null,
+         expectedAttempts,
+         chain:true,recipe_id:recipe.recipe_id,missing:[]
+       }));
+     }
+     const best=alternatives.sort((a,b)=>a.cost-b.cost)[0];
+     const answer=best||{complete:false,id,missing:[...new Set(missing.length?missing:[market.get(id)?.name||id])],reason:'Unpriced intermediate or unverified recipe'};
+     // Only memoize if recursion context does not change the result: cycles are guarded by visited.
+     if(answer.complete) memo.set(key,answer);
+     return answer;
+   }
+   return {
+     estimate:(itemId,recipeId=null)=>resolve(String(itemId),true,new Set(),0,recipeId),
+     cheapest:id=>resolve(String(id),false,new Set(),0,null),
+     hasCombo:id=>byCombo.has(String(id)),
+     recipeCount:byOutput.size
+   };
+ }
+
  function collectIngredientCost(recipe,items,materialPrices){
    let subtotal=0;const missing=[],parts=[];
    for(const ingredient of recipe.ingredients||[]){
@@ -115,19 +287,25 @@
    if(outQty===null||outQty<=0)missing.push('จำนวนผลผลิต');
    if(success===null||success<=0||success>1)missing.push('อัตราสำเร็จ');
    if(ask===null||ask<=0)missing.push('ราคาตั้งขาย');
+   const chainEstimate=custom.chainEstimate;
+   const chainCost=chainEstimate?.complete===true?safeNumber(chainEstimate.cost):null;
    const manualUnitCost=safeNumber(custom.unit_cost_override);
    const manualOverride=manualUnitCost!==null&&manualUnitCost>0;
-   if(manualOverride && ask!==null && ask>0){missing.length=0;}
+   const chainOverride=!manualOverride&&chainCost!==null&&chainCost>0;
+   if((manualOverride||chainOverride)&&ask!==null&&ask>0)missing.length=0;
    const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,assumedSuccess,npc_kinah:npc,output_qty:outQty,reference:recipe.reference===true,comboExcluded:!!recipe.combo_chance};
    if(missing.length)return {...base,reason:'ข้อมูลต้นทุนหรือสูตรไม่ครบ'};
    // Bernoulli success model. Failure consumes inputs with no output; combo ignored.
-   const spend=manualOverride?null:materials.subtotal+npc+crafting;
-   const unitCost=manualOverride?manualUnitCost:spend/(outQty*success);
+   const spend=manualOverride||chainOverride?null:materials.subtotal+npc+crafting;
+   const unitCost=manualOverride?manualUnitCost:chainOverride?chainCost:spend/(outQty*success);
    const netRevenue=ask*(1-tax)-listingFee;
    const profit=netRevenue-unitCost;
    const roi=unitCost>0?profit/unitCost:null;
    const margin=netRevenue>0?profit/netRevenue:null;
-   return {...base,complete:true,missing:[],recipeSpend:spend,unitCost,netRevenue,profit,roi,margin,tax,listingFee,manualOverride,scenario:assumedSuccess||recipe.reference===true};
+   return {...base,complete:true,missing:[],recipeSpend:spend,unitCost,netRevenue,profit,roi,margin,tax,listingFee,manualOverride,
+     chainEstimated:chainOverride,chainEstimate:chainOverride?chainEstimate:null,costSource:manualOverride?'manual':chainOverride?'chain-model':'direct',
+     assumedSuccess:chainOverride?Boolean(chainEstimate.assumedSuccess):assumedSuccess,
+     scenario:assumedSuccess||recipe.reference===true||chainOverride};
  }
  function opportunityScore(signal,eco,recipeVerified){
    if(!eco.complete)return {status:'cost',label:'รอต้นทุน',score:null,reason:eco.reason};
@@ -157,5 +335,5 @@
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
    return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),item_grade: Number.isInteger(recipe.item_grade)&&RARITIES[recipe.item_grade]?recipe.item_grade:null,icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
  }
- return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
 });
