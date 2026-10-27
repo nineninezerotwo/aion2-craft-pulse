@@ -73,6 +73,7 @@ def convert(data: dict) -> dict:
             'icon': icon_name,
             'craft_type': row.get('t') or '',
             'mastery_grade': row.get('mg') if row.get('mg') in ('beginner', 'intermediate') else None,
+            'item_grade': item[2] if isinstance(item[2], int) else None,
             'reference': True,
             'verified': False,
             'source': SOURCE,
@@ -80,13 +81,14 @@ def convert(data: dict) -> dict:
     if len(rows) < 200 or len(rows) > 400:
         raise ValueError(f'Unexpected number of Elyos recipes: {len(rows)}')
     return {
-        'schema': 4,
+        'schema': 5,
         'source': {
             'name': SOURCE, 'url': SOURCE_URL, 'license': 'MIT',
             'reference_date': '2026-09-21',
             'notes': 'Reference from LST client, not current in-game verification. Unknown success rates and fees. No Questlog scraping.',
             'images': 'Item icon filename references are used from the upstream project; images remain hosted by upstream. Game art rights belong to their respective owners.',
-            'rate_note': 'Combo probability is distinct from ordinary crafting success, which is unknown by default.'
+            'rate_note': 'Combo probability is distinct from ordinary crafting success, which is unknown by default.',
+            'grade_mapping': 'Global-client numeric item grade from item tuple [2]; Special is not Heroic.'
         },
         'server': 'Asia / Elyos / Fregion',
         'recipes': sorted(rows, key=lambda x: (x['profession'],x['name'],x['recipe_id'])),
