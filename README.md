@@ -4,6 +4,16 @@
 
 Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
+## Rarity, Observed Removal % and high-outflow tags
+
+- Item names are colored only when there is an attributed, item-ID-matched **Global-client grade**: 11 Common = white, 21 Rare = green, 31 Epic = blue, 41 Unique = gold, 51/61 higher Heroic = red. Grade 71 Special is not Heroic and stays neutral. If no trustworthy grade is known, the name stays neutral; we never guess rarity from the item name.
+- `docs/data/item-rarity.json` provides grade metadata for 703 known Global-client items. Recipe outputs in `docs/data/recipes.json` also keep `item_grade`; this dataset is a client snapshot and may not cover every marketplace item.
+- **REMOVED** = sum of decreases in active *listing counts* between observed snapshots within the selected time window; it is not units sold or completed sale count. A single listing can contain a stack of items.
+- **OUTFLOW %** = REMOVED / (listings present at the first observed point + positive increases in listings over observed transitions). This percentage reflects observed listing removals relative to *observable listing supply*, not sales conversion. It is bounded 0–100%, may miss moves between snapshot times, and counts delistings/expiration. An incomplete window shows provisional numbers but cannot earn a "hot" tag.
+- **🔥 ขายดี*** is a **high-outflow heuristic**, not a verified "bestseller": requires sufficient history (`valid`, at least 70 confidence, 80% of requested window covered), at least 12 observed supply, average listings at least 8, at least 5 removals, 2 distinct downward transitions, REMOVED % ≥30%, and asking price no worse than −10%.
+- The main Investment Score **already weights Listing Outflow at 30%**, alongside profitability (35%), price strength (20%), and listing supply/liquidity (15%). Outflow is calculated from the new normalized observed removal ratio + the frequency of downward transitions. The hot tag is an extra, stricter presentation check, not an extra boost or double-counted score.
+- The Success percentage column was removed from the shortlist as requested. Users can still configure a verified craft success chance within the details; unknown chances remain an explicitly optimistic 100%-success *scenario*, never a claim of verified success.
+
 ## Default settings, crafting icons & market update cadence
 
 - New visitors start with **Alchemy, Blacksmithing, Armorsmithing, Handicrafting and Cooking at Lv.100**. Old profiles saved as `null`/unknown are migrated to 100; explicitly chosen lower levels are kept. These are **scenario/profile settings**, not a claim about the viewer's real character.
