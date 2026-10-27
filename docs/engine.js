@@ -198,7 +198,7 @@
      let missing=[];
      const normalRecipes=byOutput.get(id)||[],comboRecipes=byCombo.get(id)||[];
      const active=normalRecipes.filter(r=>
-       !(comboRecipes.length&&/^Splendent\b/i.test(String(r.name||''))) &&
+       !/^Splendent\b/i.test(String(r.name||'')) &&
        (!forceCraft||!rootRecipeId||String(r.recipe_id)===String(rootRecipeId)));
      const candidates=active.map(r=>({recipe:r,procRate:1,mode:'craft'}));
      // Splendent recipes in this extraction often contain only extra materials.
