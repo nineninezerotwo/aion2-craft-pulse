@@ -37,6 +37,19 @@ Free, static, community-built craft market analysis for **Asia / Elyos / Fregion
 - GitHub scheduled workflows are **best-effort**, may be delayed, and can be disabled after 60 days without repository activity. Check Actions for failures or disabled schedules; GitHub Pages hosting does not guarantee an uninterrupted SLA.
 - The cron refreshes **market prices and listing counts**, not proven completed sales. Game-client reference recipes are versioned separately and are **not silently updated from Questlog**.
 
+## Full consumable craft catalog: Food, Potions and Scrolls
+
+As of the Global-client reference snapshot used by this project, the 264 Elyos recipes include:
+- **Food**: 17 recipes; **Drink**: 6 recipes (23 Cooking outputs)
+- **Potion / Serum**: 7 Alchemy recipes
+- **Scroll**: 4 Alchemy recipes
+
+These **34 consumable formulas** are included in the 243 distinct craftable outputs represented by the 264 total recipes (some outputs have alternative batch crafting recipes). This is the available **Global LST recipe reference dated 2026-09-21**, not a guaranteed full catalog of future patches.
+
+The dashboard now defaults to **All Craft Items** and provides category shortcuts with unique-output counts. All documented craftable outputs are visible even if the exchange feed does not currently include the item, or if an ingredient has no valid Fregion ask. Such items appear with **No Listings / Missing Cost** flags, and **Bound** products are explicitly not recommended for sale. Unknown prices stay `null`; they are never filled with fake 0 Kinah.
+
+Bound shop ingredients (ink, bottles, sugar, seasonings, starter potions) are missing from Exchange because they cannot be traded. Users can enter their own in-game prices per ingredient. A separate **opt-in** setting allows estimated pricing using the 36 published **Taiwan NPC vendor reference prices** from the MIT source. References are labeled **NPC TW ref.** and remain *unverified scenarios* rather than confirmed Fregion costs. With opt-in off (default), the dashboard intentionally leaves their margins blank until prices are supplied. The browser does not import or scrape Questlog recipes.
+
 ## What actually works
 
 - Public Fregion **asking-price** and **active-listing** feed, captured about hourly via the guarded collector (rate-limited, checks `/robots.txt`, verifies server mapping, stops on access denial).
