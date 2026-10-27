@@ -126,6 +126,14 @@ assert(appText.includes("filter:'craft'"),'Start with all crafts rather than onl
 assert(appText.includes('craftList.map(compute)') && appText.includes('state.craftIds.has(String(item.id))'),'Table must include all craft outputs without scanning unrelated market items');
 assert(appText.includes('E.buildCraftCatalog(state.latest.items,state.recipes)'),'Craft catalog must be generated from both feeds');
 assert(appText.includes('Bound · ลงขายไม่ได้'),'Bound crafts must be marked non-sellable');
+assert(htmlText.includes('value="market"'),'Market-score-only filter must be available for users waiting on missing NPC costs');
+assert(appText.includes("x.op.scoreKind==='market'"),'Market-only scores should appear clearly in the score column and as a filter');
+assert(appText.includes('MARKET ONLY'),'Missing-cost score must not be presented as normal investment score');
+assert(appText.includes('INVEST PREVIEW'),'Short-history profitable crafts must be marked as provisional');
+assert(appText.includes('Market Signal Score — ไม่ใช่ Investment Score'),'Detail panel must explain market-only score');
+assert(appText.includes('status:\'unlisted\'')&&appText.includes("status:'bound'"),
+ 'Unlisted and Bound items must remain disqualified for investment scores');
+
 assert(appText.includes('ไม่มีประกาศขาย'),'Missing prices must be called out clearly');
 const marketIds=new Set(latest.items.map(i=>String(i.id)));
 assert(valid.filter(r=>marketIds.has(r.item_id)).length>=70, 'Unrecognized market item IDs');
