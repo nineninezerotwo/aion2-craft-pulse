@@ -60,6 +60,21 @@
    if(isEquipmentRecipe(recipe))return 'equipment';
    return 'materials';
  }
+ // Count distinct craftable outputs for each profession, not crafting attempts or recipe variants.
+ // One item craftable by two jobs appears in both job tabs, but only once under "all".
+ function craftProfessionCounts(recipes,professions){
+   const jobs=[...new Set(professions||[])],byJob=new Map(jobs.map(job=>[job,new Set()]));
+   const all=new Set();
+   for(const recipe of recipes||[]){
+     const id=String(recipe?.item_id||'').trim();
+     const name=normName(recipe?.name);
+     if(!id&&!name)continue;
+     const key=id?'id:'+id:'name:'+name;
+     all.add(key);
+     byJob.get(recipe.profession)?.add(key);
+   }
+   return {all:all.size,...Object.fromEntries(jobs.map(job=>[job,byJob.get(job).size]))};
+ }
 
  function timeSeries(snapshots,id,hours,lastTs){
    if(!Array.isArray(snapshots)||!lastTs)return [];
@@ -381,5 +396,5 @@
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
    return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),item_grade: Number.isInteger(recipe.item_grade)&&RARITIES[recipe.item_grade]?recipe.item_grade:null,icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
  }
- return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,buildCraftCatalog,craftFamily,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,buildCraftCatalog,craftFamily,craftProfessionCounts,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
 });
