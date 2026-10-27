@@ -4,6 +4,17 @@
 
 Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
+## Default settings, crafting icons & market update cadence
+
+- New visitors start with **Alchemy, Blacksmithing, Armorsmithing, Handicrafting and Cooking at Lv.100**. Old profiles saved as `null`/unknown are migrated to 100; explicitly chosen lower levels are kept. These are **scenario/profile settings**, not a claim about the viewer's real character.
+- In **CRAFT ITEM / JOB**, recipe-backed market items show an item icon, profession, crafting category, mastery tier (Novice/Professional) and required unlock proficiency level when available in source reference.
+- **SUCCESS** is the **ordinary crafting success chance**. The referenced Global client dataset does not supply these rates, so unknown values are explicitly shown as **ไม่ทราบ**. Visitors can enter a verified percentage for each item in the detail calculator. Published `combo_chance` is separate; it is **not** the normal success rate. Untested ROI assumes 100% success as a marked optimistic scenario.
+- Icons are served as attributed **external references** from `xtopolis/aion2-static/public/icons/crafting`, using the source recipe's icon filename. Images remain upstream; game artwork rights stay with their owners. If an icon fails to load, the page shows a placeholder. No icons are stored or redistributed by this repository.
+- GitHub Actions [**Collect verified Fregion market + publish**](https://github.com/nineninezerotwo/aion2-craft-pulse/actions/workflows/collect.yml) has a UTC cron expression `23 * * * *` (hourly, minute 23). It validates source rules, server mapping, data and tests; records snapshots; commits JSON; and publishes GitHub Pages. Failed verification stops collection without overwriting data.
+- The public browser checks for refreshed JSON every **10 minutes while the tab is active**. The dashboard displays the latest snapshot time, warns when the feed exceeds **3 hours** of age, and links to the cron workflow.
+- GitHub scheduled workflows are **best-effort**, may be delayed, and can be disabled after 60 days without repository activity. Check Actions for failures or disabled schedules; GitHub Pages hosting does not guarantee an uninterrupted SLA.
+- The cron refreshes **market prices and listing counts**, not proven completed sales. Game-client reference recipes are versioned separately and are **not silently updated from Questlog**.
+
 ## What actually works
 
 - Public Fregion **asking-price** and **active-listing** feed, captured about hourly via the guarded collector (rate-limited, checks `/robots.txt`, verifies server mapping, stops on access denial).
