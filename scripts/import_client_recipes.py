@@ -29,6 +29,7 @@ def convert(data: dict) -> dict:
         raise ValueError('Not the supported game-client recipe dataset')
     items = data['items']
     profession_names = data.get('professions', [])
+    icons = data.get('icons', [])
     rows = []
     seen = set()
     for row in data['recipes']:
@@ -53,6 +54,10 @@ def convert(data: dict) -> dict:
             ingredients.append({'id': str(ingredient_id), 'name': material[0], 'qty': qty})
         if not ingredients:
             continue  # cannot model without inputs
+        icon_idx = row.get('c')
+        icon_name = icons[icon_idx] if isinstance(icon_idx, int) and 0 <= icon_idx < len(icons) else None
+        if icon_name is not None and (not isinstance(icon_name, str) or not icon_name.replace('_', '').replace('-', '').isalnum()):
+            raise ValueError(f'Invalid icon metadata in {recipe_id}')
         rows.append({
             'recipe_id': recipe_id,
             'item_id': str(item_id),
@@ -65,6 +70,9 @@ def convert(data: dict) -> dict:
             'ingredients': ingredients,
             'combo_chance': row.get('cp'),  # percent, combo not counted in earnings
             'combo_item_id': row.get('co'),
+            'icon': icon_name,
+            'craft_type': row.get('t') or '',
+            'mastery_grade': row.get('mg') if row.get('mg') in ('beginner', 'intermediate') else None,
             'reference': True,
             'verified': False,
             'source': SOURCE,
@@ -72,11 +80,13 @@ def convert(data: dict) -> dict:
     if len(rows) < 200 or len(rows) > 400:
         raise ValueError(f'Unexpected number of Elyos recipes: {len(rows)}')
     return {
-        'schema': 3,
+        'schema': 4,
         'source': {
             'name': SOURCE, 'url': SOURCE_URL, 'license': 'MIT',
             'reference_date': '2026-09-21',
-            'notes': 'Reference from LST client, not current in-game verification. Unknown success rates and fees. No Questlog scraping.'
+            'notes': 'Reference from LST client, not current in-game verification. Unknown success rates and fees. No Questlog scraping.',
+            'images': 'Item icon filename references are used from the upstream project; images remain hosted by upstream. Game art rights belong to their respective owners.',
+            'rate_note': 'Combo probability is distinct from ordinary crafting success, which is unknown by default.'
         },
         'server': 'Asia / Elyos / Fregion',
         'recipes': sorted(rows, key=lambda x: (x['profession'],x['name'],x['recipe_id'])),
