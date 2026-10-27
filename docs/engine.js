@@ -22,7 +22,43 @@
    const byId=recipes.filter(r=>r.item_id && String(r.item_id)===id);
    return byId.length?byId:recipes.filter(r=>normName(r.name)===normName(item.name));
  }
+
  function recipeFor(item, recipes){return recipesFor(item,recipes)[0]||null;}
+ // Inventory of *all craftable outputs*, not just items currently shown in market summaries.
+ // Missing listing data must stay null, NEVER convert it to a fabricated price or sale.
+ function buildCraftCatalog(marketItems,recipes){
+   const results=[],seen=new Set();
+   for(const item of marketItems||[]){
+     if(item?.id==null)continue;
+     const id=String(item.id);
+     if(seen.has(id))continue;
+     seen.add(id);
+     results.push({...item,id,marketPresent:true,marketMissing:false});
+   }
+   for(const recipe of recipes||[]){
+     const id=String(recipe?.item_id||'').trim();
+     if(!id||seen.has(id))continue;
+     seen.add(id);
+     results.push({
+       id,name:String(recipe.name||id),category:recipe.craft_type||'Crafting',
+       price:null,listings:null,marketPresent:false,marketMissing:true,
+       // This is an explicit label from the client recipe, NOT inferred tradability for other items.
+       bound:/\(\s*Bound\s*\)/i.test(String(recipe.name||''))
+     });
+   }
+   return results;
+ }
+ function craftFamily(recipe){
+   if(!recipe)return 'other';
+   const type=String(recipe.craft_type||'').toLowerCase();
+   if(type==='food'||type==='drink'||recipe.profession==='Cooking')return 'food';
+   if(type==='potion')return 'potion';
+   if(type==='scroll')return 'scroll';
+   if(type==='magicstone'||type.startsWith('misc_'))return 'materials';
+   if(isEquipmentRecipe(recipe))return 'equipment';
+   return 'materials';
+ }
+
  function timeSeries(snapshots,id,hours,lastTs){
    if(!Array.isArray(snapshots)||!lastTs)return [];
    const end=Date.parse(lastTs),start=end-hours*3600000;
@@ -337,5 +373,5 @@
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
    return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),item_grade: Number.isInteger(recipe.item_grade)&&RARITIES[recipe.item_grade]?recipe.item_grade:null,icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
  }
- return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,buildCraftCatalog,craftFamily,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
 });
