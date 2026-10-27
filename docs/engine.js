@@ -368,7 +368,20 @@
    const chainOverride=!manualOverride&&chainCost!==null&&chainCost>0;
    if((manualOverride||chainOverride)&&ask!==null&&ask>0)missing.length=0;
    const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,assumedSuccess,npc_kinah:npc,output_qty:outQty,reference:recipe.reference===true,comboExcluded:!!recipe.combo_chance,vendorReference:materials.vendorReferenceUsed||Boolean(chainEstimate?.vendorReference)};
-   if(missing.length)return {...base,reason:'ข้อมูลต้นทุนหรือสูตรไม่ครบ'};
+   if(missing.length){
+    // Known spend is a minimum, so this is a best-case ROI ceiling, NOT real ROI.
+    // Never silently price missing ingredients or NPC charges at zero.
+    const knownNpc=npc!==null&&npc>=0?npc:0;
+    const knownSpend=materials.subtotal+knownNpc+Math.max(0,crafting);
+    const minimumUnitCost=outQty!==null&&outQty>0&&success>0&&success<=1?knownSpend/(outQty*success):null;
+    const netRevenue=ask!==null&&ask>0?ask*(1-tax)-listingFee:null;
+    const roiUpperBound=minimumUnitCost!==null&&minimumUnitCost>0&&netRevenue!==null
+      ?(netRevenue-minimumUnitCost)/minimumUnitCost:null;
+    const marginUpperBound=minimumUnitCost!==null&&netRevenue!==null&&netRevenue>0
+      ?(netRevenue-minimumUnitCost)/netRevenue:null;
+    return {...base,reason:'ข้อมูลต้นทุนหรือสูตรไม่ครบ',minimumUnitCost,knownSpend,
+      roiUpperBound,marginUpperBound,partialCost:true,netRevenue};
+   }
    // Bernoulli success model. Failure consumes inputs with no output; combo ignored.
    const spend=manualOverride||chainOverride?null:materials.subtotal+npc+crafting;
    const unitCost=manualOverride?manualUnitCost:chainOverride?chainCost:spend/(outQty*success);
