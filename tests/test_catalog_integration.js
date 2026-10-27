@@ -77,6 +77,25 @@ assert(speedMarket?.price>0,'Scroll output has valid Fregion ask');
 const speedEco=E.calculateEconomics(speedMarket,selectedScroll,latest.items,{tax_percent:10});
 assert.equal(speedEco.complete,false,'Bound NPC materials without local prices must not be treated as free');
 assert(speedEco.missing.some(x=>x.includes('Bound')),'Missing Bound cost must explain why consumables are unscored');
+
+const vendorReference=JSON.parse(fs.readFileSync('docs/data/vendor-reference.json','utf8')).prices;
+const optedInSpeed=E.calculateEconomics(speedMarket,selectedScroll,latest.items,{tax_percent:10},{
+ vendorPrices:vendorReference,useVendorReference:true
+});
+assert.equal(optedInSpeed.complete,true,'Optional NPC price references must unlock consumable cost calculations');
+assert.equal(optedInSpeed.vendorReference,true,'TW vendor cost must be labeled as a reference');
+assert.equal(optedInSpeed.scenario,true,'Unverified TW shop reference must remain a scenario');
+assert(optedInSpeed.parts.some(x=>x.vendorReference),'Ingredient pricing provenance must be visible');
+const foodRecipe=valid.find(r=>r.name==="Artisan's Fruit Salad");
+const foodMarket=latest.items.find(x=>x.id===foodRecipe.item_id);
+assert(foodMarket?.price>0);
+assert.equal(E.calculateEconomics(foodMarket,foodRecipe,latest.items,{tax_percent:10}).complete,false);
+const optedInFood=E.calculateEconomics(foodMarket,foodRecipe,latest.items,{tax_percent:10},{
+ vendorPrices:vendorReference,useVendorReference:true
+});
+assert.equal(optedInFood.complete,true,'Opt-in vendor reference should also support Cooking');
+assert.equal(optedInFood.vendorReference,true);
+
 const htmlText=fs.readFileSync('docs/index.html','utf8');
 const appText=fs.readFileSync('docs/app.js','utf8');
 assert(htmlText.includes('id="craftFamilies"'),'Craft family shortcuts must be visible');
