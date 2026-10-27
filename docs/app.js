@@ -9,7 +9,7 @@ const storageKey='fregion_craft_pulse_v3';
 const oldStorageKey='fregion_craft_pulse_v2';
 function readSaved(){try{let x=JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(oldStorageKey)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
 const saved=isDemo?{}:readSaved();
-const state={latest:null,history:null,recipes:[],itemGrades:{},selected:null,period:24,search:'',filter:'evaluated',sort:'score',settings:{tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
+const state={latest:null,history:null,recipes:[],itemGrades:{},selected:null,period:24,search:'',filter:'evaluated',sort:'score',sortDir:'desc',vendorPrices:{},chainEstimator:null,settings:{use_vendor_reference:false,tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
 const JOBS=['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'];
 // Migrate saved preferences: old unknown/null values become Lv100; explicit skill values are preserved.
 const previousSkills=(state.settings.skills&&typeof state.settings.skills==='object')?state.settings.skills:{};
@@ -52,7 +52,21 @@ function rarityForItem(item,recipe){
 }
 function itemFor(id){return state.latest?.items.find(x=>x.id===id)}
 function recipeKey(recipe){return recipe.recipe_id||[recipe.item_id||E.normName(recipe.name),recipe.profession,recipe.level??'?'].join(':')}
-function recipeOptions(item){return E.recipesFor(item,state.recipes)}
+function recipeOptions(item){
+ const listed=E.recipesFor(item,state.recipes);
+ const parents=state.chainEstimator?.getComboParents(item.id)||[];
+ const gearParents=parents.filter(r=>E.isEquipmentRecipe(r));
+ if(gearParents.length){
+  return gearParents.map(parent=>({...parent,
+   recipe_id:'proc:'+parent.recipe_id,item_id:String(item.id),name:item.name,
+   level:parent.level,output_qty:1,verified:false,
+   icon:listed[0]?.icon||parent.icon,
+   item_grade:listed[0]?.item_grade??parent.item_grade,
+   combo_parent_recipe_id:parent.recipe_id
+  }));
+ }
+ return listed;
+}
 function verified(recipe){if(!recipe)return false;const key=recipeKey(recipe);return state.verified[key]===true || (state.verified[key]!==false&&recipe.verified===true)}
 function setVerified(recipe,bool){state.verified[recipeKey(recipe)]=bool;save()}
 function recipeFor(item){
@@ -60,7 +74,12 @@ function recipeFor(item){
  if(!options.length)return null;
  const selected=options.find(r=>recipeKey(r)===state.selectedRecipes[item.id]);
  if(selected)return selected;
- const candidates=options.map(r=>({r,eco:E.calculateEconomics(item,r,state.latest.items,state.settings,{...itemOverrides(item),materialPrices:state.materialPrices})}));
+ const candidates=options.map(r=>{
+   const chain=E.isEquipmentRecipe(r)&&state.chainEstimator
+     ?state.chainEstimator.estimate(item.id,String(r.recipe_id||'').replace(/^proc:/,'')):null;
+   const eco=E.calculateEconomics(item,r,state.latest.items,state.settings,{...itemOverrides(item),materialPrices:state.materialPrices,chainEstimate:chain});
+   return {r,eco};
+ });
  // Price complete input recipes by their cost rather than arbitrary iteration/order.
  candidates.sort((a,b)=>{
    if(a.eco.complete!==b.eco.complete)return a.eco.complete?-1:1;
@@ -74,7 +93,10 @@ function compute(item){
  const recipe=recipeFor(item);
  const pts=E.timeSeries(state.history?.snapshots,item.id,state.period,state.latest?.ts);
  const signal=E.analyzeSignal(pts,state.period);
- const eco=E.calculateEconomics(item,recipe,state.latest.items,state.settings,{...itemOverrides(item),materialPrices:state.materialPrices});
+ const chain=recipe&&E.isEquipmentRecipe(recipe)&&state.chainEstimator
+   ?state.chainEstimator.estimate(item.id,String(recipe.recipe_id||'').replace(/^proc:/,'')):null;
+ const eco=E.calculateEconomics(item,recipe,state.latest.items,state.settings,
+   {...itemOverrides(item),materialPrices:state.materialPrices,chainEstimate:chain});
  let op=E.opportunityScore(signal,eco,verified(recipe));
  const skill=recipe?E.safeNumber(state.settings.skills?.[recipe.profession]):null;
  const eligible=recipe?(skill===null||recipe.level===null?null:skill>=recipe.level):false;
@@ -173,7 +195,7 @@ function renderDetail(){
   input.addEventListener('change',()=>{const v=input.value.trim();if(!state.overrides[item.id])state.overrides[item.id]={};if(v==='')delete state.overrides[item.id][key];else {const n=Number(v);if(!Number.isFinite(n)||n<0||(key==='success_rate'&&(n<=0||n>100))){alert('ค่าตัวเลขไม่ถูกต้อง');return}state.overrides[item.id][key]=n*scale;}save();renderTable();renderDetail()});
  }
 }
-function render(){if(!state.ready)return;periods();renderHead();renderTable();renderDetail()}
+function render(){if(!state.ready)return;rebuildChainEstimator();periods();renderHead();renderTable();renderDetail()}
 function openDialog(id){const d=$(id);if(typeof d.showModal==='function')d.showModal();else d.setAttribute('open','')}
 function closeDialog(id){const d=$(id);if(typeof d.close==='function')d.close();else d.removeAttribute('open')}
 function readRecipeForm(){
@@ -243,11 +265,25 @@ function mergeRecipes(seed,custom){
  for(const r of custom)data.set(recipeKey(r),r);
  return [...data.values()];
 }
+function rebuildChainEstimator(){
+ if(!state.latest?.items||!state.recipes)return;
+ const successOverrides={};
+ for(const [id,overrides] of Object.entries(state.overrides)){
+   const rate=E.safeNumber(overrides?.success_rate);
+   if(rate!==null&&rate>0&&rate<=1)successOverrides[id]=rate;
+ }
+ state.chainEstimator=E.createChainEstimator(state.recipes,state.latest.items,state.settings,{
+  materialPrices:state.materialPrices,vendorPrices:state.vendorPrices,
+  allowVendorReference:state.settings.use_vendor_reference===true,
+  successOverrides
+ });
+}
 async function load(){
  const root=isDemo?'data/demo/':'data/';
  try{
   const r=await Promise.all(['latest.json','history.json'].map(x=>fetch(root+x+'?'+Date.now())));
   const recipesResponse=await fetch(root+'recipes.json?'+Date.now());
+  const vendorResponse=await fetch(root+'vendor-reference.json?'+Date.now()).catch(()=>null);
   // Optional, attributed game-client grade lookup for additional market items. Never infer rarity from item names.
   const rarityResponse=await fetch(root+'item-rarity.json?'+Date.now()).catch(()=>null);
   if(r.some(x=>!x.ok)||!recipesResponse.ok)throw Error('Data JSON ไม่พร้อม');
@@ -263,6 +299,7 @@ async function load(){
       state.itemGrades=gradeDoc.grades;
    }catch(err){console.warn('Optional rarity metadata unavailable:',err)}
   }
+  if(vendorResponse?.ok){try{const vendor=await vendorResponse.json();if(vendor?.prices&&typeof vendor.prices==='object')state.vendorPrices=vendor.prices;}catch(e){console.warn('Vendor reference unavailable',e)}}
   state.seedRecipes=book.recipes.map(r=>E.validateRecipe(r,{allowUnknown:true}));state.recipes=mergeRecipes(state.seedRecipes,state.customRecipes.map(r=>E.validateRecipe(r)));
   if(isDemo){state.verified=Object.fromEntries(state.recipes.map(x=>[recipeKey(x),true]));state.settings.skills=Object.fromEntries(['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'].map(x=>[x,100]));}
   state.ready=true;render();
