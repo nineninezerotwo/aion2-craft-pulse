@@ -39,4 +39,28 @@ def main():
         except Exception as e:
             print("Connectivity:",type(e).__name__,str(e)[:130])
         if pos==0:time.sleep(2)
-if __name__=="__main__":main()
+def confirm_mapping():
+    print("Server label discovery — two metadata requests maximum")
+    for endpoint in ("https://aion2.exchange/api/servers", "https://aion2.exchange/items"):
+        req=urllib.request.Request(endpoint,headers=HEADERS)
+        try:
+            with urllib.request.urlopen(req,timeout=20) as response:
+                text=response.read(350000).decode("utf-8",errors="replace")
+                print("Mapping source",endpoint,"status",response.status,"bytes",len(text))
+                for term in ("11507","Fregion","Asia"):
+                    index=text.lower().find(term.lower())
+                    if index>=0:
+                        excerpt=text[max(0,index-110):index+160]
+                        print("Found",term,"near",repr(excerpt[:250]))
+                    else:print("No",term,"literal in first 350k")
+        except urllib.error.HTTPError as exc:
+            print("Mapping source",endpoint,"HTTP",exc.code)
+            if exc.code in (401,403,429):
+                print("Refused access; stopping metadata checks");break
+        except Exception as exc:
+            print("Mapping request failed",type(exc).__name__,str(exc)[:150])
+        time.sleep(2)
+
+if __name__=="__main__":
+    main()
+    confirm_mapping()
