@@ -20,7 +20,9 @@
  function recipesFor(item, recipes){
    const id=String(item.id||'');
    const byId=recipes.filter(r=>r.item_id && String(r.item_id)===id);
-   return byId.length?byId:recipes.filter(r=>normName(r.name)===normName(item.name));
+   // Name-only fallback is reserved for user-created recipes without an item ID.
+   // Never equate distinct Global item IDs because their translated names happen to match.
+   return byId.length?byId:recipes.filter(r=>!r.item_id && normName(r.name)===normName(item.name));
  }
 
  function recipeFor(item, recipes){return recipesFor(item,recipes)[0]||null;}
