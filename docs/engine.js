@@ -368,20 +368,61 @@
      assumedSuccess:chainOverride?Boolean(chainEstimate.assumedSuccess):assumedSuccess,
      scenario:assumedSuccess||recipe.reference===true||chainOverride||materials.vendorReferenceUsed};
  }
+ // Early market score independent of recipe prices. It is a *signal only* and can
+ // be calculated from two snapshots without pretending missing NPC costs are free.
+ // The conservative sample-size factor prevents a two-point window ranking like a
+ // mature 24-hour history. Listing disappearance is NOT completed unit sales.
+ function marketSignalPreview(signal){
+   const n=safeNumber(signal?.points),span=safeNumber(signal?.span),supply=safeNumber(signal?.observedSupply);
+   if(n===null||n<2||span===null||span<=0||supply===null||supply<=0)
+     return {score:null,quality:'none',reason:'ต้องมีประวัติ Listings อย่างน้อย 2 จุด'};
+   const outflow=safeNumber(signal?.outflowScore)??0;
+   const strength=safeNumber(signal?.priceScore)??35;
+   const liquidity=safeNumber(signal?.liquidityScore)??0;
+   const confidence=clamp((safeNumber(signal?.confidence)??0)/100,0,1);
+   const sampling=clamp((n-1)/6,.50,1);
+   const supplyGuard=clamp(supply/12,.40,1);
+   const raw=.45*outflow+.30*strength+.25*liquidity;
+   const score=clamp(Math.round(raw*(.65+.35*confidence)*sampling*supplyGuard),0,100);
+   return {score,quality:signal.valid?'observed':'early',reason:signal.valid?
+      'คะแนนจาก Listings และราคาย้อนหลัง ไม่รวมต้นทุนคราฟหรือยอดขายจริง':
+      'คะแนนตลาดเบื้องต้นจากข้อมูลช่วงสั้น; ยังไม่ผ่านเกณฑ์ความครอบคลุมของ Timeframe'};
+ }
  function opportunityScore(signal,eco,recipeVerified){
-   if(!eco.complete)return {status:'cost',label:'รอต้นทุน',score:null,reason:eco.reason};
-   if(eco.profit<=0)return {status:'loss',label:'ต้นทุนไม่คุ้ม',score:0,reason:'รายรับสุทธิประมาณการต่ำกว่าต้นทุน (ยังไม่มีข้อมูลขายจริง)'};
-   if(!signal.valid)return {status:'history',label:'รอสัญญาณตลาด',score:null,reason:signal.reason};
+   const market=marketSignalPreview(signal);
+   if(!eco.complete){
+     if(market.score===null)
+       return {status:'cost',label:'รอต้นทุน / ข้อมูลตลาด',score:null,scoreKind:'none',reason:eco.reason||market.reason};
+     const missing=Array.isArray(eco.missing)?eco.missing.slice(0,3).join(', '):'ต้นทุนวัตถุดิบ';
+     return {status:'market',label:'คะแนนตลาดเท่านั้น',score:market.score,scoreKind:'market',
+       preview:market.quality==='early',marketScore:market.score,
+       reason:market.reason+' · ยังไม่ทราบ ROI/Margin; ขาดข้อมูล: '+missing};
+   }
+   if(eco.profit<=0)
+     return {status:'loss',label:'ต้นทุนไม่คุ้ม',score:0,scoreKind:'loss',
+       reason:'รายรับสุทธิประมาณการต่ำกว่าต้นทุน แม้ยังไม่มีข้อมูลยอดขายสำเร็จ'};
    const profitScore=clamp((eco.roi/.5)*75,0,100)*.75+clamp((eco.margin/.3)*100,0,100)*.25;
-   const raw=.35*profitScore+.30*signal.outflowScore+.20*signal.priceScore+.15*signal.liquidityScore;
+   const raw=.35*profitScore+.30*(signal.outflowScore??0)+.20*(signal.priceScore??35)+.15*(signal.liquidityScore??0);
+   if(!signal.valid){
+     if(market.score===null)
+       return {status:'history',label:'รอประวัติตลาด',score:null,scoreKind:'none',reason:signal.reason};
+     const score=clamp(Math.round(raw*(.40+.30*clamp((signal.confidence??0)/100,0,1))),0,100);
+     return {status:'preview',label:'ลงทุน · คะแนนเบื้องต้น',score,scoreKind:'investment-preview',
+       preview:true,reason:'ต้นทุนคำนวณได้ แต่ประวัติ Listings ยังไม่ครบ Timeframe · '+market.reason};
+   }
    const score=Math.round(raw*(.65+.35*signal.confidence/100));
-   // Score is an observed MARKET heuristic, not sell-through probability.
+   // Score includes profitability, but neither score nor outflow confirms sell-through.
    if(!recipeVerified||eco.assumedSuccess)
-     return {status:'scenario',label:'สถานการณ์สมมติ',score,reason:'สูตรหรือโอกาสคราฟสำเร็จยังไม่ยืนยัน — ห้ามถือเป็นกำไรที่รับประกัน'};
+     return {status:'scenario',label:'ลงทุน · สมมติฐาน',score,scoreKind:'investment',
+       reason:'สูตรหรือโอกาสคราฟสำเร็จยังไม่ยืนยัน — ห้ามถือเป็นกำไรที่รับประกัน'};
    if(eco.roi>=.20 && score>=65 && signal.confidence>=65 && (signal.priceChange??0)>-.12)
-     return {status:'trial',label:'ทดลองล็อตเล็ก',score,reason:'กำไรที่คำนวณได้ + สัญญาณประกาศลด (ไม่ใช่ยอดขายจริง)'};
-   if(eco.roi>=.10 && score>=48)return {status:'watch',label:'เฝ้าดู',score,reason:'มีโอกาส แต่สัญญาณยังไม่แข็งแรง'};
-   return {status:'avoid',label:'ยังไม่แนะนำ',score,reason:'กำไรหรือแรงซื้ออ่อนกว่าที่ต้องการ'};
+     return {status:'trial',label:'ทดลองล็อตเล็ก',score,scoreKind:'investment',
+       reason:'กำไรที่คำนวณได้ + สัญญาณประกาศลด (ไม่ใช่ยอดขายจริง)'};
+   if(eco.roi>=.10 && score>=48)
+     return {status:'watch',label:'เฝ้าดู',score,scoreKind:'investment',
+       reason:'มีโอกาส แต่สัญญาณยังไม่แข็งแรง'};
+   return {status:'avoid',label:'ยังไม่แนะนำ',score,scoreKind:'investment',
+     reason:'กำไรหรือแรงซื้ออ่อนกว่าที่ต้องการ'};
  }
  function validateRecipe(recipe,opts={}){
    if(!recipe || typeof recipe!=='object')throw Error('สูตรไม่ใช่วัตถุ');
@@ -396,5 +437,5 @@
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
    return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),item_grade: Number.isInteger(recipe.item_grade)&&RARITIES[recipe.item_grade]?recipe.item_grade:null,icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
  }
- return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,buildCraftCatalog,craftFamily,craftProfessionCounts,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,sortCraftRows,isEquipmentRecipe,createChainEstimator,recipeFor,recipesFor,buildCraftCatalog,craftFamily,craftProfessionCounts,timeSeries,analyzeSignal,calculateEconomics,marketSignalPreview,opportunityScore,validateRecipe};
 });
