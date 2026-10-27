@@ -83,6 +83,8 @@ assert.throws(()=>E.validateRecipe(clientRecipe));
 const withVariants=E.recipesFor(item,[{...client,item_id:'wrong'},client,{...client,recipe_id:'124',item_id:item.id}]);
 assert.equal(withVariants.length,1);
 assert.equal(withVariants[0].recipe_id,'124');
+assert.equal(E.recipesFor(item,[{...client,item_id:'another-product-id'}]).length,0,'Different game item IDs must not be matched solely on names');
+assert.equal(E.recipesFor(item,[{...client,item_id:''}]).length,1,'Name-only user-entered recipes should still match');
 
 const fake=(name,score,margin,ask,other={})=>({
  item:{id:name,name,price:ask,listings:other.listings??12},
