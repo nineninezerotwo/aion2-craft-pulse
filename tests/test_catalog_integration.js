@@ -60,11 +60,11 @@ assert.equal(new Set(shared.map(r=>r.profession)).size,2);
 assert.deepEqual(E.craftProfessionCounts(shared,jobs),{
  all:1,Alchemy:0,Blacksmithing:1,Armorsmithing:1,Handicrafting:0,Cooking:0
 },'Batch recipes must not inflate counts, and shared outputs must occur under both jobs');
-assert(appText.includes("state.profession==='all'?options:options.filter(recipe=>recipe.profession===state.profession)"),
+assert(client.includes("state.profession==='all'?options:options.filter(recipe=>recipe.profession===state.profession)"),
  'The selected profession must determine the recipe used for cost calculations');
-assert(appText.includes('rows=rows.filter(x=>x.recipe?.profession===state.profession)'),
+assert(client.includes('rows=rows.filter(x=>x.recipe?.profession===state.profession)'),
  'Profession filter must constrain the displayed crafting rows');
-assert(appText.includes('state.selected=null'),'Switching profession should clear a stale item detail');
+assert(client.includes('state.selected=null'),'Switching profession should clear a stale item detail');
 
 assert.equal(catalogById.size,catalog.length,'Craft catalog must not duplicate market entries');
 assert(uniqueCraftIds.size>=240,'Craft output catalog unexpectedly shrunk');
