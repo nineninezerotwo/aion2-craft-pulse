@@ -158,7 +158,8 @@
      status:r=>r.op?.label??null
    };
    const selected=Object.prototype.hasOwnProperty.call(values,column)?column:'score';
-   const anyPositiveScore=rows.some(r=>number(r.op?.score)>0);
+   const hasFullInvestment=rows.some(r=>number(r.op?.score)>0 &&
+     (!r.op?.scoreKind||r.op.scoreKind==='investment'));
    function compareNullable(a,b,order){
      if(a==null)return b==null?0:1;
      if(b==null)return -1;
@@ -169,14 +170,26 @@
    rows.sort((a,b)=>{
      if(selected==='score'&&direction!=='asc'){
        const aScore=number(a.op?.score), bScore=number(b.op?.score);
-       // Only positive scores are *actionable*. Unscored profitable crafts outrank known losses (score 0).
-       if(anyPositiveScore){
-         const rank=r=>number(r.op?.score)>0?0:number(r.eco?.margin)!=null?1:2;
-         const ga=rank(a),gb=rank(b);
-         if(ga!==gb)return ga-gb;
-         if(ga===0){const byScore=compareNullable(aScore,bScore,-1);if(byScore)return byScore;}
+       // Scores with different evidence are deliberately not mixed into a single ranking:
+       // full Investment Score -> profitable margin -> Market-only score -> losses/no data.
+       // When no mature investment scores exist, net Margin leads (the prior default).
+       const rank=r=>{
+         const n=number(r.op?.score),kind=r.op?.scoreKind;
+         const margin=number(r.eco?.margin);
+         if(hasFullInvestment && n!==null && n>0 && (!kind||kind==='investment'))return 0;
+         if(margin!==null && margin>0)return hasFullInvestment?1:0;
+         if(kind==='market' && n!==null)return hasFullInvestment?2:1;
+         if(margin!==null)return hasFullInvestment?3:2;
+         return hasFullInvestment?4:3;
+       };
+       const ra=rank(a), rb=rank(b);
+       if(ra!==rb)return ra-rb;
+       const marketGroup=hasFullInvestment?2:1;
+       if((hasFullInvestment&&ra===0)||ra===marketGroup){
+         const byScore=compareNullable(aScore,bScore,-1);
+         if(byScore)return byScore;
        }
-       // First snapshot(s) have no useful scores: lead with highest calculated net margin.
+       // Existing profitable crafts keep margin ordering while awaiting full history.
        const byMargin=compareNullable(number(a.eco?.margin),number(b.eco?.margin),-1);
        if(byMargin)return byMargin;
        const byProfit=compareNullable(number(a.eco?.profit),number(b.eco?.profit),-1);
