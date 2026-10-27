@@ -9,7 +9,7 @@ const storageKey='fregion_craft_pulse_v3';
 const oldStorageKey='fregion_craft_pulse_v2';
 function readSaved(){try{let x=JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(oldStorageKey)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
 const saved=isDemo?{}:readSaved();
-const state={latest:null,history:null,recipes:[],catalog:[],catalogById:new Map(),itemGrades:{},selected:null,period:24,search:'',filter:'craft',family:'all',sort:'score',sortDir:'desc',vendorPrices:{},chainEstimator:null,settings:{use_vendor_reference:false,tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
+const state={latest:null,history:null,recipes:[],catalog:[],catalogById:new Map(),itemGrades:{},selected:null,period:24,search:'',filter:'craft',profession:'all',sort:'score',sortDir:'desc',vendorPrices:{},chainEstimator:null,settings:{use_vendor_reference:false,tax_percent:10,listing_fee:0,crafting_fee:0,skills:{Alchemy:100,Blacksmithing:100,Armorsmithing:100,Handicrafting:100,Cooking:100},...saved.settings},materialPrices:saved.materialPrices||{},overrides:saved.overrides||{},customRecipes:saved.customRecipes||[], verified:saved.verified||{},watchlist:saved.watchlist||[],selectedRecipes:saved.selectedRecipes||{},ready:false};
 const JOBS=['Alchemy','Blacksmithing','Armorsmithing','Handicrafting','Cooking'];
 // Migrate saved preferences: old unknown/null values become Lv100; explicit skill values are preserved.
 const previousSkills=(state.settings.skills&&typeof state.settings.skills==='object')?state.settings.skills:{};
@@ -56,16 +56,16 @@ function recipeOptions(item){
  const listed=E.recipesFor(item,state.recipes);
  const parents=state.chainEstimator?.getComboParents(item.id)||[];
  const gearParents=parents.filter(r=>E.isEquipmentRecipe(r));
- if(gearParents.length){
-  return gearParents.map(parent=>({...parent,
+ const options=gearParents.length?gearParents.map(parent=>({...parent,
    recipe_id:'proc:'+parent.recipe_id,item_id:String(item.id),name:item.name,
    level:parent.level,output_qty:1,verified:false,
    icon:listed[0]?.icon||parent.icon,
    item_grade:listed[0]?.item_grade??parent.item_grade,
    combo_parent_recipe_id:parent.recipe_id
-  }));
- }
- return listed;
+  })):listed;
+ // The active profession determines which recipe and cost apply to the row.
+ // A shared item can appear in two profession tabs without inheriting the other job's recipe.
+ return state.profession==='all'?options:options.filter(recipe=>recipe.profession===state.profession);
 }
 function verified(recipe){if(!recipe)return false;const key=recipeKey(recipe);return state.verified[key]===true || (state.verified[key]!==false&&recipe.verified===true)}
 function setVerified(recipe,bool){state.verified[recipeKey(recipe)]=bool;save()}
@@ -119,29 +119,23 @@ function compute(item){
  return {item,recipe,pts,signal,eco,op,eligible};
 }
 function periods(){let el=$('periods');el.textContent='';for(const [label,hours] of horizons){const b=document.createElement('button');b.textContent=label;b.className=state.period===hours?'active':'';b.type='button';b.addEventListener('click',()=>{state.period=hours;render()});el.appendChild(b)}}
-const FAMILY_CHOICES=[
- ['all','ของคราฟทั้งหมด'],['food','อาหาร / เครื่องดื่ม'],
- ['potion','ยา / Serum / Potion'],['scroll','Scroll'],
- ['materials','วัตถุดิบคราฟ'],['equipment','Equipment']
-];
-function renderFamilyFilters(){
- const parent=$('craftFamilies');if(!parent)return;
- const familyById=new Map();
- for(const recipe of state.recipes){
-  const id=String(recipe.item_id||'');
-  if(id&&!familyById.has(id))familyById.set(id,E.craftFamily(recipe));
- }
- const counts={all:familyById.size};
- for(const family of familyById.values())counts[family]=(counts[family]||0)+1;
- parent.innerHTML=FAMILY_CHOICES.map(([key,label])=>
-  '<button type="button" data-family="'+key+'" class="craft-family'+(state.family===key?' active':'')+
-  '" aria-pressed="'+(state.family===key)+'">'+esc(label)+' <span>'+fmt(counts[key]||0)+'</span></button>'
+const PROFESSION_CHOICES=[['all','ทุกอาชีพ'],...JOBS.map(job=>[job,job])];
+function renderProfessionFilters(){
+ const parent=$('craftProfessions');if(!parent)return;
+ const counts=E.craftProfessionCounts(state.recipes,JOBS);
+ parent.innerHTML=PROFESSION_CHOICES.map(([key,label])=>
+  '<button type="button" data-profession="'+esc(key)+'" class="craft-profession'+(state.profession===key?' active':'')+
+  '" aria-pressed="'+(state.profession===key)+'">'+esc(label)+' <span>'+fmt(counts[key]||0)+'</span></button>'
  ).join('');
- for(const button of parent.querySelectorAll('button[data-family]')){
+ for(const button of parent.querySelectorAll('button[data-profession]')){
   button.addEventListener('click',()=>{
-    state.family=button.dataset.family;
+    const selected=button.dataset.profession;
+    if(selected!=='all'&&!JOBS.includes(selected))return;
+    state.profession=selected;
+    // Reset the secondary availability filter, not the normal investment sorting.
     state.filter='craft';$('recipeFilter').value='craft';
-    renderTable();renderFamilyFilters();
+    state.selected=null;
+    renderProfessionFilters();renderTable();renderDetail();
   });
  }
 }
@@ -169,7 +163,7 @@ function renderTable(){
    :sourceItems.filter(item=>state.craftIds.has(String(item.id))||
      state.recipes.some(r=>!r.item_id && E.normName(r.name)===E.normName(item.name)));
  let rows=craftList.map(compute);
- if(state.family!=='all')rows=rows.filter(x=>x.recipe&&E.craftFamily(x.recipe)===state.family);
+ if(state.profession!=='all')rows=rows.filter(x=>x.recipe?.profession===state.profession);
  const query=E.normName(state.search);
  if(query)rows=rows.filter(x=>E.normName(x.item.name).includes(query)||x.item.id.includes(query)||E.normName(x.recipe?.profession).includes(query)||E.normName(x.recipe?.craft_type).includes(query));
  if(state.filter==='craft')rows=rows.filter(x=>x.recipe);
@@ -179,7 +173,6 @@ function renderTable(){
  if(state.filter==='hot')rows=rows.filter(x=>E.isHotListingSignal(x.signal));
  if(state.filter==='available')rows=rows.filter(x=>x.recipe&&x.eligible===true);
  if(state.filter==='watchlist')rows=rows.filter(x=>state.watchlist.includes(x.item.id));
- if(state.filter.startsWith('job:'))rows=rows.filter(x=>x.recipe?.profession===state.filter.slice(4));
  rows=E.sortCraftRows(rows,state.sort,state.sortDir);
  const scoresReady=rows.some(x=>x.op.score!=null && x.op.score>0);
  const sortedByMargin=state.sort==='score'&&state.sortDir==='desc'&&!scoresReady;
@@ -280,7 +273,7 @@ function render(){
  state.catalog=E.buildCraftCatalog(state.latest.items,state.recipes);
  state.craftIds=new Set(state.recipes.map(r=>String(r.item_id||'')).filter(Boolean));
  state.catalogById=new Map(state.catalog.map(item=>[String(item.id),item]));
- rebuildChainEstimator();periods();renderHead();renderFamilyFilters();renderTable();renderDetail();
+ rebuildChainEstimator();periods();renderHead();renderProfessionFilters();renderTable();renderDetail();
 }
 function openDialog(id){const d=$(id);if(typeof d.showModal==='function')d.showModal();else d.setAttribute('open','')}
 function closeDialog(id){const d=$(id);if(typeof d.close==='function')d.close();else d.removeAttribute('open')}
@@ -295,7 +288,9 @@ function setupControls(){
  $('recipeFilter').value=state.filter;
  $('recipeFilter').addEventListener('change',e=>{
    state.filter=e.target.value;
-   state.family='all';renderFamilyFilters();renderTable();
+   // Secondary filters operate within the chosen profession. The all-market view resets it.
+   if(state.filter==='all'){state.profession='all';state.selected=null;renderProfessionFilters()}
+   renderTable();renderDetail();
  });
  $('sort').addEventListener('change',e=>{state.sort=e.target.value;state.sortDir=['name','job','status'].includes(state.sort)?'asc':'desc';renderTable()});
  for(const button of document.querySelectorAll('#craftHeader th[data-sort-key] .sort-header')){
