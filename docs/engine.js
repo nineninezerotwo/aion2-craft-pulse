@@ -203,7 +203,8 @@
      const candidates=active.map(r=>({recipe:r,procRate:1,mode:'craft'}));
      // Splendent recipes in this extraction often contain only extra materials.
      // Prefer the *parent combo recipe*, not their incomplete direct inputs.
-     if(comboRecipes.length && (!forceCraft||!rootRecipeId||comboRecipes.some(r=>String(r.recipe_id)===String(rootRecipeId))))
+     // Proc-only target recipes are incomplete in the client extraction. Always follow their parent.
+     if(comboRecipes.length)
        for(const recipe of comboRecipes)candidates.push({recipe,procRate:Number(recipe.combo_chance)/100,mode:'combo-proc'});
      for(const {recipe,procRate,mode} of candidates){
        const quantity=safeNumber(recipe.output_qty);
@@ -249,6 +250,7 @@
      estimate:(itemId,recipeId=null)=>resolve(String(itemId),true,new Set(),0,recipeId),
      cheapest:id=>resolve(String(id),false,new Set(),0,null),
      hasCombo:id=>byCombo.has(String(id)),
+     getComboParents:id=>(byCombo.get(String(id))||[]).slice(),
      recipeCount:byOutput.size
    };
  }
