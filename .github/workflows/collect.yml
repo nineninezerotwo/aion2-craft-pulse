@@ -1,0 +1,62 @@
+name: Collect market & refresh Pages
+
+on:
+  # Optional low-rate collection, once per hour (only when explicitly enabled).
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: fregion-github-pages
+  cancel-in-progress: false
+
+jobs:
+  collect-and-publish:
+    if: vars.MARKET_DATA_COLLECTION_ENABLED == 'true' && vars.MARKET_SOURCE_PERMISSION_CONFIRMED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect approved public market summaries
+        env:
+          MARKET_SERVER_ID: ${{ vars.MARKET_SERVER_ID }}
+          CONFIRM_FREGION_SERVER_ID: ${{ vars.CONFIRM_FREGION_SERVER_ID }}
+          MARKET_SOURCE_PERMISSION_CONFIRMED: ${{ vars.MARKET_SOURCE_PERMISSION_CONFIRMED }}
+        run: python scripts/collector.py
+      - name: Commit validated snapshot data
+        run: |
+          git config user.name 'fregion-market-bot'
+          git config user.email 'fregion-market-bot@users.noreply.github.com'
+          git add docs/data/latest.json docs/data/history.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: capture authorized Fregion snapshot'
+            git push
+          fi
+      # Commits made with GITHUB_TOKEN do not trigger a separate push workflow.
+      # Deploy in this workflow so the hourly snapshot becomes visible on Pages.
+      - name: Verify calculations and collector format
+        run: |
+          python -m unittest discover -s tests -v
+          node tests/test_engine.js
+          node --check docs/app.js
+          node --check docs/engine.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+      - name: Deploy updated dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4

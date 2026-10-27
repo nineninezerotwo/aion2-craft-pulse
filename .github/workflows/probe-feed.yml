@@ -1,0 +1,19 @@
+name: Check market feed connectivity (one-shot)
+on:
+  push:
+    branches: [main]
+    paths: ['scripts/probe_feed.py', '.github/workflows/probe-feed.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe two server candidates (no data stored)
+        run: python scripts/probe_feed.py

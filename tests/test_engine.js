@@ -1,0 +1,56 @@
+'use strict';
+const assert=require('node:assert/strict');
+const E=require('../docs/engine.js');
+const now='2026-10-27T03:00:00Z';
+const id='610000001';
+function seriesFor(count=25){
+ let n=100;const snapshots=[];
+ for(let i=0;i<count;i++){
+  n=Math.max(5,n-(i%3===0?6:2)+(i%5===0?3:0));
+  const time=new Date(Date.parse(now)-(count-i-1)*3600e3).toISOString();
+  snapshots.push({ts:time,values:{[id]:[10000+i*30,n]}});
+ }
+ return snapshots;
+}
+const snapshots=seriesFor();
+const points=E.timeSeries(snapshots,id,24,now);
+assert.equal(points.length,25);
+const signal=E.analyzeSignal(points,24);
+assert.equal(signal.valid,true);
+assert(signal.confidence>=75);
+assert(signal.observedDrops>0);
+assert(signal.observedAdds>0);
+assert(signal.netDelta < 0);
+assert.equal(signal.dropTransitions>0,true);
+const item={id,name:'Ruby Powder',price:12000};
+const ingredient={id:'610000002',name:'Ruby Gemstone',price:17000};
+const recipe={name:'Ruby Powder',profession:'Alchemy',level:45,output_qty:30,success_rate:.95,npc_kinah:0,ingredients:[{name:'Ruby Gemstone',qty:10}],verified:true};
+const econ=E.calculateEconomics(item,recipe,[item,ingredient],{tax_percent:10});
+assert.equal(econ.complete,true);
+assert(Math.abs(econ.unitCost-5964.912280701754)<.01);
+assert(econ.profit>0);
+assert(econ.margin>0&&econ.roi>econ.margin);
+const op=E.opportunityScore(signal,econ,true);
+assert(['trial','watch','avoid'].includes(op.status),op.status);
+assert(op.score!==null);
+assert.equal(E.opportunityScore(signal,econ,false).status,'verify');
+assert.equal(E.opportunityScore(E.analyzeSignal([],24),econ,true).status,'history');
+const bound={...recipe,npc_kinah:null};
+assert.equal(E.calculateEconomics(item,bound,[item,ingredient],{tax_percent:10}).complete,false);
+const manual=E.calculateEconomics(item,bound,[item,ingredient],{tax_percent:10},{unit_cost_override:5500});
+assert.equal(manual.complete,true);
+assert.equal(manual.unitCost,5500);
+const loss=E.calculateEconomics({...item,price:1000},recipe,[item,ingredient],{tax_percent:10});
+assert.equal(E.opportunityScore(signal,loss,true).status,'loss');
+const noPrice=E.calculateEconomics(item,recipe,[item],{tax_percent:10});
+assert.equal(noPrice.complete,false);
+assert(noPrice.missing.includes('Ruby Gemstone'));
+const old=E.timeSeries(snapshots,id,90*24,now);
+const insufficient=E.analyzeSignal(old,90*24);
+assert.equal(insufficient.valid,false);
+assert.throws(()=>E.validateRecipe({name:'X',output_qty:0,success_rate:1,ingredients:[{name:'Y',qty:1}]}));
+assert.throws(()=>E.validateRecipe({name:'X',output_qty:1,success_rate:1,ingredients:[{name:'Y',qty:0}]}));
+const valid=E.validateRecipe({...recipe,source:'game',verified:false});
+assert.equal(valid.ingredients.length,1);
+assert.equal(valid.verified,false);
+console.log('All engine tests passed (ROI, margin, listing drops, confidence, missing inputs, verification)');

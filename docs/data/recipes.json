@@ -1,0 +1,252 @@
+{
+  "version": 2,
+  "notice": "UNVERIFIED examples. These are NOT a licensed Questlog database. Confirm input quantity, NPC materials, success rate and output in-game before relying on ROI.",
+  "recipes": [
+    {
+      "name": "Spiritstone Powder",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 25,
+      "output_qty": 30,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Spiritstone",
+          "qty": 10
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Yggdrasil Paper",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 25,
+      "output_qty": 30,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Yggdrasil Log",
+          "qty": 10
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Sapphire Powder",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 45,
+      "output_qty": 30,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Sapphire Gemstone",
+          "qty": 10
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Diamond Powder",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 45,
+      "output_qty": 30,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Diamond Gemstone",
+          "qty": 10
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Ruby Powder",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 45,
+      "output_qty": 30,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Ruby Gemstone",
+          "qty": 10
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Strong Leather",
+      "item_id": "",
+      "profession": "Armorsmithing",
+      "level": 25,
+      "output_qty": 10,
+      "success_rate": 0.952,
+      "npc_kinah": 0,
+      "ingredients": [
+        {
+          "name": "Raw Leather",
+          "qty": 20
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Unverified reference formula"
+    },
+    {
+      "name": "Orichalcum Ingot",
+      "item_id": "",
+      "profession": "Blacksmithing",
+      "level": 25,
+      "output_qty": 10,
+      "success_rate": 0.952,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Orichalcum Ore",
+          "qty": 20
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Orichalcum Solvent (Bound) x10"
+    },
+    {
+      "name": "Yggdrasil Wood",
+      "item_id": "",
+      "profession": "Handicrafting",
+      "level": 25,
+      "output_qty": 10,
+      "success_rate": 0.952,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Yggdrasil Log",
+          "qty": 20
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Sandpaper (Bound) x10"
+    },
+    {
+      "name": "Sapphire Decoration",
+      "item_id": "",
+      "profession": "Handicrafting",
+      "level": 25,
+      "output_qty": 10,
+      "success_rate": 0.952,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Sapphire Gemstone",
+          "qty": 20
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Abrasive (Bound) x10"
+    },
+    {
+      "name": "Superior Speed Scroll",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 65,
+      "output_qty": 1,
+      "success_rate": 0.729,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Ruby Powder",
+          "qty": 3
+        },
+        {
+          "name": "Yggdrasil Paper",
+          "qty": 1
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Speed Scroll (Bound) x1, Professional Ink (Bound) x1"
+    },
+    {
+      "name": "Superior Courage Scroll",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 70,
+      "output_qty": 1,
+      "success_rate": 0.729,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Sapphire Powder",
+          "qty": 3
+        },
+        {
+          "name": "Yggdrasil Paper",
+          "qty": 1
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Courage Scroll (Bound) x1, Professional Ink (Bound) x1"
+    },
+    {
+      "name": "Superior Benediction Scroll",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 75,
+      "output_qty": 1,
+      "success_rate": 0.729,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Diamond Powder",
+          "qty": 3
+        },
+        {
+          "name": "Yggdrasil Paper",
+          "qty": 1
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Benediction Scroll (Bound) x1, Professional Ink (Bound) x1"
+    },
+    {
+      "name": "Enhanced Thick Balaur Scale",
+      "item_id": "",
+      "profession": "Alchemy",
+      "level": 51,
+      "output_qty": 1,
+      "success_rate": 0.952,
+      "npc_kinah": null,
+      "ingredients": [
+        {
+          "name": "Balaur's Essence",
+          "qty": 2
+        }
+      ],
+      "verified": false,
+      "source": "Starter reference: VERIFY in-game before use",
+      "notes": "Bound materials: Lesser Dragon Scale Hardener (Bound) x1"
+    }
+  ]
+}
