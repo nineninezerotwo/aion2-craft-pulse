@@ -10,7 +10,12 @@
  const safeNumber=x=>x!==''&&x!=null&&Number.isFinite(Number(x))?Number(x):null;
  const normName=x=>String(x??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
  const hoursBetween=(a,b)=>(Date.parse(b)-Date.parse(a))/3600000;
- function recipeFor(item, recipes){return recipes.find(r=>String(r.item_id||'')===String(item.id)) || recipes.find(r=>normName(r.name)===normName(item.name));}
+ function recipesFor(item, recipes){
+   const id=String(item.id||'');
+   const byId=recipes.filter(r=>r.item_id && String(r.item_id)===id);
+   return byId.length?byId:recipes.filter(r=>normName(r.name)===normName(item.name));
+ }
+ function recipeFor(item, recipes){return recipesFor(item,recipes)[0]||null;}
  function timeSeries(snapshots,id,hours,lastTs){
    if(!Array.isArray(snapshots)||!lastTs)return [];
    const end=Date.parse(lastTs),start=end-hours*3600000;
@@ -76,7 +81,11 @@
  function calculateEconomics(item,recipe,items,settings={},custom={}){
    if(!recipe)return {complete:false,reason:'ไม่มีสูตรคราฟ'};
    const materials=collectIngredientCost(recipe,items,custom.materialPrices||{});
-   const outQty=safeNumber(recipe.output_qty),success=safeNumber(custom.success_rate??recipe.success_rate);
+   const outQty=safeNumber(recipe.output_qty);
+   const knownSuccess=safeNumber(custom.success_rate??recipe.success_rate);
+   const assumedSuccess=knownSuccess===null;
+   // Unknown craft success is an optimistic scenario only, NEVER a confirmed EV.
+   const success=assumedSuccess?1:knownSuccess;
    const npc=safeNumber(custom.npc_kinah??recipe.npc_kinah);
    const crafting=safeNumber(settings.crafting_fee)??0;
    const tax=clamp(safeNumber(settings.tax_percent)??10,0,50)/100;
@@ -90,8 +99,8 @@
    if(ask===null||ask<=0)missing.push('ราคาตั้งขาย');
    const manualUnitCost=safeNumber(custom.unit_cost_override);
    const manualOverride=manualUnitCost!==null&&manualUnitCost>0;
-   if(manualOverride && ask!==null){missing.length=0;}
-   const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,npc_kinah:npc,output_qty:outQty};
+   if(manualOverride && ask!==null && ask>0){missing.length=0;}
+   const base={complete:false,missing,parts:materials.parts,ask,success_rate:success,assumedSuccess,npc_kinah:npc,output_qty:outQty,reference:recipe.reference===true,comboExcluded:!!recipe.combo_chance};
    if(missing.length)return {...base,reason:'ข้อมูลต้นทุนหรือสูตรไม่ครบ'};
    // Bernoulli success model. Failure consumes inputs with no output; combo ignored.
    const spend=manualOverride?null:materials.subtotal+npc+crafting;
@@ -100,33 +109,35 @@
    const profit=netRevenue-unitCost;
    const roi=unitCost>0?profit/unitCost:null;
    const margin=netRevenue>0?profit/netRevenue:null;
-   return {...base,complete:true,missing:[],recipeSpend:spend,unitCost,netRevenue,profit,roi,margin,tax,listingFee,manualOverride};
+   return {...base,complete:true,missing:[],recipeSpend:spend,unitCost,netRevenue,profit,roi,margin,tax,listingFee,manualOverride,scenario:assumedSuccess||recipe.reference===true};
  }
  function opportunityScore(signal,eco,recipeVerified){
-   if(!recipeVerified)return {status:'verify',label:'รอยืนยันสูตร',score:null,reason:'สูตรอ้างอิงยังไม่ได้ตรวจในเกม'};
    if(!eco.complete)return {status:'cost',label:'รอต้นทุน',score:null,reason:eco.reason};
-   if(eco.profit<=0)return {status:'loss',label:'ขาดทุน',score:0,reason:'รายรับสุทธิไม่พอต้นทุน'};
-   if(!signal.valid)return {status:'history',label:'รอประวัติ',score:null,reason:signal.reason};
+   if(eco.profit<=0)return {status:'loss',label:'ต้นทุนไม่คุ้ม',score:0,reason:'รายรับสุทธิประมาณการต่ำกว่าต้นทุน (ยังไม่มีข้อมูลขายจริง)'};
+   if(!signal.valid)return {status:'history',label:'รอสัญญาณตลาด',score:null,reason:signal.reason};
    const profitScore=clamp((eco.roi/.5)*75,0,100)*.75+clamp((eco.margin/.3)*100,0,100)*.25;
    const raw=.35*profitScore+.30*signal.outflowScore+.20*signal.priceScore+.15*signal.liquidityScore;
    const score=Math.round(raw*(.65+.35*signal.confidence/100));
+   // Score is an observed MARKET heuristic, not sell-through probability.
+   if(!recipeVerified||eco.assumedSuccess)
+     return {status:'scenario',label:'สถานการณ์สมมติ',score,reason:'สูตรหรือโอกาสคราฟสำเร็จยังไม่ยืนยัน — ห้ามถือเป็นกำไรที่รับประกัน'};
    if(eco.roi>=.20 && score>=65 && signal.confidence>=65 && (signal.priceChange??0)>-.12)
-     return {status:'trial',label:'ทดลองล็อตเล็ก',score,reason:'กำไร + สัญญาณประกาศลด (ยังไม่ยืนยันยอดขายจริง)'};
+     return {status:'trial',label:'ทดลองล็อตเล็ก',score,reason:'กำไรที่คำนวณได้ + สัญญาณประกาศลด (ไม่ใช่ยอดขายจริง)'};
    if(eco.roi>=.10 && score>=48)return {status:'watch',label:'เฝ้าดู',score,reason:'มีโอกาส แต่สัญญาณยังไม่แข็งแรง'};
    return {status:'avoid',label:'ยังไม่แนะนำ',score,reason:'กำไรหรือแรงซื้ออ่อนกว่าที่ต้องการ'};
  }
- function validateRecipe(recipe){
+ function validateRecipe(recipe,opts={}){
    if(!recipe || typeof recipe!=='object')throw Error('สูตรไม่ใช่วัตถุ');
    const name=String(recipe.name||'').trim();
-   const output_qty=Number(recipe.output_qty),success_rate=Number(recipe.success_rate);
+   const output_qty=Number(recipe.output_qty),success_rate=recipe.success_rate==null||recipe.success_rate===''?null:Number(recipe.success_rate);
    if(!name||name.length>150)throw Error('ชื่อสูตรไม่ถูกต้อง');
    if(!Number.isFinite(output_qty)||output_qty<=0||output_qty>100000)throw Error('ผลผลิตไม่ถูกต้อง');
-   if(!Number.isFinite(success_rate)||success_rate<=0||success_rate>1)throw Error('โอกาสสำเร็จต้องอยู่ระหว่าง 0–1');
+   if((success_rate===null&&!opts.allowUnknown)|| (success_rate!==null&&(!Number.isFinite(success_rate)||success_rate<=0||success_rate>1)))throw Error('โอกาสสำเร็จต้องอยู่ระหว่าง 0–1 หรือระบุว่าไม่ทราบสำหรับชุดข้อมูลอ้างอิง');
    if(!Array.isArray(recipe.ingredients)||recipe.ingredients.length<1||recipe.ingredients.length>40)throw Error('ต้องมีวัตถุดิบอย่างน้อยหนึ่งรายการ');
    for(const ing of recipe.ingredients){if(!String(ing.name||ing.id||'').trim()||!(Number(ing.qty)>0))throw Error('ชื่อหรือจำนวนวัตถุดิบไม่ถูกต้อง');}
    const npc=recipe.npc_kinah===null||recipe.npc_kinah===''?null:Number(recipe.npc_kinah);
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
-   return {name, item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:Number(recipe.level)||0,output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,source:String(recipe.source||'user-entered').slice(0,240)};
+   return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240)};
  }
- return {clamp,safeNumber,normName,recipeFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
 });

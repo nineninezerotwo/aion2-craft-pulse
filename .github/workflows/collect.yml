@@ -1,20 +1,17 @@
-name: Collect verified Fregion market snapshots
+name: Collect verified Fregion market + publish
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '23 * * * *'
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/collector.py'
-      - '.github/workflows/collect.yml'
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: fregion-market-collector
+  group: fregion-market-collect-and-deploy
   cancel-in-progress: false
 
 jobs:
@@ -22,30 +19,44 @@ jobs:
     if: github.repository == 'nineninezerotwo/aion2-craft-pulse'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test snapshot validation and ROI engine
+      - name: Verify market and crafting calculation safety
         run: |
           python -m unittest discover -s tests -v
           node tests/test_engine.js
           node --check docs/app.js
           node --check docs/engine.js
-      - name: Read only the verified Fregion public market summaries
+      - name: Collect Fregion public market summaries (rate limited; policy checked)
         env:
           MARKET_SERVER_ID: '11507'
           CONFIRM_FREGION_SERVER_ID: '11507'
         run: python scripts/collector.py
-      - name: Commit validated snapshots to GitHub
+      - name: Commit validated snapshots to main
         run: |
           git config user.name 'fregion-market-bot'
           git config user.email 'fregion-market-bot@users.noreply.github.com'
           git add docs/data/latest.json docs/data/history.json
           if git diff --cached --quiet; then
-            echo 'No data changes'
-            exit 0
+            echo 'No snapshot changes'
+          else
+            git commit -m 'data: update verified Fregion market snapshot'
+            git push
           fi
-          git commit -m 'data: update Asia Elyos Fregion market reference snapshot'
-          git push
+      # GitHub Actions GITHUB_TOKEN pushes do not trigger push workflows.
+      # We publish ourselves so Pages receives the hourly data.
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+      - name: Deploy refreshed market dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4

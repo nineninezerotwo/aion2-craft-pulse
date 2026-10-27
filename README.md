@@ -1,70 +1,73 @@
-# Fregion Craft Pulse
+# Fregion Craft Pulse — AION 2 Global
 
-[เปิดเว็บไซต์](https://nineninezerotwo.github.io/aion2-craft-pulse/) · [คู่มือสถานะ Feed](https://nineninezerotwo.github.io/aion2-craft-pulse/feed-setup.html) · [ตรวจ GitHub Actions](https://github.com/nineninezerotwo/aion2-craft-pulse/actions)
+[**Public dashboard**](https://nineninezerotwo.github.io/aion2-craft-pulse/) · [GitHub Actions](https://github.com/nineninezerotwo/aion2-craft-pulse/actions) · [Source code](https://github.com/nineninezerotwo/aion2-craft-pulse)
 
-**สถานะ 27 ตุลาคม 2026: Market Feed ใช้งานจริงแล้ว** — GitHub Actions เก็บ Snapshot แรกได้ **707 items**, **439 items ที่มีราคาตั้งขาย**, ที่ **2026-10-27 05:34:11 UTC**. Source: aion2.exchange. ข้อมูลส่วนนี้ไม่ใช่ยอดขายสำเร็จ
+Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
-ตลาดล็อกเป็น **Global / Asia / Elyos / Fregion**: game server key **1507**, Aion2Market API server ID **11507**. ตรวจ mapping จาก `https://aion2.exchange/api/servers` แล้ว; Collector ตรวจ mapping ใหม่ก่อนเก็บทุกครั้งและจะหยุดทันทีถ้า ID ไม่ตรง
+## What actually works
 
-## ทำงานอย่างไร
+- Public Fregion **asking-price** and **active-listing** feed, captured about hourly via the guarded collector (rate-limited, checks `/robots.txt`, verifies server mapping, stops on access denial).
+- **264 Global client Elyos crafting reference recipes** across Alchemy, Blacksmithing, Armorsmithing, Handicrafting and Cooking. Item IDs link recipes and ingredients to the Fregion market catalog. Alternative recipes for the same output (e.g. ×1 vs ×10) can be compared.
+- ROI, net margin, expected profit, cost breakdown and manual vendor/Bound prices. Price, number of output units, ordinary crafting success rate, taxes and extra fees are configurable.
+- Listing removal **signals** and price trends at 3/6/12/24h, 3/7/14/30/90d; long windows appear only after adequate history. Confidence, missing inputs and source freshness shown.
+- Explicit optimistic **scenario** when the client recipe has no confirmed ordinary crafting success probability: assumes 100% successful crafts until the player supplies a game-verified rate. Combo/Splendent proceeds are **not** included in estimated income. Reference formulas are **not** marked verified automatically.
+- Personal profession levels, local recipe verification, watchlist and backup in browser storage. Visitors' customizations stay local; only approved public data is shared via Pages.
 
-- `docs/index.html` เป็น Dashboard ใช้ GitHub Pages ฟรี อ่าน JSON ล่าสุดจาก GitHub Raw เป็นหลัก (สำรองด้วยไฟล์ Pages)
-- `scripts/collector.py` ดึงเฉพาะ **ราคาเสนอขายและจำนวน Active Listings** จาก Aion2Market ผ่าน API ที่ตอบข้อมูลแบบสาธารณะ ไม่มีการเข้าสู่ระบบหรือเก็บข้อมูลบัญชีเกม
-- `.github/workflows/collect.yml` ทำงานทุกชั่วโมงที่นาที 23 UTC และสามารถรันเองได้จาก Actions (กำหนดการของ GitHub อาจคลาดเคลื่อนหรือถูกปิดตามข้อกำหนด)
-- `docs/data/latest.json` คือ Snapshot ล่าสุด; `docs/data/history.json` คือประวัติตามช่วงเวลา 90 วัน โดยคงข้อมูล 7 วันแรกเป็นรายชั่วโมง, วันที่ 8–30 ทุก 6 ชั่วโมง และวันที่ 31–90 รายวัน
-- UI มีช่วง 3h, 6h, 12h, 24h, 3d, 7d, 14d, 30d, 90d; ต้องมี Snapshot ครอบคลุมช่วงเวลาพอก่อนให้สัญญาณการลงทุน
-- `docs/data/recipes.json` มีสูตรเริ่มต้น **13 สูตรที่ยังไม่ได้รับการยืนยัน**. ต้องตรวจวัตถุดิบและโอกาสคราฟจากในเกมหรือชุดข้อมูลที่ได้รับอนุญาตก่อนจัดอันดับ ROI
-- กราฟ `Listings Drops` คือ **การลดลงของจำนวนประกาศระหว่าง Snapshot** ไม่สามารถยืนยันว่าเกิดจากการขายสำเร็จ; อาจเกิดจากการถอนหรือประกาศหมดอายุ
+## Critical market warnings
 
-## ข้อมูลต้นทางและข้อควรระวัง
+**Observed reductions in Listings are not confirmed units sold.** A listing may disappear because it sold, expired or was withdrawn, and one listing may contain multiple units. We do **not** claim a true sell-through rate, realized revenue, actual days to sale, or proof of buyers on Fregion. Investment Score is a heuristic, not a probability. Lowest asks can be bait/outliers, and are not completed sale prices. Check the in-game Market Settlement before investing large quantities.
 
-Aion2Market เผยแพร่ API สาธารณะและ `robots.txt` ณ วันที่ 27 ตุลาคม 2026 อนุญาตให้ user-agent ของเราอ่านเส้นทาง /api/items ได้ผ่านการทดสอบ. ตัว Collector ตรวจ robots.txt ทุกครั้งและหยุดเมื่อมีการปฏิเสธ 401, 403, 429; ไม่มีการหลบ rate limits, CAPTCHA หรือใช้ cookies. การเข้าถึง API **ไม่ได้เป็นการรับรองสิทธิ์การเผยแพร่ข้อมูลซ้ำ** หากผู้ให้บริการเปลี่ยนเงื่อนไขหรือไม่อนุญาตการนำข้อมูลไปใช้ต่อ ให้ระงับ Collector และติดต่อผู้ให้บริการ
+**The recipe catalog is not verified against the latest game build.** Global LST reference from September 21, 2026. A game patch or recipe-specific success/combo changes can invalidate any estimate. Check the recipe in game. No default NPC Bound prices from Taiwan have been silently treated as Fregion prices. Rates/taxes/fees default to scenarios; users can adjust. Ingredients lacking market prices must be priced manually; missing inputs do not become free.
 
-Questlog ไม่ได้เป็นแหล่งข้อมูลของ Collector และไม่มีการคัดลอกฐานข้อมูลสูตรคราฟจาก Questlog เพราะต้องมีสิทธิ์การนำไปใช้ตามเงื่อนไขของเว็บไซต์
+## Sources and licensing
 
-## สถานะการวิเคราะห์
+- **Market:** [aion2.exchange](https://aion2.exchange/) public item summaries only. No logins, sessions, CAPTCHA bypass, 403/429 avoidance or internal game traffic. Collector checks `/api/servers` for **Asia / Elyos / Fregion** (API ID `11507`) and `robots.txt` on every run. Public API availability is *not* an unconditional right to republish; owner will stop collection if source conditions change or rights are challenged.
+- **Reference recipes:** [xtopolis/aion2-static `src/data/crafting.json`](https://github.com/xtopolis/aion2-static/blob/main/src/data/crafting.json), MIT-licensed normalization of AION 2 Global launch-scale-test client data (2026-09-21). [Upstream license](https://github.com/xtopolis/aion2-static/blob/main/LICENSE). Attribution retained in `docs/data/recipes.json`. Game item names and concepts belong to NCSOFT; this is an unofficial fan tool and not endorsed by any provider.
+- **Questlog:** **not scraped or reproduced**. This project does not import Questlog's database because of its redistribution/automation restrictions.
 
-| ส่วน | สถานะ |
-|---|---|
-| ราคาตั้งขายและ Listings ของ Fregion | เชื่อมแล้ว |
-| ประวัติ Snapshot หลายช่วงเวลา | เริ่มสะสมแล้ว |
-| ROI / Margin / ต้นทุนวัตถุดิบ | มี Engine, ต้องยืนยันสูตรก่อน |
-| Listing Drop / Price Strength | แสดงหลังข้อมูลย้อนหลังเพียงพอ |
-| ยอดขายสำเร็จจริงของ Fregion | ยังไม่มี Feed ที่ยืนยันได้ |
+## Publishing on GitHub Pages
 
-### สูตรหลัก
+GitHub → Repository → **Settings → Pages → Build and deployment → Source: GitHub Actions**. The repository has two workflows:
 
-```text
-Observed Listing Drops = Σ max(0, Listings(previous) - Listings(next))
-Expected Cost per Unit = (Σ material quantity × ask price + NPC fee + craft fee) / (output quantity × success rate)
-Expected Net Revenue per Unit = cheapest ask × (1 - assumed market tax) - listing fee
-Expected Profit per Unit = Expected Net Revenue - Expected Cost
-ROI = Expected Profit / Expected Cost × 100
-Net Margin = Expected Profit / Expected Net Revenue × 100
-```
+- `Deploy Fregion Craft Pulse` deploys on code changes and manual dispatch.
+- `Collect verified Fregion market + publish` captures the public feed around minute 23 every hour, commits `docs/data/latest.json` + `history.json`, then **deploys the new files in the same workflow**. GitHub-token-initiated commits do not trigger ordinary push workflows, hence the explicit deploy step.
 
-ตัวอย่างเริ่มต้นค่าภาษีในเว็บเป็นสมมติฐาน 10%; ผู้ใช้งานต้องตรวจในเกม. ไม่มีการรับประกันว่าราคาตั้งขายคือราคาขายได้จริง
+If the GitHub Pages setting is still `Deploy from a branch`, change it to **GitHub Actions**, since both workflows use `actions/deploy-pages`. Review Actions logs for any failure or API prohibition. Inactivity limits and quotas are determined by GitHub. No external paid infrastructure is needed while usage is within the free tiers.
 
-## การดูแลระบบ
+## Updating recipes without Questlog scraping
 
-- [ดูรอบเก็บข้อมูลและ Error logs](https://github.com/nineninezerotwo/aion2-craft-pulse/actions)
-- [ตรวจราคาล่าสุดใน Repository](https://github.com/nineninezerotwo/aion2-craft-pulse/blob/main/docs/data/latest.json)
-- [ตรวจประวัติ Snapshot](https://github.com/nineninezerotwo/aion2-craft-pulse/blob/main/docs/data/history.json)
-- [การตั้งค่า Pages](https://github.com/nineninezerotwo/aion2-craft-pulse/settings/pages) — Currently using main /docs is fine: webpage loads current data from GitHub Raw
-- ถ้าหน้าเว็บยังเห็นค่าเก่า ให้ Hard Refresh (**Ctrl + Shift + R**), รอสักครู่ แล้วตรวจสถานะ workflow ล่าสุด
-
-## ทดสอบแบบ Offline
+The checked-in catalog was converted from the MIT Global client reference, not scraped from Questlog. To regenerate from a local copy of that upstream data:
 
 ```bash
+python scripts/import_client_recipes.py --input /path/to/crafting.json
+python -m unittest discover -s tests -v
+node tests/test_engine.js
+```
+
+User-defined recipes can be added/verified and edited in the dashboard; they stay in `localStorage`. Export a JSON backup from Settings if you switch devices.
+
+## Test locally
+
+```bash
+python -m http.server 8000 --directory docs
+# http://localhost:8000/
 python -m unittest discover -s tests -v
 node tests/test_engine.js
 node --check docs/app.js
 node --check docs/engine.js
-python -m http.server 8000 --directory docs
 ```
 
-หากต้องการทดลอง Fixture ให้ใช้ **สำเนาแยกจาก Repo จริง** เพราะ `python scripts/collector.py --fixture tests/fixture.json` จะเขียนทับ Snapshot ใน `docs/data/`. ต้องไม่อัปโหลดผล Fixture เป็นข้อมูลตลาดจริง
+## Architecture
 
-## สิทธิ์ในการใช้
+```text
+.github/workflows/{collect,deploy}.yml
+scripts/collector.py                    - policy-aware public market collector
+scripts/import_client_recipes.py        - reproducible MIT recipe conversion
+docs/index.html,app.js,engine.js,...    - public JS static UI and finance engine
+docs/data/latest.json                   - last Fregion asking-price snapshot
+docs/data/history.json                  - up to 90 days of listing & price snapshots
+docs/data/recipes.json                  - 264 *unverified* Elyos reference recipes
+tests/                                 - math, data and collector tests
+```
 
-โค้ดต้นแบบเป็น Community Tool ที่ไม่ได้เป็นผลิตภัณฑ์หรือส่วนหนึ่งของ NCSoft, Aion2Market หรือ Questlog. เครดิตข้อมูลราคาตลาด: [aion2.exchange](https://aion2.exchange/). Github Pages/Actions เป็น Free Tier สำหรับ Public Repository ตามเงื่อนไขและการใช้งานของ GitHub
+Fan-made, non-commercial community tool. **This website does not execute game actions or place trades.**

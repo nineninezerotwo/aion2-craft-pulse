@@ -33,7 +33,7 @@ assert(econ.margin>0&&econ.roi>econ.margin);
 const op=E.opportunityScore(signal,econ,true);
 assert(['trial','watch','avoid'].includes(op.status),op.status);
 assert(op.score!==null);
-assert.equal(E.opportunityScore(signal,econ,false).status,'verify');
+assert.equal(E.opportunityScore(signal,econ,false).status,'scenario');
 assert.equal(E.opportunityScore(E.analyzeSignal([],24),econ,true).status,'history');
 const bound={...recipe,npc_kinah:null};
 assert.equal(E.calculateEconomics(item,bound,[item,ingredient],{tax_percent:10}).complete,false);
@@ -53,4 +53,17 @@ assert.throws(()=>E.validateRecipe({name:'X',output_qty:1,success_rate:1,ingredi
 const valid=E.validateRecipe({...recipe,source:'game',verified:false});
 assert.equal(valid.ingredients.length,1);
 assert.equal(valid.verified,false);
+// Global-client reference recipes with unknown success produce *optimistic* estimates only.
+const clientRecipe={...recipe,recipe_id:'123',reference:true,verified:false,success_rate:null};
+const client=E.validateRecipe(clientRecipe,{allowUnknown:true});
+assert.equal(client.success_rate,null);
+const preliminary=E.calculateEconomics(item,client,[item,ingredient],{tax_percent:10});
+assert.equal(preliminary.complete,true);
+assert.equal(preliminary.assumedSuccess,true);
+assert.equal(preliminary.scenario,true);
+assert.equal(E.opportunityScore(signal,preliminary,false).status,'scenario');
+assert.throws(()=>E.validateRecipe(clientRecipe));
+const withVariants=E.recipesFor(item,[{...client,item_id:'wrong'},client,{...client,recipe_id:'124',item_id:item.id}]);
+assert.equal(withVariants.length,1);
+assert.equal(withVariants[0].recipe_id,'124');
 console.log('All engine tests passed (ROI, margin, listing drops, confidence, missing inputs, verification)');

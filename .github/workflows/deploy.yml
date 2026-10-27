@@ -1,6 +1,12 @@
-name: Deploy dashboard (initial / manual)
+name: Deploy Fregion Craft Pulse
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'scripts/import_client_recipes.py'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -9,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: fregion-github-pages
+  group: fregion-code-deploy
   cancel-in-progress: false
 
 jobs:
@@ -20,7 +26,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Verify calculations and collector format
+      - name: Validate dataset and calculations
         run: |
           python -m unittest discover -s tests -v
           node tests/test_engine.js
@@ -30,6 +36,6 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs
-      - name: Deploy dashboard
+      - name: Deploy public dashboard
         id: deployment
         uses: actions/deploy-pages@v4
