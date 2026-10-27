@@ -61,6 +61,24 @@ def confirm_mapping():
             print("Mapping request failed",type(exc).__name__,str(exc)[:150])
         time.sleep(2)
 
+def check_robots():
+    import urllib.robotparser
+    target="https://aion2.exchange/robots.txt"
+    req=urllib.request.Request(target,headers=HEADERS)
+    try:
+        with urllib.request.urlopen(req,timeout=20) as r:
+            robots=r.read(16000).decode("utf-8",errors="replace")
+            print("robots.txt HTTP",r.status,"rules bytes",len(robots))
+            print("robots.txt lines:",repr(robots[:2500]))
+            rp=urllib.robotparser.RobotFileParser()
+            rp.parse(robots.splitlines())
+            print("Our UA may fetch /api/items:",rp.can_fetch(HEADERS["User-Agent"],BASE))
+    except urllib.error.HTTPError as exc:
+        print("robots.txt HTTP",exc.code,"— permission still unverified")
+    except Exception as exc:
+        print("robots.txt diagnostic:",type(exc).__name__,str(exc)[:120])
+
 if __name__=="__main__":
     main()
     confirm_mapping()
+    check_robots()
