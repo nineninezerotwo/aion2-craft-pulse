@@ -9,6 +9,13 @@
  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
  const safeNumber=x=>x!==''&&x!=null&&Number.isFinite(Number(x))?Number(x):null;
  const normName=x=>String(x??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
+ // Global-client numeric item grades. Special (71) is separate from the rarity ladder.
+ const RARITIES={11:['common','Common'],21:['rare','Rare'],31:['epic','Epic'],41:['unique','Unique'],51:['heroic','Heroic'],61:['heroic','Heroic'],71:['special','Special']};
+ function rarityForGrade(grade){
+   const key=safeNumber(grade);
+   const entry=key!==null?RARITIES[key]:null;
+   return entry?{key:entry[0],label:entry[1],grade:key}:{key:'unknown',label:'ไม่ทราบระดับ',grade:null};
+ }
  const hoursBetween=(a,b)=>(Date.parse(b)-Date.parse(a))/3600000;
  function recipesFor(item, recipes){
    const id=String(item.id||'');
@@ -28,8 +35,8 @@
    return selected.map(s=>({ts:s.ts,price:s.values[String(id)][0],listings:s.values[String(id)][1]}));
  }
  function analyzeSignal(points,hours){
-   const empty={valid:false,reason:'ต้องมี Snapshot อย่างน้อย 3 จุด',points:points.length,span:0,coverage:0,confidence:0,observedDrops:null,observedAdds:null,netDelta:null,priceChange:null,priceScore:null,outflowScore:null,liquidityScore:null,dropTransitions:0,score:null};
-   if(points.length<3)return empty;
+   const empty={valid:false,reason:'ต้องมี Snapshot อย่างน้อย 3 จุด',points:points.length,span:0,coverage:0,confidence:0,observedDrops:null,observedAdds:null,netDelta:null,priceChange:null,priceScore:null,outflowScore:null,liquidityScore:null,dropTransitions:0,observedSupply:null,removedRate:null,firstListings:null,lastListings:null,score:null};
+   if(points.length<2)return empty;
    const first=points[0],last=points[points.length-1];
    const span=hoursBetween(first.ts,last.ts),coverage=clamp(span/hours,0,1);
    if(span<=0)return {...empty,reason:'ช่วงเวลาผิดปกติ'};
@@ -43,12 +50,15 @@
      }
    }
    const avg=listings.reduce((a,b)=>a+b,0)/listings.length;
-   const baseline=Math.max(10,avg);
+   // Supply observed by our snapshots, NOT units sold: opening listings plus net listing additions.
+   // drops / observedSupply is bounded 0–1 but is not true sales conversion.
+   const observedSupply=Math.max(0,first.listings)+adds;
+   const removedRate=observedSupply>0?clamp(drops/observedSupply,0,1):null;
    const priceChange=first.price>0&&last.price>0?(last.price-first.price)/first.price:null;
    // Normalize by observed listing supply; do not infer units sold from listing counts.
-   const dropRatio=drops/baseline;
+   const dropRatio=removedRate??0;
    const repeat=dropTransitions/Math.max(1,points.length-1);
-   const outflowScore=clamp(100*(.65*clamp(dropRatio/.42,0,1)+.35*clamp(repeat/.4,0,1)),0,100);
+   const outflowScore=clamp(100*(.65*clamp(dropRatio/.40,0,1)+.35*clamp(repeat/.4,0,1)),0,100);
    const priceScore=priceChange===null?35:clamp(50+(priceChange/.20)*40,0,100);
    const liquidityScore=avg<3?5:avg<8?20:avg<20?42:avg<70?65:avg<300?85:avg<900?75:60;
    const expectedStep=hours<=7*24?1:hours<=30*24?6:24;
@@ -61,7 +71,15 @@
    const valid=coverage>=.58&&points.length>=minPoints&&confidence>=65;
    const score=valid?Math.round(.52*outflowScore+.28*priceScore+.20*liquidityScore):null;
    const reason=!valid?`ข้อมูลยังไม่ต่อเนื่อง (${points.length}/${minPoints}+ จุด, ครอบคลุม ${Math.round(coverage*100)}%, confidence ${confidence})`:null;
-   return {valid,reason,points:points.length,span,coverage,confidence,observedDrops:drops,observedAdds:adds,netDelta:last.listings-first.listings,priceChange,priceScore:Math.round(priceScore),outflowScore:Math.round(outflowScore),liquidityScore:Math.round(liquidityScore),dropTransitions,score,avgListings:avg,maxGap};
+   return {valid,reason,points:points.length,span,coverage,confidence,observedDrops:drops,observedAdds:adds,netDelta:last.listings-first.listings,priceChange,priceScore:Math.round(priceScore),outflowScore:Math.round(outflowScore),liquidityScore:Math.round(liquidityScore),dropTransitions,observedSupply,removedRate,firstListings:first.listings,lastListings:last.listings,score,avgListings:avg,maxGap};
+ }
+ // Demand proxy only. Guard sparse listings, short histories, nonrepeating drops, and collapsing prices.
+ function isHotListingSignal(signal){
+   return Boolean(signal&&signal.valid&&signal.confidence>=70&&signal.coverage>=.8
+     &&signal.observedSupply>=12&&signal.avgListings>=8
+     &&signal.observedDrops>=5&&signal.dropTransitions>=2
+     &&signal.removedRate!==null&&signal.removedRate>=.30
+     &&signal.priceChange!==null&&signal.priceChange>=-.10);
  }
  function collectIngredientCost(recipe,items,materialPrices){
    let subtotal=0;const missing=[],parts=[];
@@ -137,7 +155,7 @@
    for(const ing of recipe.ingredients){if(!String(ing.name||ing.id||'').trim()||!(Number(ing.qty)>0))throw Error('ชื่อหรือจำนวนวัตถุดิบไม่ถูกต้อง');}
    const npc=recipe.npc_kinah===null||recipe.npc_kinah===''?null:Number(recipe.npc_kinah);
    if(npc!==null&&(!Number.isFinite(npc)||npc<0))throw Error('ต้นทุน NPC ไม่ถูกต้อง');
-   return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
+   return {name,recipe_id:String(recipe.recipe_id||''),item_id:String(recipe.item_id||''),profession:String(recipe.profession||'Unknown'),level:recipe.level==null?null:Number(recipe.level),output_qty,success_rate,npc_kinah:npc,ingredients:recipe.ingredients.map(i=>({name:String(i.name||'').trim(),id:i.id?String(i.id):'',qty:Number(i.qty)})),verified:recipe.verified===true,reference:recipe.reference===true,combo_chance:recipe.combo_chance??null,combo_item_id:recipe.combo_item_id||null,source:String(recipe.source||'user-entered').slice(0,240),item_grade: Number.isInteger(recipe.item_grade)&&RARITIES[recipe.item_grade]?recipe.item_grade:null,icon:/^[A-Za-z0-9_-]{1,160}$/.test(recipe.icon||'')?recipe.icon:null,craft_type:String(recipe.craft_type||'').slice(0,70),mastery_grade:['beginner','intermediate'].includes(recipe.mastery_grade)?recipe.mastery_grade:null};
  }
- return {clamp,safeNumber,normName,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
+ return {clamp,safeNumber,normName,rarityForGrade,isHotListingSignal,recipeFor,recipesFor,timeSeries,analyzeSignal,calculateEconomics,opportunityScore,validateRecipe};
 });
