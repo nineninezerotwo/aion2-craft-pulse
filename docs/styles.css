@@ -126,3 +126,94 @@ table{min-width:1480px}th,td{padding:13px 12px}th{font-size:10px}.name-cell{min-
 .market-only-notice{border:1px solid #3b6379;background:#102938;border-radius:10px;padding:13px 17px;margin:15px 0;line-height:1.6}
 .market-only-notice strong{color:#9fdef1;font-size:13px}
 .market-only-notice p{color:#b3ccda;font-size:12px;margin:7px 0 0}
+
+
+/* Responsive craft result table: no sideways scrolling or hidden data.
+ * Full 13-column table at desktop widths; labeled two/three-column cards below.
+ * Every metric, including SCORE and ACTION, stays visible at any viewport size.
+ */
+.page-shell{max-width:1820px;padding-left:clamp(12px,2vw,32px);padding-right:clamp(12px,2vw,32px)}
+.main-panel{min-width:0}
+.main-panel .table-scroll{overflow-x:visible;overflow-y:visible;width:100%;max-width:100%}
+.main-panel .table-scroll table{min-width:0;width:100%;max-width:100%;table-layout:fixed;white-space:normal}
+.main-panel .table-scroll th{min-width:0;max-width:100%;word-break:normal;overflow-wrap:anywhere;vertical-align:middle}
+.main-panel .table-scroll td{min-width:0;max-width:100%;padding:11px 5px;text-align:right;vertical-align:middle;
+ white-space:normal;overflow-wrap:anywhere;word-wrap:break-word;font-size:11px;line-height:1.45}
+.main-panel .table-scroll th:nth-child(1){width:19%}
+.main-panel .table-scroll th:nth-child(2){width:7%}
+.main-panel .table-scroll th:nth-child(3){width:5%}
+.main-panel .table-scroll th:nth-child(4){width:6%}
+.main-panel .table-scroll th:nth-child(5){width:7%}
+.main-panel .table-scroll th:nth-child(6){width:5%}
+.main-panel .table-scroll th:nth-child(7){width:6%}
+.main-panel .table-scroll th:nth-child(8){width:9%}
+.main-panel .table-scroll th:nth-child(9){width:8%}
+.main-panel .table-scroll th:nth-child(10){width:6%}
+.main-panel .table-scroll th:nth-child(11){width:7%}
+.main-panel .table-scroll th:nth-child(12){width:8%}
+.main-panel .table-scroll th:nth-child(13){width:7%}
+#craftHeader th .sort-header{padding:10px 3px;font-size:9px;line-height:1.2;min-height:46px;
+ white-space:normal;overflow-wrap:anywhere;flex-wrap:wrap;gap:2px;justify-content:center;text-align:center}
+#craftHeader th:first-child .sort-header{justify-content:flex-start;text-align:left;padding-left:9px}
+#craftHeader th .sort-direction{font-size:11px;min-width:9px}
+.main-panel .table-scroll tbody td:first-child{padding-left:9px;text-align:left}
+.main-panel .table-scroll tbody td:last-child{text-align:center;padding-right:5px}
+.main-panel .table-scroll .craft-item-cell{min-width:0;width:100%;gap:7px;align-items:center}
+.main-panel .table-scroll .craft-item-copy{flex:1 1 0;min-width:0;max-width:100%}
+.main-panel .table-scroll .craft-icon{width:38px;height:38px;flex:0 0 38px}
+.main-panel .table-scroll .craft-item-copy .item-name{max-width:100%;font-size:11px;white-space:normal;
+ overflow:visible;overflow-wrap:anywhere;text-overflow:clip}
+.main-panel .table-scroll .item-title-row{min-width:0;max-width:100%;flex-wrap:wrap;gap:3px}
+.main-panel .table-scroll .item-sub{font-size:10px;margin-top:3px;overflow-wrap:anywhere}
+.main-panel .table-scroll .craft-unlock{font-size:9px;line-height:1.3}
+.main-panel .table-scroll .market-data-tag,.main-panel .table-scroll .hot-listing-tag{font-size:9px;white-space:normal}
+.main-panel .table-scroll .pill{max-width:100%;font-size:9px;white-space:normal;
+ overflow-wrap:anywhere;line-height:1.3;padding:5px 4px;border-radius:6px;text-align:center}
+.main-panel .table-scroll .score-cell{text-align:center}
+.main-panel .table-scroll .score-kind{white-space:normal;overflow-wrap:anywhere;font-size:9px;line-height:1.3}
+.main-panel .table-scroll .confidence{font-size:9px;line-height:1.3}
+.main-panel .table-scroll .score-chip{padding:3px 5px;white-space:normal;font-size:11px}
+.main-panel .table-scroll .chain-cost-label{font-size:9px;line-height:1.25}
+.main-panel .table-scroll td.num{font-variant-numeric:tabular-nums}
+
+/* Compact cards below large-table width: full data still visible, never truncated.
+ * Header sorting remains available from the Sort dropdown above the results.
+ */
+@media(max-width:1250px){
+ .main-panel .table-scroll{padding:0 12px 10px}
+ .main-panel .table-scroll table{display:block;min-width:0;width:100%;max-width:100%}
+ .main-panel .table-scroll thead{display:none}
+ .main-panel .table-scroll tbody{display:block;width:100%}
+ .main-panel .table-scroll tbody tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:0;border:1px solid #34465a;border-radius:12px;overflow:hidden;margin-bottom:12px;
+  background:linear-gradient(135deg,#132436,#101c2b)}
+ .main-panel .table-scroll tbody tr.selected,.main-panel .table-scroll tbody tr:hover{background:#1c3041}
+ .main-panel .table-scroll tbody td{display:block;width:auto;max-width:100%;min-width:0;
+  box-sizing:border-box;padding:9px 11px;text-align:left!important;border:0;
+  border-top:1px solid rgba(76,107,133,.30);font-size:12px;overflow-wrap:anywhere}
+ .main-panel .table-scroll tbody td:first-child{grid-column:1/-1;border-top:0;
+  padding:12px 13px;text-align:left!important}
+ .main-panel .table-scroll tbody td:not(.name-cell)::before{
+  display:block;content:attr(data-label);font-size:9px;letter-spacing:.7px;
+  font-weight:750;color:#83a0b5;line-height:1.4;margin-bottom:4px}
+ .main-panel .table-scroll tbody td.name-cell::before{display:none}
+ .main-panel .table-scroll tbody td .score-kind{font-size:10px}
+ .main-panel .table-scroll tbody td:last-child{text-align:left!important}
+ .main-panel .table-scroll tbody td .pill{font-size:11px;padding:5px 9px;text-align:left}
+ .main-panel .table-scroll .craft-icon{width:43px;height:43px;flex-basis:43px}
+ .main-panel .table-scroll .craft-item-copy .item-name{font-size:13px}
+ .main-panel .table-scroll .craft-item-cell{gap:12px}
+ .main-panel .table-scroll .score-cell{text-align:left}
+ .main-panel .table-scroll .score-chip{font-size:12px;padding:4px 7px}
+ .main-panel .table-scroll .item-sub{font-size:11px}
+ .main-panel .table-scroll .craft-unlock{font-size:10px}
+}
+@media(max-width:640px){
+ .main-panel .table-scroll{padding:0 9px 9px}
+ .main-panel .table-scroll tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main-panel .table-scroll tbody td{padding:9px 10px;font-size:12px}
+ .main-panel .table-scroll tbody td:first-child{grid-column:1/-1;padding:12px 10px}
+ .main-panel .table-scroll .craft-icon{width:40px;height:40px;flex-basis:40px}
+ .main-panel .table-scroll .craft-item-cell{gap:8px}
+ .main-panel .table-scroll .craft-item-copy .item-name{font-size:12px}
+}
