@@ -132,6 +132,9 @@ const cheaperIngot={recipe_id:'ingot',item_id:'200',name:'Orichalcum Ingot',
 const cheaper=E.createChainEstimator([ironRecipe,derivedStub,cheaperIngot],
   mats.map(x=>({...x,price:x.id==='300'?20:x.price})),{});
 assert.equal(cheaper.estimate('101').cost,320,'Nested intermediate craft should beat marketplace ask');
+const orphanSplendent=E.createChainEstimator([derivedStub],mats,{});
+assert.equal(orphanSplendent.estimate('101').complete,false,
+ 'Proc-only stub extras must not be priced as a standalone Splendent craft');
 const noMaterial=E.createChainEstimator([ironRecipe],mats.filter(x=>x.id!=='200'),{});
 assert.equal(noMaterial.estimate('100').complete,false,'Missing market price must not become zero');
 const refOnly=E.createChainEstimator([ironRecipe],mats.filter(x=>x.id!=='200'),{},{
