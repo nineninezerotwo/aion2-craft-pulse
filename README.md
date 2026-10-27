@@ -4,6 +4,16 @@
 
 Free, static, community-built craft market analysis for **Asia / Elyos / Fregion** (game server 1507, Aion2Market API server 11507). No account, subscription, server or private game data required.
 
+## Responsive table and actual default sorting
+
+The crafting scanner shows **all 13 metrics without sideways scrolling**:
+
+- **Wide screens:** condensed, fixed-layout table with proportional column widths, wrapped long item names and multi-line recommendation/score labels.
+- **Laptop/tablet and narrow screens:** the same results reflow into labeled cards (three metric columns, then two on small phones). Each card includes every previous table cell: asking price, listings, observed removals, outflow, net and price deltas, cost, profit, ROI, margin, score and action. The Sort dropdown remains accessible in this mode.
+- All table cells include `data-label` for the responsive cards; no financial metric is deliberately omitted to fit the screen.
+- On page load `sort:'score'` and `sortDir:'desc'` are selected. This means mature **Investment Scores** first, but when there are only `INVEST PREVIEW` scores the actual displayed order falls back to **Net Margin descending**. That is why a row with a preview score of 25 can appear above a row with 37 when the first has greater Margin. The on-screen Sort hint now states the **effective sort** explicitly (`INVESTMENT SCORE ↓` or `MARGIN ↓ (FALLBACK)`).
+- The native GitHub Pages branch deployment publishes code updates from `main/docs`, while the separate hourly market collector deploys its own GITHUB_TOKEN-created snapshot. Code-validation workflow no longer tries a second Pages deployment, avoiding HTTP 400 conflicts from duplicate simultaneous deployments.
+
 ## Market-only Score when crafting costs are missing
 
 The dashboard intentionally **does not invent missing material prices**, even if waiting for Bound/NPC costs would prevent a true profitability calculation. Instead, whenever at least two nonempty chronological Fregion listing snapshots exist:
