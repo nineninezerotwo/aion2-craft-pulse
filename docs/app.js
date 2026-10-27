@@ -95,8 +95,16 @@ function compute(item){
  const signal=E.analyzeSignal(pts,state.period);
  const chain=recipe&&E.isEquipmentRecipe(recipe)&&state.chainEstimator
    ?state.chainEstimator.estimate(item.id,String(recipe.recipe_id||'').replace(/^proc:/,'')):null;
- const eco=E.calculateEconomics(item,recipe,state.latest.items,state.settings,
+ let eco=E.calculateEconomics(item,recipe,state.latest.items,state.settings,
    {...itemOverrides(item),materialPrices:state.materialPrices,chainEstimate:chain});
+ // A Splendent item is a proc/chain outcome. When its chain cannot be priced,
+ // do not fall back to a misleading "bonus materials only" cost.
+ if(recipe&&E.isEquipmentRecipe(recipe)&&/^Splendent\\b/i.test(String(recipe.name||''))&&!chain?.complete
+     &&!(E.safeNumber(itemOverrides(item).unit_cost_override)>0)){
+   eco={...eco,complete:false,unitCost:null,profit:null,roi:null,margin:null,
+     missing:chain?.missing||['unknown chain input'],
+     reason:'Splendent chain cost missing; partial proc materials are not a complete recipe'};
+ }
  let op=E.opportunityScore(signal,eco,verified(recipe));
  const skill=recipe?E.safeNumber(state.settings.skills?.[recipe.profession]):null;
  const eligible=recipe?(skill===null||recipe.level===null?null:skill>=recipe.level):false;
